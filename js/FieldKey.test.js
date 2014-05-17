@@ -18,7 +18,7 @@
         var key;
 
         key = 'foo/bar/baz'.toFieldKey();
-        ok(key.isA(dache.FieldKey), "should yield FieldKey");
+        ok(key.isA(dache.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
@@ -31,7 +31,7 @@
         var key;
 
         key = ['foo', 'bar', 'baz'].toFieldKey();
-        ok(key.isA(dache.FieldKey), "should yield FieldKey");
+        ok(key.isA(dache.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
@@ -40,7 +40,7 @@
     test("Conversion from EntityKey", function () {
         var key = dache.EntityKey.create('foo', 'bar', 'baz');
 
-        ok(key.isA(dache.FieldKey), "should yield FieldKey");
+        ok(key.isA(dache.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
@@ -49,7 +49,7 @@
     test("Conversion from Path", function () {
         var key = 'foo>bar>baz'.toPath().toFieldKey();
 
-        ok(key.isA(dache.FieldKey), "should yield FieldKey");
+        ok(key.isA(dache.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
@@ -151,7 +151,7 @@
             "document>document>hasDocumentMeta", // checks document meta for metadata documents
             "document>foo>fields>baz>hasFieldMeta", // checks field meta for specified field
             "document>document>hasDocumentMeta", // checks document meta for metadata documents again
-            "document>foo>fields>baz>type" // gets type information from field's path in meta (WITH metadata levels)
+            "document>foo>fields>baz>fieldType" // gets type information from field's path in meta (WITH metadata levels)
         ], "should fetch true metadata flags to see where the type information is");
     });
 

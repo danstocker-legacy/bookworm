@@ -54,18 +54,15 @@ troop.postpone(dache, 'FieldKey', function () {
              */
             getEntityPath: function () {
                 var documentKey = this.documentKey,
-                    asArray = [
-                        documentKey.documentType,
-                        documentKey.documentId
-                    ];
+                    result = documentKey.getEntityPath();
 
                 if (documentKey.hasDocumentMeta()) {
-                    asArray.push('fields');
+                    result.appendKey('fields');
                 }
 
-                asArray.push(this.fieldName);
+                result.appendKey(this.fieldName);
 
-                return asArray.toPath();
+                return result;
             },
 
             /**
@@ -94,7 +91,7 @@ troop.postpone(dache, 'FieldKey', function () {
 
                 if (hasFieldMeta) {
                     // when field has metadata, type information can is one level deeper
-                    typeMetaPath.appendKey('type');
+                    typeMetaPath.appendKey('fieldType');
                 }
 
                 return dache.metadata.getNode(typeMetaPath);

@@ -19,27 +19,35 @@ troop.postpone(dache, 'metadata', function () {
             }
 
             //@formatter:off
-//          /**
-//           * Sample metadata document.
-//           */
+//          /** Sample metadata document. */
 //          user: {
 //              /**
-//               * Specifies that document has no metadata:
-//               * field nodes come right under the document node.
-//               */
+//              * Specifies that document has no metadata:
+//              * field nodes come right under the document node.
+//              */
 //              hasDocumentMeta: false,
 //              fields: {
 //                  name: {
-//                      /** Field type */
-//                      type: 'string',
+//                      /** Field contains string */
+//                      fieldType: 'string',
 //                      /** Specifies that 'name' field has NO metadata associated with it. */
 //                      hasFieldMeta: false
 //                  },
 //                  age: {
-//                      /** Field type */
-//                      type: 'number',
+//                      /** Field contains number */
+//                      fieldType: 'number',
 //                      /** Specifies that 'name' field has metadata associated with it. */
 //                      hasFieldMeta: true
+//                  },
+//                  emails: {
+//                      /** Field contains collection */
+//                      fieldType: 'collection',
+//                      /** There is no metadata associated with the collection */
+//                      hasFieldMeta: false,
+//                      /** Items are strings */
+//                      itemType: 'string',
+//                      /** There is metadata associated with items */
+//                      hasItemMeta: true
 //                  }
 //              }
 //          }
@@ -57,7 +65,7 @@ troop.postpone(dache, 'documents', function () {
      */
     dache.documents = flock.EventedTree.create({
         //@formatter:off
-//      /** Sample document **/
+        /** Sample document **/
 //      user: {
 //          /**
 //           * Document type was specified not to have metadata.
@@ -74,7 +82,27 @@ troop.postpone(dache, 'documents', function () {
 //               * Value is stored on sub-node.
 //               */
 //              age: {
+//                  /** When field has metadata, value is always stored under 'value'. */
 //                  value: 32
+//              },
+//              /**
+//               * 'email' field was specified not to have metadata.
+//               * Value is collection and is associated with the key.
+//               */
+//              emails: {
+//                  /**
+//                   * Items for this collection were specified to have metadata.
+//                   * Item values are stored on sub-node.
+//                   */
+//                  'john@johnsdomain.com':{
+//                      qualifier: 'home',
+//                      /** When item has metadata, value is always stored under 'value'. */
+//                      value:'john@johnsdomain.com'
+//                  },
+//                  'john@johnsworkplace.com':{
+//                      qualifier: 'work',
+//                      value: 'john@johnsworkplace.com'
+//                  }
 //              }
 //          }
 //      }
