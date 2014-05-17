@@ -1,5 +1,5 @@
 /*global dessert, troop, sntls, dache */
-/*global module, test, ok, equal, strictEqual, notStrictEqual, deepEqual, notDeepEqual, raises */
+/*global module, test, expect, ok, equal, strictEqual, notStrictEqual, deepEqual, notDeepEqual, raises */
 (function () {
     "use strict";
 
@@ -46,8 +46,8 @@
         var key = dache.EntityKey.create('foo', 'bar');
 
         ok(key.isA(dache.DocumentKey), "should return DocumentKey instance");
-        equal(key.documentType, 'foo', "should set the document type");
-        equal(key.documentId, 'bar', "should set the document ID");
+        equal(key.documentType, 'foo', "should set document type");
+        equal(key.documentId, 'bar', "should set document ID");
     });
 
     test("Equivalence tester", function () {
@@ -55,6 +55,17 @@
         ok('foo/bar'.toDocumentKey().equals('foo/bar'.toDocumentKey()), "should pass for keys w/ same type / ID");
         ok(!'foo/bar'.toDocumentKey().equals('foo/baz'.toDocumentKey()), "should fail for different IDs");
         ok(!'foo/bar'.toDocumentKey().equals('fuu/bar'.toDocumentKey()), "should fail for different types");
+    });
+
+    test("Field key getter", function () {
+        var documentKey = dache.EntityKey.create('foo', 'bar'),
+            fieldKey = documentKey.getFieldKey('baz');
+
+        ok(fieldKey.isA(dache.FieldKey), "should return a FieldKey instance");
+        ok(fieldKey.documentKey.isA(dache.DocumentKey), "should set document key");
+        equal(fieldKey.documentKey.documentType, 'foo', "should set document type");
+        equal(fieldKey.documentKey.documentId, 'bar', "should set document ID");
+        equal(fieldKey.fieldName, 'baz', "should set field name");
     });
 
     test("Entity path getter", function () {
@@ -71,6 +82,22 @@
 
         ok(path.isA(sntls.Path), "should return CachePath instance");
         deepEqual(path.asArray, ['document', 'foo'], "should set path contents correctly");
+    });
+
+    test("Metadata tester", function () {
+        //expect(1);
+
+        var key = 'foo/bar'.toDocumentKey();
+
+        dache.metadata.addMocks({
+            getNode: function (path) {
+                equal(path.toString(), 'document>foo>hasDocumentMeta', "should fetch value from correct path");
+            }
+        });
+
+        key.hasDocumentMeta();
+
+        dache.metadata.removeMocks();
     });
 
     test("Conversion to String", function () {

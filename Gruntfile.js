@@ -7,6 +7,7 @@ module.exports = function (grunt) {
             'js/namespaces.js',
             'js/EntityKey.js',
             'js/DocumentKey.js',
+            'js/FieldKey.js',
             'js/exports.js'
         ],
 

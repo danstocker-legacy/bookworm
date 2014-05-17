@@ -49,6 +49,19 @@ troop.postpone(dache, 'DocumentKey', function () {
             },
 
             /**
+             * Creates a FieldKey instance based on the current document key and the specified field name.
+             * @param {string} fieldName
+             * @returns {dache.FieldKey}
+             */
+            getFieldKey: function (fieldName) {
+                return dache.FieldKey.create(
+                    this.documentType,
+                    this.documentId,
+                    fieldName
+                );
+            },
+
+            /**
              * @returns {sntls.Path}
              */
             getEntityPath: function () {
@@ -59,7 +72,7 @@ troop.postpone(dache, 'DocumentKey', function () {
              * @returns {sntls.Path}
              */
             getMetaPath: function () {
-                return ['document', this.documentType].toPath();
+                return ['document', this.documentType].toDocumentKey().getEntityPath();
             },
 
             /**
