@@ -101,7 +101,8 @@ troop.amendPostponed(dache, 'Key', function () {
 
     dache.EntityKey
         .addSurrogate(dache, 'ItemKey', function () {
-            return arguments.length >= 4 && !arguments[3].toDocumentKey().documentId;
+            return arguments.length === 4 &&
+                   !arguments[3].toDocumentKey().documentId;
         });
 });
 
@@ -109,10 +110,12 @@ troop.amendPostponed(dache, 'Key', function () {
     "use strict";
 
     dessert.addTypes(/** @lends dessert */{
+        /** Tells whether expression is an ItemKey */
         isItemKey: function (expr) {
             return dache.ItemKey.isBaseOf(expr);
         },
 
+        /** Tells whether expression is optionally an ItemKey */
         isItemKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
                    dache.ItemKey.isBaseOf(expr);
@@ -123,6 +126,7 @@ troop.amendPostponed(dache, 'Key', function () {
         String.prototype,
         /** @lends String# */{
             /**
+             * Converts string to ItemKey.
              * @returns {dache.ItemKey}
              */
             toItemKey: function () {
@@ -143,6 +147,7 @@ troop.amendPostponed(dache, 'Key', function () {
         Array.prototype,
         /** @lends Array# */{
             /**
+             * Converts Array of strings to ItemKey.
              * @returns {dache.ItemKey}
              */
             toItemKey: function () {

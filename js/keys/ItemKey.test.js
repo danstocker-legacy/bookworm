@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    module("Item key");
+    module("Item Key");
 
     test("Instantiation", function () {
         var itemKey = dache.ItemKey.create('hello', 'world', 'foo', 'bar');

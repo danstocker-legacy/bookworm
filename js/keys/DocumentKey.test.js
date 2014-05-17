@@ -85,7 +85,7 @@
     });
 
     test("Metadata tester", function () {
-        //expect(1);
+        expect(1);
 
         var key = 'foo/bar'.toDocumentKey();
 

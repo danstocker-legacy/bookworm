@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    module("Field key");
+    module("Field Key");
 
     test("Instantiation", function () {
         var fieldKey = dache.FieldKey.create('hello', 'world', 'foo');
