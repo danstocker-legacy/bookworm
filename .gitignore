@@ -1,0 +1,5 @@
+/.idea/
+/node_modules/
+/out/
+dache.js
+*.tgz
