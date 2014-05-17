@@ -5,14 +5,16 @@ module.exports = function (grunt) {
     var params = {
         files: [
             'js/namespace.js',
-            'js/EntityKey.js',
-            'js/DocumentKey.js',
-            'js/FieldKey.js',
+            'js/cache.js',
+            'js/keys/EntityKey.js',
+            'js/keys/DocumentKey.js',
+            'js/keys/FieldKey.js',
+            'js/keys/ItemKey.js',
             'js/exports.js'
         ],
 
         test: [
-            'js/jsTestDriver.conf'
+            'js/keys/jsTestDriver.conf'
         ],
 
         globals: {
