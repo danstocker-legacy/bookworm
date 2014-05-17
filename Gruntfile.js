@@ -10,6 +10,7 @@ module.exports = function (grunt) {
             'js/keys/DocumentKey.js',
             'js/keys/FieldKey.js',
             'js/keys/ItemKey.js',
+            'js/keys/ReferenceItemKey.js',
             'js/exports.js'
         ],
 
