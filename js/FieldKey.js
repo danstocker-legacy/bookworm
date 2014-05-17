@@ -86,15 +86,11 @@ troop.postpone(dache, 'FieldKey', function () {
              * @returns {string}
              */
             getFieldType: function () {
-                var hasFieldMeta = this.hasFieldMeta(),
+                var metadata = dache.metadata,
                     typeMetaPath = this.getMetaPath();
 
-                if (hasFieldMeta) {
-                    // when field has metadata, type information can is one level deeper
-                    typeMetaPath.appendKey('fieldType');
-                }
-
-                return dache.metadata.getNode(typeMetaPath);
+                return metadata.getNode(typeMetaPath.clone().appendKey('fieldType')) ||
+                       metadata.getNode(typeMetaPath);
             },
 
             /**

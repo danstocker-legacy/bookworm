@@ -89,7 +89,7 @@
         deepEqual(path.asArray, ['document', 'foo', 'fields', 'baz'], "should set path contents");
     });
 
-    test("Metadata tester", function () {
+    test("Field meta tester", function () {
         var key = 'foo/bar/baz'.toFieldKey(),
             paths = [];
 
@@ -117,9 +117,16 @@
         var key = 'foo/bar/baz'.toFieldKey(),
             paths;
 
+        dache.FieldKey.addMocks({
+            getMetaPath: function () {
+                return 'meta>path'.toPath();
+            }
+        });
+
         dache.metadata.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
+                return undefined;
             }
         });
 
@@ -129,16 +136,14 @@
         dache.metadata.removeMocks();
 
         deepEqual(paths, [
-            "document>document>hasDocumentMeta", // checks document meta for metadata documents
-            "document>foo>baz>hasFieldMeta", // checks field meta for specified field
-            "document>document>hasDocumentMeta", // checks document meta for metadata documents again
-            "document>foo>baz" // gets type information from field's path in meta (w/o metadata levels)
-        ], "should fetch false metadata flags to see where the type information is");
+            "meta>path>fieldType",
+            "meta>path"
+        ], "should try metadata first, then field value");
 
         dache.metadata.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
-                return true;
+                return 'fieldType';
             }
         });
 
@@ -146,13 +151,11 @@
         key.getFieldType();
 
         dache.metadata.removeMocks();
+        dache.FieldKey.removeMocks();
 
         deepEqual(paths, [
-            "document>document>hasDocumentMeta", // checks document meta for metadata documents
-            "document>foo>fields>baz>hasFieldMeta", // checks field meta for specified field
-            "document>document>hasDocumentMeta", // checks document meta for metadata documents again
-            "document>foo>fields>baz>fieldType" // gets type information from field's path in meta (WITH metadata levels)
-        ], "should fetch true metadata flags to see where the type information is");
+            "meta>path>fieldType"
+        ], "should fetch field type from metadata if it is found there");
     });
 
     test("Conversion to String", function () {
