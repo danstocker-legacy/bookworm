@@ -61,6 +61,18 @@
         ok(!'foo/bar/baz'.toFieldKey().equals('foo/bar/hello'.toFieldKey()), "should fail on different field name");
     });
 
+    test("Item key getter", function () {
+        var fieldKey = 'foo/bar/baz'.toFieldKey(),
+            itemKey = fieldKey.getItemKey('hello');
+
+        ok(itemKey.isA(dache.ItemKey), "should return an ItemKey instance");
+        ok(itemKey.documentKey.isA(dache.DocumentKey), "should set document key");
+        equal(itemKey.documentKey.documentType, 'foo', "should set document type");
+        equal(itemKey.documentKey.documentId, 'bar', "should set document ID");
+        equal(itemKey.fieldName, 'baz', "should set field name");
+        equal(itemKey.itemId, 'hello', "should set item ID");
+    });
+
     test("Entity path getter", function () {
         var key = 'foo/bar/baz'.toFieldKey(),
             path = key.getEntityPath();

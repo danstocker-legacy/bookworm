@@ -50,6 +50,22 @@ troop.postpone(dache, 'FieldKey', function () {
             },
 
             /**
+             * Creates an ItemKey instance based on the current field key and the specified item ID.
+             * @param {string} itemId
+             * @returns {dache.ItemKey}
+             */
+            getItemKey: function (itemId) {
+                var documentKey = this.documentKey;
+
+                return dache.ItemKey.create(
+                    documentKey.documentType,
+                    documentKey.documentId,
+                    this.fieldName,
+                    itemId
+                );
+            },
+
+            /**
              * @returns {sntls.Path}
              */
             getEntityPath: function () {

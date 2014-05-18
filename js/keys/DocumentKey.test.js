@@ -58,7 +58,7 @@
     });
 
     test("Field key getter", function () {
-        var documentKey = dache.EntityKey.create('foo', 'bar'),
+        var documentKey = 'foo/bar'.toDocumentKey(),
             fieldKey = documentKey.getFieldKey('baz');
 
         ok(fieldKey.isA(dache.FieldKey), "should return a FieldKey instance");
