@@ -36,21 +36,6 @@ troop.postpone(dache, 'CollectionField', function () {
         });
 });
 
-troop.amendPostponed(dache, 'FieldKey', function () {
-    "use strict";
-
-    dache.FieldKey
-        .addMethods(/** @lends dache.FieldKey# */{
-            /**
-             * Creates CollectionField instance based on the current field key.
-             * @returns {dache.CollectionField}
-             */
-            toCollectionField: function () {
-                return dache.CollectionField.create(this);
-            }
-        });
-});
-
 troop.amendPostponed(dache, 'Field', function () {
     "use strict";
 
@@ -59,35 +44,3 @@ troop.amendPostponed(dache, 'Field', function () {
             return fieldKey.getFieldType() === 'collection';
         });
 });
-
-(function () {
-    "use strict";
-
-    troop.Properties.addProperties.call(
-        String.prototype,
-        /** @lends String# */{
-            /**
-             * Creates CollectionField instance based on the current string as key.
-             * @returns {dache.CollectionField}
-             */
-            toCollectionField: function () {
-                return dache.CollectionField.create(this.toFieldKey());
-            }
-        },
-        false, false, false
-    );
-
-    troop.Properties.addProperties.call(
-        Array.prototype,
-        /** @lends Array# */{
-            /**
-             * Creates CollectionField instance based on the current Array of string as key.
-             * @returns {dache.CollectionField}
-             */
-            toCollectionField: function () {
-                return dache.CollectionField.create(this.toFieldKey());
-            }
-        },
-        false, false, false
-    );
-}());

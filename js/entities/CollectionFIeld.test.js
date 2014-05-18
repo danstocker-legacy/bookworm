@@ -5,23 +5,6 @@
 
     module("Collection Field");
 
-    test("Conversion from FieldKey", function () {
-        var fieldKey = 'foo/bar/baz'.toFieldKey(),
-            collection = fieldKey.toCollectionField();
-
-        ok(collection.isA(dache.CollectionField), "should return CollectionField instance");
-    });
-
-    test("Conversion from String", function () {
-        var collection = 'foo/bar/baz'.toCollectionField();
-        ok(collection.isA(dache.CollectionField), "should return CollectionField instance");
-    });
-
-    test("Conversion from Array", function () {
-        var collection = ['foo', 'bar', 'baz'].toCollectionField();
-        ok(collection.isA(dache.CollectionField), "should return CollectionField instance");
-    });
-
     test("Field surrogate", function () {
         expect(4);
 
