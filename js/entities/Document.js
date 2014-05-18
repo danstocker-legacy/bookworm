@@ -33,6 +33,17 @@ troop.postpone(dache, 'Document', function () {
                  * @type {dache.DocumentKey}
                  */
                 this.documentKey = documentKey;
+            },
+
+            /**
+             * Fetches document metadata node.
+             * @param {string} metaName
+             * @returns {*}
+             */
+            getDocumentMeta: function (metaName) {
+                return this.documentKey.hasDocumentMeta() ?
+                    this.getNode(metaName) :
+                    undefined;
             }
         });
 });

@@ -40,4 +40,43 @@
         ok(document.isA(dache.Document), "should return Document instance");
         strictEqual(document.documentKey, documentKey, "should set document key");
     });
+
+    test("Meta node getter", function () {
+        expect(4);
+
+        var document = 'foo/bar'.toDocument(),
+            metaNode = {};
+
+        dache.Document.addMocks({
+            getNode: function () {
+                deepEqual(arguments, {0: 'hello'},
+                    "should fetch the metadata node from right under the entity node");
+                return metaNode;
+            }
+        });
+
+        dache.DocumentKey.addMocks({
+            hasDocumentMeta: function () {
+                equal(this.toString(), 'foo/bar', "should test for document metadata");
+                return true;
+            }
+        });
+
+        strictEqual(document.getDocumentMeta('hello'), metaNode, "should return meta node");
+
+        dache.DocumentKey.removeMocks();
+
+        dache.DocumentKey.addMocks({
+            hasDocumentMeta: function () {
+                return false;
+            }
+        });
+
+        equal(typeof document.getDocumentMeta('hello'), 'undefined',
+            "should return undefined when document has no metadata");
+
+        dache.DocumentKey.removeMocks();
+
+        dache.Document.removeMocks();
+    });
 }());
