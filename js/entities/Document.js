@@ -36,7 +36,7 @@ troop.postpone(dache, 'Document', function () {
             },
 
             /**
-             * Fetches document metadata node.
+             * Fetches document metadata node from cache.
              * @param {string} metaName
              * @returns {*}
              */
@@ -44,6 +44,15 @@ troop.postpone(dache, 'Document', function () {
                 return this.documentKey.hasDocumentMeta() ?
                     this.getNode(metaName) :
                     undefined;
+            },
+
+            /**
+             * Retrieves Field entity matching the specified field name.
+             * @param {string} fieldName
+             * @returns {dache.Field}
+             */
+            getField: function (fieldName) {
+                return this.documentKey.getFieldKey(fieldName).toField();
             }
         });
 });

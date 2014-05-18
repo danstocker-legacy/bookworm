@@ -79,4 +79,12 @@
 
         dache.Document.removeMocks();
     });
+
+    test("Field entity getter", function () {
+        var document = 'foo/bar'.toDocument(),
+            field = document.getField('baz');
+
+        ok(field.isA(dache.Field), "should return Field instance");
+        equal(field.fieldKey.toString(), 'foo/bar/baz', "should set field key on returned entity");
+    });
 }());
