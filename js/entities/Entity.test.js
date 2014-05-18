@@ -6,10 +6,6 @@
     module("Entity");
 
     test("Instantiation", function () {
-        raises(function () {
-            dache.Entity.create();
-        }, "should fail on missing entity key argument");
-
         var entityKey = 'foo/bar'.toDocumentKey(),
             entity = dache.Entity.create(entityKey);
 

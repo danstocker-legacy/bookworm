@@ -23,8 +23,6 @@ troop.postpone(dache, 'Entity', function () {
              * @ignore
              */
             init: function (entityKey) {
-                dessert.isEntityKey(entityKey, "Invalid entity key");
-
                 /**
                  * Key that identifies the entity.
                  * @type {dache.EntityKey}
