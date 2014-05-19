@@ -40,7 +40,7 @@
     test("Items getter", function () {
         expect(2);
 
-        var collection = 'foo/bar/baz'.toCollectionField(),
+        var collection = dache.CollectionField.create('foo/bar/baz'.toFieldKey()),
             itemsNode = {},
             result;
 
@@ -61,7 +61,7 @@
     test("Collection getter", function () {
         expect(3);
 
-        var collection = 'foo/bar/baz'.toCollectionField(),
+        var collection = dache.CollectionField.create('foo/bar/baz'.toFieldKey()),
             itemsNode = {},
             result;
 
