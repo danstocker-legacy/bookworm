@@ -8,19 +8,22 @@
     test("Field surrogate", function () {
         expect(4);
 
-        var collection;
+        var collection,
+            testedField;
 
         dache.FieldKey.addMocks({
             getFieldType: function () {
-                equal(this.toString(), 'foo/bar/baz', "should test field type");
+                testedField = this.toString();
                 return 'collection';
             }
         });
 
         collection = dache.Field.create('foo/bar/baz'.toFieldKey());
-        ok(collection.isA(dache.CollectionField), "should return CollectionField instance when field type is 'collection'");
 
         dache.FieldKey.removeMocks();
+
+        ok(collection.isA(dache.CollectionField), "should return CollectionField instance when field type is 'collection'");
+        equal(testedField, 'foo/bar/baz', "should test field type");
 
         dache.FieldKey.addMocks({
             getFieldType: function () {

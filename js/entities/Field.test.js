@@ -67,7 +67,7 @@
         dache.FieldKey.removeMocks();
 
         dache.FieldKey.addMocks({
-            hasDocumentMeta: function () {
+            hasFieldMeta: function () {
                 return false;
             }
         });
@@ -101,7 +101,7 @@
             }
         });
 
-        strictEqual(field.getFieldValue('hello'), valueNode, "should return value node");
+        strictEqual(field.getFieldValue(), valueNode, "should return value node");
 
         dache.Field.removeMocks();
         dache.FieldKey.removeMocks();

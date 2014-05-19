@@ -73,7 +73,7 @@ troop.postpone(dache, 'Field', function () {
         });
 });
 
-troop.amendPostponed(dache, 'FieldKey', function (/**dache*/model) {
+troop.amendPostponed(dache, 'FieldKey', function () {
     "use strict";
 
     dache.FieldKey
@@ -83,7 +83,7 @@ troop.amendPostponed(dache, 'FieldKey', function (/**dache*/model) {
              * @returns {dache.Field}
              */
             toField: function () {
-                return model.Field.create(this);
+                return dache.Field.create(this);
             }
         });
 });
