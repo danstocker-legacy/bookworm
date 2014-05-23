@@ -1,25 +1,25 @@
-/*global dessert, troop, sntls, dache */
-troop.postpone(dache, 'Document', function () {
+/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'Document', function () {
     "use strict";
 
-    var base = dache.Entity,
+    var base = bookworm.Entity,
         self = base.extend();
 
     /**
-     * @name dache.Document.create
+     * @name bookworm.Document.create
      * @function
-     * @param {dache.DocumentKey} documentKey
-     * @returns {dache.Document}
+     * @param {bookworm.DocumentKey} documentKey
+     * @returns {bookworm.Document}
      */
 
     /**
      * @class
-     * @extends dache.Entity
+     * @extends bookworm.Entity
      */
-    dache.Document = self
-        .addMethods(/** @lends dache.Document# */{
+    bookworm.Document = self
+        .addMethods(/** @lends bookworm.Document# */{
             /**
-             * @param {dache.DocumentKey} documentKey
+             * @param {bookworm.DocumentKey} documentKey
              * @ignore
              */
             init: function (documentKey) {
@@ -30,7 +30,7 @@ troop.postpone(dache, 'Document', function () {
                 /**
                  * Document key associated with current entity.
                  * Same as entityKey.
-                 * @type {dache.DocumentKey}
+                 * @type {bookworm.DocumentKey}
                  */
                 this.documentKey = documentKey;
             },
@@ -49,7 +49,7 @@ troop.postpone(dache, 'Document', function () {
             /**
              * Retrieves Field entity matching the specified field name.
              * @param {string} fieldName
-             * @returns {dache.Field}
+             * @returns {bookworm.Field}
              */
             getField: function (fieldName) {
                 return this.documentKey.getFieldKey(fieldName).toField();
@@ -57,17 +57,17 @@ troop.postpone(dache, 'Document', function () {
         });
 });
 
-troop.amendPostponed(dache, 'DocumentKey', function () {
+troop.amendPostponed(bookworm, 'DocumentKey', function () {
     "use strict";
 
-    dache.DocumentKey
-        .addMethods(/** @lends dache.DocumentKey */{
+    bookworm.DocumentKey
+        .addMethods(/** @lends bookworm.DocumentKey */{
             /**
              * Creates Document instance based on the current document key.
-             * @returns {dache.Document}
+             * @returns {bookworm.Document}
              */
             toDocument: function () {
-                return dache.Document.create(this);
+                return bookworm.Document.create(this);
             }
         });
 });
@@ -80,10 +80,10 @@ troop.amendPostponed(dache, 'DocumentKey', function () {
         /** @lends String# */{
             /**
              * Creates Document instance based on the current string as key.
-             * @returns {dache.Document}
+             * @returns {bookworm.Document}
              */
             toDocument: function () {
-                return dache.Document.create(this.toDocumentKey());
+                return bookworm.Document.create(this.toDocumentKey());
             }
         },
         false, false, false
@@ -94,10 +94,10 @@ troop.amendPostponed(dache, 'DocumentKey', function () {
         /** @lends Array# */{
             /**
              * Creates Document instance based on the current Array of strings as key.
-             * @returns {dache.Document}
+             * @returns {bookworm.Document}
              */
             toDocument: function () {
-                return dache.Document.create(this.toDocumentKey());
+                return bookworm.Document.create(this.toDocumentKey());
             }
         },
         false, false, false

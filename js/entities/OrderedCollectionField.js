@@ -1,22 +1,22 @@
-/*global dessert, troop, sntls, dache */
-troop.postpone(dache, 'OrderedCollectionField', function () {
+/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'OrderedCollectionField', function () {
     "use strict";
 
-    var base = dache.CollectionField,
+    var base = bookworm.CollectionField,
         self = base.extend();
 
     /**
-     * @name dache.OrderedCollectionField.create
+     * @name bookworm.OrderedCollectionField.create
      * @function
-     * @returns {dache.OrderedCollectionField}
+     * @returns {bookworm.OrderedCollectionField}
      */
 
     /**
      * @class
-     * @extends dache.CollectionField
+     * @extends bookworm.CollectionField
      */
-    dache.OrderedCollectionField = self
-        .addMethods(/** @lends dache.OrderedCollectionField# */{
+    bookworm.OrderedCollectionField = self
+        .addMethods(/** @lends bookworm.OrderedCollectionField# */{
             /**
              * Fetches item order for specified item ID.
              * @param {string} itemId
@@ -53,11 +53,11 @@ troop.postpone(dache, 'OrderedCollectionField', function () {
         });
 });
 
-troop.amendPostponed(dache, 'Field', function () {
+troop.amendPostponed(bookworm, 'Field', function () {
     "use strict";
 
-    dache.Field
-        .addSurrogate(dache, 'OrderedCollectionField', function (/**dache.FieldKey*/fieldKey) {
+    bookworm.Field
+        .addSurrogate(bookworm, 'OrderedCollectionField', function (/**bookworm.FieldKey*/fieldKey) {
             return fieldKey.getFieldType() === 'ordered-collection';
         });
 });

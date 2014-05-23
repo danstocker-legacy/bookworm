@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, dache */
+/*global dessert, troop, sntls, bookworm */
 /*global module, test, expect, ok, equal, strictEqual, notStrictEqual, deepEqual, notDeepEqual, raises */
 (function () {
     "use strict";
@@ -6,9 +6,9 @@
     module("Field Key");
 
     test("Instantiation", function () {
-        var fieldKey = dache.FieldKey.create('hello', 'world', 'foo');
+        var fieldKey = bookworm.FieldKey.create('hello', 'world', 'foo');
 
-        ok(fieldKey.documentKey.isA(dache.DocumentKey), "should set document key");
+        ok(fieldKey.documentKey.isA(bookworm.DocumentKey), "should set document key");
         equal(fieldKey.documentKey.documentType, 'hello', "should set document type");
         equal(fieldKey.documentKey.documentId, 'world', "should set document ID");
         equal(fieldKey.fieldName, 'foo', "should set field name");
@@ -18,7 +18,7 @@
         var key;
 
         key = 'foo/bar/baz'.toFieldKey();
-        ok(key.isA(dache.FieldKey), "should return FieldKey instance");
+        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
@@ -31,16 +31,16 @@
         var key;
 
         key = ['foo', 'bar', 'baz'].toFieldKey();
-        ok(key.isA(dache.FieldKey), "should return FieldKey instance");
+        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
     });
 
     test("Conversion from EntityKey", function () {
-        var key = dache.EntityKey.create('foo', 'bar', 'baz');
+        var key = bookworm.EntityKey.create('foo', 'bar', 'baz');
 
-        ok(key.isA(dache.FieldKey), "should return FieldKey instance");
+        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
@@ -49,7 +49,7 @@
     test("Conversion from Path", function () {
         var key = 'foo>bar>baz'.toPath().toFieldKey();
 
-        ok(key.isA(dache.FieldKey), "should return FieldKey instance");
+        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
@@ -65,8 +65,8 @@
         var fieldKey = 'foo/bar/baz'.toFieldKey(),
             itemKey = fieldKey.getItemKey('hello');
 
-        ok(itemKey.isA(dache.ItemKey), "should return an ItemKey instance");
-        ok(itemKey.documentKey.isA(dache.DocumentKey), "should set document key");
+        ok(itemKey.isA(bookworm.ItemKey), "should return an ItemKey instance");
+        ok(itemKey.documentKey.isA(bookworm.DocumentKey), "should set document key");
         equal(itemKey.documentKey.documentType, 'foo', "should set document type");
         equal(itemKey.documentKey.documentId, 'bar', "should set document ID");
         equal(itemKey.fieldName, 'baz', "should set field name");
@@ -80,7 +80,7 @@
         ok(path.isA(sntls.Path), "should return Path instance");
         deepEqual(path.asArray, ['foo', 'bar', 'baz'], "should set path contents");
 
-        dache.DocumentKey.addMocks({
+        bookworm.DocumentKey.addMocks({
             hasDocumentMeta: function () {
                 return true;
             }
@@ -89,7 +89,7 @@
         path = key.getEntityPath();
         deepEqual(path.asArray, ['foo', 'bar', 'fields', 'baz'], "should set path contents (with document meta)");
 
-        dache.DocumentKey.removeMocks();
+        bookworm.DocumentKey.removeMocks();
     });
 
     test("Meta path getter", function () {
@@ -105,7 +105,7 @@
         var key = 'foo/bar/baz'.toFieldKey(),
             paths = [];
 
-        dache.metadata.addMocks({
+        bookworm.metadata.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
 
@@ -117,7 +117,7 @@
 
         key.hasFieldMeta();
 
-        dache.metadata.removeMocks();
+        bookworm.metadata.removeMocks();
 
         deepEqual(paths, [
             'document>document>hasDocumentMeta',
@@ -129,13 +129,13 @@
         var key = 'foo/bar/baz'.toFieldKey(),
             paths;
 
-        dache.FieldKey.addMocks({
+        bookworm.FieldKey.addMocks({
             getMetaPath: function () {
                 return 'meta>path'.toPath();
             }
         });
 
-        dache.metadata.addMocks({
+        bookworm.metadata.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
                 return undefined;
@@ -145,14 +145,14 @@
         paths = [];
         key.getFieldType();
 
-        dache.metadata.removeMocks();
+        bookworm.metadata.removeMocks();
 
         deepEqual(paths, [
             "meta>path>fieldType",
             "meta>path"
         ], "should try metadata first, then field value");
 
-        dache.metadata.addMocks({
+        bookworm.metadata.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
                 return 'fieldType';
@@ -162,8 +162,8 @@
         paths = [];
         key.getFieldType();
 
-        dache.metadata.removeMocks();
-        dache.FieldKey.removeMocks();
+        bookworm.metadata.removeMocks();
+        bookworm.FieldKey.removeMocks();
 
         deepEqual(paths, [
             "meta>path>fieldType"
@@ -171,8 +171,8 @@
     });
 
     test("Conversion to String", function () {
-        equal(dache.FieldKey.create('foo', 'bar', 'baz').toString(), 'foo/bar/baz');
-        equal(dache.FieldKey.create('foo', 'bar', 'b/az').toString(), 'foo/bar/b%2Faz');
+        equal(bookworm.FieldKey.create('foo', 'bar', 'baz').toString(), 'foo/bar/baz');
+        equal(bookworm.FieldKey.create('foo', 'bar', 'b/az').toString(), 'foo/bar/b%2Faz');
         equal('foo/bar/baz'.toFieldKey().toString(), 'foo/bar/baz');
     });
 }());

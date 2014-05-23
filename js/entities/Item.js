@@ -1,25 +1,25 @@
-/*global dessert, troop, sntls, dache */
-troop.postpone(dache, 'Item', function () {
+/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'Item', function () {
     "use strict";
 
-    var base = dache.Field,
+    var base = bookworm.Field,
         self = base.extend();
 
     /**
-     * @name dache.Item.create
+     * @name bookworm.Item.create
      * @function
-     * @param {dache.ItemKey} itemKey
-     * @returns {dache.Item}
+     * @param {bookworm.ItemKey} itemKey
+     * @returns {bookworm.Item}
      */
 
     /**
      * @class
-     * @extends dache.Field
+     * @extends bookworm.Field
      */
-    dache.Item = self
-        .addMethods(/** @lends dache.Item# */{
+    bookworm.Item = self
+        .addMethods(/** @lends bookworm.Item# */{
             /**
-             * @param {dache.ItemKey} itemKey
+             * @param {bookworm.ItemKey} itemKey
              * @ignore
              */
             init: function (itemKey) {
@@ -30,7 +30,7 @@ troop.postpone(dache, 'Item', function () {
                 /**
                  * Item key associated with current entity.
                  * Same as entityKey.
-                 * @type {dache.ItemKey}
+                 * @type {bookworm.ItemKey}
                  */
                 this.itemKey = itemKey;
             },
@@ -59,7 +59,7 @@ troop.postpone(dache, 'Item', function () {
             /**
              * Replaces item value node with the specified value.
              * @param {*} value
-             * @returns {dache.Item}
+             * @returns {bookworm.Item}
              */
             setItemValue: function (value) {
                 if (this.itemKey.hasItemMeta()) {
@@ -73,17 +73,17 @@ troop.postpone(dache, 'Item', function () {
         });
 });
 
-troop.amendPostponed(dache, 'ItemKey', function () {
+troop.amendPostponed(bookworm, 'ItemKey', function () {
     "use strict";
 
-    dache.ItemKey
-        .addMethods(/** @lends dache.ItemKey */{
+    bookworm.ItemKey
+        .addMethods(/** @lends bookworm.ItemKey */{
             /**
              * Creates Item instance based on the current item key.
-             * @returns {dache.Item}
+             * @returns {bookworm.Item}
              */
             toItem: function () {
-                return dache.Item.create(this);
+                return bookworm.Item.create(this);
             }
         });
 });
@@ -96,10 +96,10 @@ troop.amendPostponed(dache, 'ItemKey', function () {
         /** @lends String# */{
             /**
              * Creates Item instance based on the current string as key.
-             * @returns {dache.Item}
+             * @returns {bookworm.Item}
              */
             toItem: function () {
-                return dache.Item.create(this.toItemKey());
+                return bookworm.Item.create(this.toItemKey());
             }
         },
         false, false, false
@@ -110,10 +110,10 @@ troop.amendPostponed(dache, 'ItemKey', function () {
         /** @lends Array# */{
             /**
              * Creates Item instance based on the current Array of string as key.
-             * @returns {dache.Item}
+             * @returns {bookworm.Item}
              */
             toItem: function () {
-                return dache.Item.create(this.toItemKey());
+                return bookworm.Item.create(this.toItemKey());
             }
         },
         false, false, false

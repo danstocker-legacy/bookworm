@@ -1,23 +1,23 @@
-/*global dessert, troop, sntls, dache */
-troop.postpone(dache, 'CollectionField', function () {
+/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'CollectionField', function () {
     "use strict";
 
-    var base = dache.Field,
+    var base = bookworm.Field,
         self = base.extend();
 
     /**
-     * @name dache.CollectionField.create
+     * @name bookworm.CollectionField.create
      * @function
-     * @param {dache.FieldKey} fieldKey
-     * @returns {dache.CollectionField}
+     * @param {bookworm.FieldKey} fieldKey
+     * @returns {bookworm.CollectionField}
      */
 
     /**
      * @class
-     * @extends dache.Field
+     * @extends bookworm.Field
      */
-    dache.CollectionField = self
-        .addMethods(/** @lends dache.CollectionField# */{
+    bookworm.CollectionField = self
+        .addMethods(/** @lends bookworm.CollectionField# */{
             /**
              * Fetches node from cache containing collection items.
              * @returns {object}
@@ -36,11 +36,11 @@ troop.postpone(dache, 'CollectionField', function () {
         });
 });
 
-troop.amendPostponed(dache, 'Field', function () {
+troop.amendPostponed(bookworm, 'Field', function () {
     "use strict";
 
-    dache.Field
-        .addSurrogate(dache, 'CollectionField', function (/**dache.FieldKey*/fieldKey) {
+    bookworm.Field
+        .addSurrogate(bookworm, 'CollectionField', function (/**bookworm.FieldKey*/fieldKey) {
             return fieldKey.getFieldType() === 'collection';
         });
 });

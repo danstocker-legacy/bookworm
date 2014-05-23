@@ -1,11 +1,11 @@
-/*global dessert, troop, sntls, dache */
-troop.postpone(dache, 'EntityKey', function () {
+/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'EntityKey', function () {
     "use strict";
 
     /**
-     * @name dache.EntityKey.create
+     * @name bookworm.EntityKey.create
      * @function
-     * @returns {dache.EntityKey}
+     * @returns {bookworm.EntityKey}
      */
 
     /**
@@ -14,26 +14,26 @@ troop.postpone(dache, 'EntityKey', function () {
      * @class
      * @extends troop.Base
      */
-    dache.EntityKey = troop.Base.extend();
+    bookworm.EntityKey = troop.Base.extend();
 
     /**
      * Tells whether specified key is identical to the current one.
-     * @name dache.EntityKey#equals
+     * @name bookworm.EntityKey#equals
      * @function
-     * @param {dache.EntityKey} key
+     * @param {bookworm.EntityKey} key
      * @returns {boolean}
      */
 
     /**
      * Resolves key to the cache path of the Entity.
-     * @name dache.EntityKey#getEntityPath
+     * @name bookworm.EntityKey#getEntityPath
      * @function
      * @returns {sntls.Path}
      */
 
     /**
      * Retrieves meta node path associated with the current key.
-     * @name dache.EntityKey#getMetaPath
+     * @name bookworm.EntityKey#getMetaPath
      * @function
      * @returns {sntls.Path}
      */
@@ -45,13 +45,13 @@ troop.postpone(dache, 'EntityKey', function () {
     dessert.addTypes(/** @lends dessert */{
         /** Tells whether expression is an EntityKey */
         isEntityKey: function (expr) {
-            return dache.EntityKey.isBaseOf(expr);
+            return bookworm.EntityKey.isBaseOf(expr);
         },
 
         /** Tells whether expression is optionally an EntityKey */
         isEntityKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
-                   dache.EntityKey.isBaseOf(expr);
+                   bookworm.EntityKey.isBaseOf(expr);
         }
     });
 
@@ -60,14 +60,14 @@ troop.postpone(dache, 'EntityKey', function () {
         /** @lends String# */{
             /**
              * Converts string to EntityKey instance.
-             * @returns {dache.EntityKey}
+             * @returns {bookworm.EntityKey}
              */
             toEntityKey: function () {
                 var parts = this.split('/')
                     .map(function (part) {
                         return decodeURIComponent(part);
                     });
-                return dache.EntityKey.create.apply(dache.EntityKey, parts);
+                return bookworm.EntityKey.create.apply(bookworm.EntityKey, parts);
             }
         },
         false, false, false
@@ -78,10 +78,10 @@ troop.postpone(dache, 'EntityKey', function () {
         /** @lends Array# */{
             /**
              * Converts Array to EntityKey instance.
-             * @returns {dache.EntityKey}
+             * @returns {bookworm.EntityKey}
              */
             toEntityKey: function () {
-                return dache.EntityKey.create.apply(dache.EntityKey, this);
+                return bookworm.EntityKey.create.apply(bookworm.EntityKey, this);
             }
         },
         false, false, false

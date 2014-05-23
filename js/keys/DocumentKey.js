@@ -1,25 +1,25 @@
-/*global dessert, troop, sntls, dache */
-troop.postpone(dache, 'DocumentKey', function () {
+/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'DocumentKey', function () {
     "use strict";
 
-    var base = dache.EntityKey,
+    var base = bookworm.EntityKey,
         self = base.extend();
 
     /**
-     * @name dache.DocumentKey.create
+     * @name bookworm.DocumentKey.create
      * @function
      * @param {string} documentType
      * @param {string} documentId
-     * @returns {dache.DocumentKey}
+     * @returns {bookworm.DocumentKey}
      */
 
     /**
      * Identifies a Document entity.
      * @class
-     * @extends dache.EntityKey
+     * @extends bookworm.EntityKey
      */
-    dache.DocumentKey = self
-        .addMethods(/** @lends dache.DocumentKey# */{
+    bookworm.DocumentKey = self
+        .addMethods(/** @lends bookworm.DocumentKey# */{
             /**
              * @param {string} documentType
              * @param {string} documentId
@@ -40,7 +40,7 @@ troop.postpone(dache, 'DocumentKey', function () {
             },
 
             /**
-             * @param {dache.DocumentKey} documentKey
+             * @param {bookworm.DocumentKey} documentKey
              */
             equals: function (documentKey) {
                 return documentKey &&
@@ -51,10 +51,10 @@ troop.postpone(dache, 'DocumentKey', function () {
             /**
              * Creates a FieldKey instance based on the current document key and the specified field name.
              * @param {string} fieldName
-             * @returns {dache.FieldKey}
+             * @returns {bookworm.FieldKey}
              */
             getFieldKey: function (fieldName) {
-                return dache.FieldKey.create(
+                return bookworm.FieldKey.create(
                     this.documentType,
                     this.documentId,
                     fieldName
@@ -80,7 +80,7 @@ troop.postpone(dache, 'DocumentKey', function () {
              * @returns {boolean}
              */
             hasDocumentMeta: function () {
-                return dache.metadata.getNode(this.getMetaPath().appendKey('hasDocumentMeta'));
+                return bookworm.metadata.getNode(this.getMetaPath().appendKey('hasDocumentMeta'));
             },
 
             /**
@@ -92,11 +92,11 @@ troop.postpone(dache, 'DocumentKey', function () {
         });
 });
 
-troop.amendPostponed(dache, 'EntityKey', function () {
+troop.amendPostponed(bookworm, 'EntityKey', function () {
     "use strict";
 
-    dache.EntityKey
-        .addSurrogate(dache, 'DocumentKey', function () {
+    bookworm.EntityKey
+        .addSurrogate(bookworm, 'DocumentKey', function () {
             return arguments.length === 2;
         });
 });
@@ -108,7 +108,7 @@ troop.amendPostponed(sntls, 'Path', function () {
         .addMethods(/** @lends sntls.Path */{
             /**
              * Converts cache Path to DocumentKey instance.
-             * @returns {dache.DocumentKey}
+             * @returns {bookworm.DocumentKey}
              */
             toDocumentKey: function () {
                 return this.asArray.toDocumentKey();
@@ -116,22 +116,22 @@ troop.amendPostponed(sntls, 'Path', function () {
         });
 });
 
-troop.postpone(dache, 'DocumentKeyCollection', function () {
+troop.postpone(bookworm, 'DocumentKeyCollection', function () {
     "use strict";
 
     /**
-     * @name dache.DocumentKeyCollection.create
+     * @name bookworm.DocumentKeyCollection.create
      * @function
      * @param {object} [items]
-     * @returns {dache.DocumentKeyCollection}
+     * @returns {bookworm.DocumentKeyCollection}
      */
 
     /**
      * @class
      * @extends {sntls.Collection}
-     * @extends {dache.DocumentKey}
+     * @extends {bookworm.DocumentKey}
      */
-    dache.DocumentKeyCollection = sntls.Collection.of(dache.DocumentKey);
+    bookworm.DocumentKeyCollection = sntls.Collection.of(bookworm.DocumentKey);
 });
 
 troop.amendPostponed(sntls, 'Hash', function () {
@@ -141,10 +141,10 @@ troop.amendPostponed(sntls, 'Hash', function () {
         .addMethods(/** @lends sntls.Hash */{
             /**
              * Converts Hash instance to DocumentKeyCollection instance.
-             * @returns {dache.DocumentKeyCollection}
+             * @returns {bookworm.DocumentKeyCollection}
              */
             toDocumentKeyCollection: function () {
-                return dache.DocumentKeyCollection.create(this.items);
+                return bookworm.DocumentKeyCollection.create(this.items);
             }
         });
 });
@@ -155,13 +155,13 @@ troop.amendPostponed(sntls, 'Hash', function () {
     dessert.addTypes(/** @lends dessert */{
         /** Tells whether expression is a DocumentKey */
         isDocumentKey: function (expr) {
-            return dache.DocumentKey.isBaseOf(expr);
+            return bookworm.DocumentKey.isBaseOf(expr);
         },
 
         /** Tells whether expression is optionally a DocumentKey */
         isDocumentKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
-                   dache.DocumentKey.isBaseOf(expr);
+                   bookworm.DocumentKey.isBaseOf(expr);
         }
     });
 
@@ -170,11 +170,11 @@ troop.amendPostponed(sntls, 'Hash', function () {
         /** @lends String# */{
             /**
              * Converts string to a DocumentKey instance.
-             * @returns {dache.DocumentKey}
+             * @returns {bookworm.DocumentKey}
              */
             toDocumentKey: function () {
                 var parts = this.split('/');
-                return dache.DocumentKey.create(
+                return bookworm.DocumentKey.create(
                     decodeURIComponent(parts[0]),
                     decodeURIComponent(parts[1])
                 );
@@ -188,17 +188,17 @@ troop.amendPostponed(sntls, 'Hash', function () {
         /** @lends Array# */{
             /**
              * Converts array of strings (key components) to a DocumentKey instance.
-             * @returns {dache.DocumentKey}
+             * @returns {bookworm.DocumentKey}
              * @example
              * ['foo', 'bar'].toDocumentKey() // single document key
              */
             toDocumentKey: function () {
-                return dache.DocumentKey.create(this[0], this[1]);
+                return bookworm.DocumentKey.create(this[0], this[1]);
             },
 
             /**
              * Converts array of strings (keys) to a DocumentKeyCollection.
-             * @returns {dache.DocumentKeyCollection}
+             * @returns {bookworm.DocumentKeyCollection}
              * @example
              * ['foo/bar', 'foo/baz'].toDocumentKeyCollection() // collection of document keys
              */

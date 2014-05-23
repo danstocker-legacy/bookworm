@@ -1,14 +1,14 @@
-/*global dessert, troop, sntls, dache */
-troop.postpone(dache, 'Entity', function () {
+/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'Entity', function () {
     "use strict";
 
     var slice = Array.prototype.slice;
 
     /**
-     * @name dache.Entity.create
+     * @name bookworm.Entity.create
      * @function
-     * @param {dache.EntityKey} entityKey
-     * @returns {dache.Entity}
+     * @param {bookworm.EntityKey} entityKey
+     * @returns {bookworm.Entity}
      */
 
     /**
@@ -16,16 +16,16 @@ troop.postpone(dache, 'Entity', function () {
      * @class
      * @extends troop.Base
      */
-    dache.Entity = troop.Base.extend()
-        .addMethods(/** @lends dache.Entity */{
+    bookworm.Entity = troop.Base.extend()
+        .addMethods(/** @lends bookworm.Entity */{
             /**
-             * @param {dache.EntityKey} entityKey
+             * @param {bookworm.EntityKey} entityKey
              * @ignore
              */
             init: function (entityKey) {
                 /**
                  * Key that identifies the entity.
-                 * @type {dache.EntityKey}
+                 * @type {bookworm.EntityKey}
                  */
                 this.entityKey = entityKey;
             },
@@ -42,7 +42,7 @@ troop.postpone(dache, 'Entity', function () {
                     entityPath = entityPath.append(slice.call(arguments).toPath());
                 }
 
-                return dache.documents.getNode(entityPath);
+                return bookworm.documents.getNode(entityPath);
             },
 
             /**
@@ -66,7 +66,7 @@ troop.postpone(dache, 'Entity', function () {
                     entityPath = entityPath.append(slice.call(arguments).toPath());
                 }
 
-                return sntls.Tree.getNode.call(dache.documents, entityPath);
+                return sntls.Tree.getNode.call(bookworm.documents, entityPath);
             },
 
             /**
@@ -80,7 +80,7 @@ troop.postpone(dache, 'Entity', function () {
 
             /**
              * Touches entity node, triggering access event when absent, but not returning the node itself.
-             * @returns {dache.Entity}
+             * @returns {bookworm.Entity}
              */
             touchNode: function () {
                 this.getNode();
@@ -91,13 +91,13 @@ troop.postpone(dache, 'Entity', function () {
              * Replaces entity node with the specified value.
              * Extra arguments will be appended to the entity path.
              * @param {*} value
-             * @returns {dache.Entity}
+             * @returns {bookworm.Entity}
              */
             setNode: function (value) {
                 var dataPath = this.entityKey.getEntityPath();
 
                 if (arguments.length) {
-                    dache.documents.setNode(dataPath.append(slice.call(arguments, 1).toPath()), value);
+                    bookworm.documents.setNode(dataPath.append(slice.call(arguments, 1).toPath()), value);
                 }
 
                 return this;

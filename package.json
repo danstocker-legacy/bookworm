@@ -1,7 +1,7 @@
 {
-    "name"           : "dache",
+    "name"           : "bookworm",
     "version"        : "0.1.0",
-    "description"    : "Document cache",
+    "description"    : "Bookworm",
     "keywords"       : [
         "document",
         "cache",
@@ -34,7 +34,7 @@
         "QUnitAdapter"        : "https://dl.dropboxusercontent.com/u/9258903/packages/QUnitAdapter-0.1.0.tgz"
     },
     "files"          : [
-        "dache.js"
+        "bookworm.js"
     ],
-    "main"           : "dache.js"
+    "main"           : "bookworm.js"
 }

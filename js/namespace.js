@@ -3,7 +3,7 @@
  */
 /*global require */
 /** @namespace */
-var dache = {},
+var bookworm = {},
     dessert = dessert || require('dessert'),
     troop = troop || require('troop'),
     sntls = sntls || require('sntls'),

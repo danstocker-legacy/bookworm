@@ -1,7 +1,7 @@
 /**
  * Library exports
  */
-/*global dache, module */
+/*global bookworm, module */
 if (typeof module === 'object') {
-    module.exports = dache;
+    module.exports = bookworm;
 }

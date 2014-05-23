@@ -1,12 +1,12 @@
-/*global dessert, troop, sntls, flock, dache */
-troop.postpone(dache, 'metadata', function () {
+/*global dessert, troop, sntls, flock, bookworm */
+troop.postpone(bookworm, 'metadata', function () {
     "use strict";
 
     /**
      * Non-evented cache for documents describing document types and their fields.
      * @type {sntls.Tree}
      */
-    dache.metadata = sntls.Tree.create({
+    bookworm.metadata = sntls.Tree.create({
         /** Metadata node, contains information about document types and their fields. */
         document: {
             /** Basic document meta, describes all other metadata documents. */
@@ -56,14 +56,14 @@ troop.postpone(dache, 'metadata', function () {
     });
 });
 
-troop.postpone(dache, 'documents', function () {
+troop.postpone(bookworm, 'documents', function () {
     "use strict";
 
     /**
      * Evented cache for application-domain documents.
      * @type {flock.EventedTree}
      */
-    dache.documents = flock.EventedTree.create({
+    bookworm.documents = flock.EventedTree.create({
         //@formatter:off
         /** Sample document **/
 //      user: {
@@ -110,12 +110,12 @@ troop.postpone(dache, 'documents', function () {
     });
 });
 
-troop.postpone(dache, 'index', function () {
+troop.postpone(bookworm, 'index', function () {
     "use strict";
 
     /**
      * Non-evented cache for application-domain indexes.
      * @type {sntls.Tree}
      */
-    dache.index = sntls.Tree.create();
+    bookworm.index = sntls.Tree.create();
 });

@@ -1,26 +1,26 @@
-/*global dessert, troop, sntls, dache */
-troop.postpone(dache, 'ItemKey', function () {
+/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'ItemKey', function () {
     "use strict";
 
-    var base = dache.FieldKey,
+    var base = bookworm.FieldKey,
         self = base.extend();
 
     /**
-     * @name dache.ItemKey.create
+     * @name bookworm.ItemKey.create
      * @function
      * @param {string} documentType
      * @param {string} documentId
      * @param {string} fieldName
      * @param {string} itemId
-     * @returns {dache.ItemKey}
+     * @returns {bookworm.ItemKey}
      */
 
     /**
      * @class
-     * @extends dache.FieldKey
+     * @extends bookworm.FieldKey
      */
-    dache.ItemKey = self
-        .addMethods(/** @lends dache.ItemKey# */{
+    bookworm.ItemKey = self
+        .addMethods(/** @lends bookworm.ItemKey# */{
             /**
              * @param {string} documentType
              * @param {string} documentId
@@ -39,17 +39,17 @@ troop.postpone(dache, 'ItemKey', function () {
             },
 
             /**
-             * @param {dache.ItemKey} itemKey
+             * @param {bookworm.ItemKey} itemKey
              * @returns {boolean}
              */
             equals: function (itemKey) {
-                return dache.FieldKey.equals.call(this, itemKey) &&
+                return bookworm.FieldKey.equals.call(this, itemKey) &&
                        this.itemId === itemKey.itemId;
             },
 
             /**
              * Creates a field key identifying the Item entity's parent Field entity.
-             * @returns {dache.FieldKey}
+             * @returns {bookworm.FieldKey}
              */
             getFieldKey: function () {
                 var documentKey = this.documentKey;
@@ -76,7 +76,7 @@ troop.postpone(dache, 'ItemKey', function () {
              * @returns {boolean}
              */
             hasItemMeta: function () {
-                return dache.metadata.getNode(this.getMetaPath().appendKey('hasItemMeta'));
+                return bookworm.metadata.getNode(this.getMetaPath().appendKey('hasItemMeta'));
             },
 
             /**
@@ -84,23 +84,23 @@ troop.postpone(dache, 'ItemKey', function () {
              * @returns {string}
              */
             getItemType: function () {
-                return dache.metadata.getNode(this.getMetaPath().appendKey('itemType'));
+                return bookworm.metadata.getNode(this.getMetaPath().appendKey('itemType'));
             },
 
             /**
              * @returns {string}
              */
             toString: function () {
-                return dache.FieldKey.toString.call(this) + '/' + encodeURIComponent(this.itemId);
+                return bookworm.FieldKey.toString.call(this) + '/' + encodeURIComponent(this.itemId);
             }
         });
 });
 
-troop.amendPostponed(dache, 'Key', function () {
+troop.amendPostponed(bookworm, 'Key', function () {
     "use strict";
 
-    dache.EntityKey
-        .addSurrogate(dache, 'ItemKey', function () {
+    bookworm.EntityKey
+        .addSurrogate(bookworm, 'ItemKey', function () {
             return arguments.length === 4 &&
                    !arguments[3].toDocumentKey().documentId;
         });
@@ -112,13 +112,13 @@ troop.amendPostponed(dache, 'Key', function () {
     dessert.addTypes(/** @lends dessert */{
         /** Tells whether expression is an ItemKey */
         isItemKey: function (expr) {
-            return dache.ItemKey.isBaseOf(expr);
+            return bookworm.ItemKey.isBaseOf(expr);
         },
 
         /** Tells whether expression is optionally an ItemKey */
         isItemKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
-                   dache.ItemKey.isBaseOf(expr);
+                   bookworm.ItemKey.isBaseOf(expr);
         }
     });
 
@@ -127,12 +127,12 @@ troop.amendPostponed(dache, 'Key', function () {
         /** @lends String# */{
             /**
              * Converts string to ItemKey.
-             * @returns {dache.ItemKey}
+             * @returns {bookworm.ItemKey}
              */
             toItemKey: function () {
                 var parts = this.split('/');
 
-                return dache.ItemKey.create(
+                return bookworm.ItemKey.create(
                     decodeURIComponent(parts[0]),
                     decodeURIComponent(parts[1]),
                     decodeURIComponent(parts[2]),
@@ -148,10 +148,10 @@ troop.amendPostponed(dache, 'Key', function () {
         /** @lends Array# */{
             /**
              * Converts Array of strings to ItemKey.
-             * @returns {dache.ItemKey}
+             * @returns {bookworm.ItemKey}
              */
             toItemKey: function () {
-                return dache.ItemKey.create(this[0], this[1], this[2], this[3]);
+                return bookworm.ItemKey.create(this[0], this[1], this[2], this[3]);
             }
         },
         false, false, false

@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, flock, dache */
+/*global dessert, troop, sntls, flock, bookworm */
 /*global module, test, expect, ok, equal, strictEqual, notStrictEqual, deepEqual, notDeepEqual, raises */
 (function () {
     "use strict";
@@ -9,30 +9,30 @@
         var collection,
             testedField;
 
-        dache.FieldKey.addMocks({
+        bookworm.FieldKey.addMocks({
             getFieldType: function () {
                 testedField = this.toString();
                 return 'ordered-collection';
             }
         });
 
-        collection = dache.Field.create('foo/bar/baz'.toFieldKey());
+        collection = bookworm.Field.create('foo/bar/baz'.toFieldKey());
 
-        dache.FieldKey.removeMocks();
+        bookworm.FieldKey.removeMocks();
 
         equal(testedField, 'foo/bar/baz', "should test field type");
-        ok(collection.isA(dache.OrderedCollectionField),
+        ok(collection.isA(bookworm.OrderedCollectionField),
             "should return OrderedCollectionField instance when field type is 'ordered-collection'");
     });
 
     test("Item order getter", function () {
         expect(7);
 
-        var orderedCollection = dache.OrderedCollectionField.create('foo/bar/baz'.toFieldKey()),
+        var orderedCollection = bookworm.OrderedCollectionField.create('foo/bar/baz'.toFieldKey()),
             getNodeArgs = [],
             orderNode = {};
 
-        dache.Item.addMocks({
+        bookworm.Item.addMocks({
             getNode: function () {
                 // called twice
                 equal(this.itemKey.toString(), 'foo/bar/baz/hello', "should fetch item node from cache");
@@ -41,7 +41,7 @@
             }
         });
 
-        dache.ItemKey.addMocks({
+        bookworm.ItemKey.addMocks({
             hasItemMeta: function () {
                 // called twice
                 equal(this.toString(), 'foo/bar/baz/hello', "should test for item meta");
@@ -51,9 +51,9 @@
 
         strictEqual(orderedCollection.getItemOrder('hello'), orderNode, "should return order node");
 
-        dache.ItemKey.removeMocks();
+        bookworm.ItemKey.removeMocks();
 
-        dache.ItemKey.addMocks({
+        bookworm.ItemKey.addMocks({
             hasItemMeta: function () {
                 return false;
             }
@@ -61,9 +61,9 @@
 
         strictEqual(orderedCollection.getItemOrder('hello'), orderNode, "should return order node");
 
-        dache.ItemKey.removeMocks();
+        bookworm.ItemKey.removeMocks();
 
-        dache.Item.removeMocks();
+        bookworm.Item.removeMocks();
 
         deepEqual(getNodeArgs, [
             {0: 'order'},
@@ -74,11 +74,11 @@
     test("Item key getter by order", function () {
         expect(6);
 
-        var orderedCollection = dache.OrderedCollectionField.create('foo/bar/baz'.toFieldKey()),
+        var orderedCollection = bookworm.OrderedCollectionField.create('foo/bar/baz'.toFieldKey()),
             traversedItemsIds = [],
             result;
 
-        dache.OrderedCollectionField.addMocks({
+        bookworm.OrderedCollectionField.addMocks({
             getItemsAsCollection: function () {
                 // called twice
                 equal(this.fieldKey.toString(), 'foo/bar/baz', "should fetch collection items");
@@ -99,9 +99,9 @@
         deepEqual(traversedItemsIds.sort(), ['foo', 'bar', 'baz'].sort(), "should get order until matching order found");
 
         result = orderedCollection.getItemKeyByOrder(0);
-        ok(result.isA(dache.ItemKey), "should return ItemKey instance");
+        ok(result.isA(bookworm.ItemKey), "should return ItemKey instance");
         equal(result.itemId, 'foo', "should return ItemKey with matching item ID");
 
-        dache.OrderedCollectionField.removeMocks();
+        bookworm.OrderedCollectionField.removeMocks();
     });
 }());

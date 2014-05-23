@@ -1,25 +1,25 @@
-/*global dessert, troop, sntls, dache */
-troop.postpone(dache, 'Field', function () {
+/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'Field', function () {
     "use strict";
 
-    var base = dache.Entity,
+    var base = bookworm.Entity,
         self = base.extend();
 
     /**
-     * @name dache.Field.create
+     * @name bookworm.Field.create
      * @function
-     * @param {dache.FieldKey} fieldKey
-     * @returns {dache.Field}
+     * @param {bookworm.FieldKey} fieldKey
+     * @returns {bookworm.Field}
      */
 
     /**
      * @class
-     * @extends dache.Entity
+     * @extends bookworm.Entity
      */
-    dache.Field = self
-        .addMethods(/** @lends dache.Field# */{
+    bookworm.Field = self
+        .addMethods(/** @lends bookworm.Field# */{
             /**
-             * @param {dache.FieldKey} fieldKey
+             * @param {bookworm.FieldKey} fieldKey
              * @ignore
              */
             init: function (fieldKey) {
@@ -30,7 +30,7 @@ troop.postpone(dache, 'Field', function () {
                 /**
                  * Field key associated with current entity.
                  * Same as entityKey.
-                 * @type {dache.FieldKey}
+                 * @type {bookworm.FieldKey}
                  */
                 this.fieldKey = fieldKey;
             },
@@ -59,7 +59,7 @@ troop.postpone(dache, 'Field', function () {
             /**
              * Replaces field value node with the specified value.
              * @param {*} value
-             * @returns {dache.Field}
+             * @returns {bookworm.Field}
              */
             setFieldValue: function (value) {
                 if (this.fieldKey.hasFieldMeta()) {
@@ -73,17 +73,17 @@ troop.postpone(dache, 'Field', function () {
         });
 });
 
-troop.amendPostponed(dache, 'FieldKey', function () {
+troop.amendPostponed(bookworm, 'FieldKey', function () {
     "use strict";
 
-    dache.FieldKey
-        .addMethods(/** @lends dache.FieldKey */{
+    bookworm.FieldKey
+        .addMethods(/** @lends bookworm.FieldKey */{
             /**
              * Creates Field instance based on the current field key.
-             * @returns {dache.Field}
+             * @returns {bookworm.Field}
              */
             toField: function () {
-                return dache.Field.create(this);
+                return bookworm.Field.create(this);
             }
         });
 });
@@ -96,10 +96,10 @@ troop.amendPostponed(dache, 'FieldKey', function () {
         /** @lends String# */{
             /**
              * Creates Field instance based on the current string as key.
-             * @returns {dache.Field}
+             * @returns {bookworm.Field}
              */
             toField: function () {
-                return dache.Field.create(this.toFieldKey());
+                return bookworm.Field.create(this.toFieldKey());
             }
         },
         false, false, false
@@ -110,10 +110,10 @@ troop.amendPostponed(dache, 'FieldKey', function () {
         /** @lends Array# */{
             /**
              * Creates Field instance based on the current Array of string as key.
-             * @returns {dache.Field}
+             * @returns {bookworm.Field}
              */
             toField: function () {
-                return dache.Field.create(this.toFieldKey());
+                return bookworm.Field.create(this.toFieldKey());
             }
         },
         false, false, false
