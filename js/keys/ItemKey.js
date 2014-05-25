@@ -96,7 +96,7 @@ troop.postpone(bookworm, 'ItemKey', function () {
         });
 });
 
-troop.amendPostponed(bookworm, 'Key', function () {
+troop.amendPostponed(bookworm, 'EntityKey', function () {
     "use strict";
 
     bookworm.EntityKey
