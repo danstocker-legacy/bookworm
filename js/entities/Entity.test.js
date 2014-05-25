@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, flock, bookworm */
+/*global dessert, troop, sntls, flock, b$ */
 /*global module, test, expect, ok, equal, strictEqual, notStrictEqual, deepEqual, notDeepEqual, raises */
 (function () {
     "use strict";
@@ -7,17 +7,17 @@
 
     test("Instantiation", function () {
         var entityKey = 'foo/bar'.toDocumentKey(),
-            entity = bookworm.Entity.create(entityKey);
+            entity = b$.Entity.create(entityKey);
 
         strictEqual(entity.entityKey, entityKey, "should set entity key");
     });
 
     test("Node getter", function () {
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey()),
+        var entity = b$.Entity.create('foo/bar'.toDocumentKey()),
             entityNode = {},
             paths = [];
 
-        bookworm.documents.addMocks({
+        b$.documents.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
                 return entityNode;
@@ -27,7 +27,7 @@
         strictEqual(entity.getNode(), entityNode, "should return node retrieved from cache");
         entity.getNode('baz');
 
-        bookworm.documents.removeMocks();
+        b$.documents.removeMocks();
 
         deepEqual(paths, [
             'foo>bar',
@@ -38,11 +38,11 @@
     test("Hash node getter", function () {
         expect(3);
 
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey()),
+        var entity = b$.Entity.create('foo/bar'.toDocumentKey()),
             entityNode = {},
             result;
 
-        bookworm.Entity.addMocks({
+        b$.Entity.addMocks({
             getNode: function () {
                 deepEqual(arguments, {0: 'hello', 1: 'world'}, "should pass extra arguments to node getter");
                 return entityNode;
@@ -51,7 +51,7 @@
 
         result = entity.getNodeAsHash('hello', 'world');
 
-        bookworm.Entity.removeMocks();
+        b$.Entity.removeMocks();
 
         ok(result.isA(sntls.Hash), "should return Hash instance");
         strictEqual(result.items, entityNode, "should return Hash with entity node inside");
@@ -60,12 +60,12 @@
     test("Silent node getter", function () {
         expect(3);
 
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey()),
+        var entity = b$.Entity.create('foo/bar'.toDocumentKey()),
             entityNode = {};
 
         sntls.Tree.addMocks({
             getNode: function (path) {
-                strictEqual(this, bookworm.documents, "should fetch node from ");
+                strictEqual(this, b$.documents, "should fetch node from ");
                 equal(path.toString(), 'foo>bar>baz', "should call Tree node getter with appended path");
                 return entityNode;
             }
@@ -79,11 +79,11 @@
     test("Silent Hash node getter", function () {
         expect(3);
 
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey()),
+        var entity = b$.Entity.create('foo/bar'.toDocumentKey()),
             entityNode = {},
             result;
 
-        bookworm.Entity.addMocks({
+        b$.Entity.addMocks({
             getSilentNode: function () {
                 deepEqual(arguments, {0: 'hello', 1: 'world'}, "should pass extra arguments to silent node getter");
                 return entityNode;
@@ -92,7 +92,7 @@
 
         result = entity.getSilentNodeAsHash('hello', 'world');
 
-        bookworm.Entity.removeMocks();
+        b$.Entity.removeMocks();
 
         ok(result.isA(sntls.Hash), "should return Hash instance");
         strictEqual(result.items, entityNode, "should return Hash with entity node inside");
@@ -101,9 +101,9 @@
     test("Entity node tester", function () {
         expect(2);
 
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey());
+        var entity = b$.Entity.create('foo/bar'.toDocumentKey());
 
-        bookworm.Entity.addMocks({
+        b$.Entity.addMocks({
             getNode: function () {
                 ok(true, "should call node setter");
             }
@@ -111,15 +111,15 @@
 
         strictEqual(entity.touchNode(), entity, "should be chainable");
 
-        bookworm.Entity.removeMocks();
+        b$.Entity.removeMocks();
     });
 
     test("Node setter", function () {
         expect(3);
 
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey());
+        var entity = b$.Entity.create('foo/bar'.toDocumentKey());
 
-        bookworm.documents.addMocks({
+        b$.documents.addMocks({
             setNode: function (path, value) {
                 equal(path.toString(), 'foo>bar>world', "should set node in cache on the entity's extended path");
                 equal(value, 'hello', "should set correct value in cache");
@@ -128,6 +128,6 @@
 
         strictEqual(entity.setNode('hello', 'world'), entity, "should be chainable");
 
-        bookworm.documents.removeMocks();
+        b$.documents.removeMocks();
     });
 }());

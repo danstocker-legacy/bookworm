@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, bookworm */
+/*global dessert, troop, sntls, b$ */
 /*global module, test, expect, ok, equal, strictEqual, notStrictEqual, deepEqual, notDeepEqual, raises */
 (function () {
     "use strict";
@@ -6,7 +6,7 @@
     module("Document Key");
 
     test("Instantiation", function () {
-        var key = bookworm.DocumentKey.create('hello', 'world');
+        var key = b$.DocumentKey.create('hello', 'world');
 
         equal(key.documentType, 'hello', "should set document type");
         equal(key.documentId, 'world', "should set document ID");
@@ -16,7 +16,7 @@
         var key;
 
         key = 'foo/bar'.toDocumentKey();
-        ok(key.isA(bookworm.DocumentKey), "should return DocumentKey instance");
+        ok(key.isA(b$.DocumentKey), "should return DocumentKey instance");
         equal(key.documentType, 'foo', "should set document type");
         equal(key.documentId, 'bar', "should set document ID");
 
@@ -28,7 +28,7 @@
         var key;
 
         key = ['foo', 'bar'].toDocumentKey();
-        ok(key.isA(bookworm.DocumentKey), "should return DocumentKey instance");
+        ok(key.isA(b$.DocumentKey), "should return DocumentKey instance");
         equal(key.documentType, 'foo', "should set document type");
         equal(key.documentId, 'bar', "should set document ID");
     });
@@ -37,15 +37,15 @@
         var path = ['foo', 'bar', 'baz'].toPath(),
             key = path.toDocumentKey();
 
-        ok(key.isA(bookworm.DocumentKey), "should return DocumentKey instance");
+        ok(key.isA(b$.DocumentKey), "should return DocumentKey instance");
         equal(key.documentType, 'foo', "should set document type");
         equal(key.documentId, 'bar', "should set document ID");
     });
 
     test("Conversion from EntityKey", function () {
-        var key = bookworm.EntityKey.create('foo', 'bar');
+        var key = b$.EntityKey.create('foo', 'bar');
 
-        ok(key.isA(bookworm.DocumentKey), "should return DocumentKey instance");
+        ok(key.isA(b$.DocumentKey), "should return DocumentKey instance");
         equal(key.documentType, 'foo', "should set document type");
         equal(key.documentId, 'bar', "should set document ID");
     });
@@ -61,8 +61,8 @@
         var documentKey = 'foo/bar'.toDocumentKey(),
             fieldKey = documentKey.getFieldKey('baz');
 
-        ok(fieldKey.isA(bookworm.FieldKey), "should return a FieldKey instance");
-        ok(fieldKey.documentKey.isA(bookworm.DocumentKey), "should set document key");
+        ok(fieldKey.isA(b$.FieldKey), "should return a FieldKey instance");
+        ok(fieldKey.documentKey.isA(b$.DocumentKey), "should set document key");
         equal(fieldKey.documentKey.documentType, 'foo', "should set document type");
         equal(fieldKey.documentKey.documentId, 'bar', "should set document ID");
         equal(fieldKey.fieldName, 'baz', "should set field name");
@@ -89,7 +89,7 @@
 
         var key = 'foo/bar'.toDocumentKey();
 
-        bookworm.metadata.addMocks({
+        b$.metadata.addMocks({
             getNode: function (path) {
                 equal(path.toString(), 'document>foo>hasDocumentMeta', "should fetch value from correct path");
             }
@@ -97,11 +97,11 @@
 
         key.hasDocumentMeta();
 
-        bookworm.metadata.removeMocks();
+        b$.metadata.removeMocks();
     });
 
     test("Conversion to String", function () {
-        equal(bookworm.DocumentKey.create('foo', 'bar').toString(), 'foo/bar', 'should concatenate type / ID with slash');
-        equal(bookworm.DocumentKey.create('f/oo', 'b/ar').toString(), 'f%2Foo/b%2Far', 'should URI encode type / ID');
+        equal(b$.DocumentKey.create('foo', 'bar').toString(), 'foo/bar', 'should concatenate type / ID with slash');
+        equal(b$.DocumentKey.create('f/oo', 'b/ar').toString(), 'f%2Foo/b%2Far', 'should URI encode type / ID');
     });
 }());

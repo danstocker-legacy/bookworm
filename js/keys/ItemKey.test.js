@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, flock, bookworm */
+/*global dessert, troop, sntls, flock, b$ */
 /*global module, test, expect, ok, equal, strictEqual, notStrictEqual, deepEqual, notDeepEqual, raises */
 (function () {
     "use strict";
@@ -6,7 +6,7 @@
     module("Item Key");
 
     test("Instantiation", function () {
-        var itemKey = bookworm.ItemKey.create('hello', 'world', 'foo', 'bar');
+        var itemKey = b$.ItemKey.create('hello', 'world', 'foo', 'bar');
 
         equal(itemKey.documentKey.documentType, 'hello', "should set document type");
         equal(itemKey.documentKey.documentId, 'world', "should set document ID");
@@ -17,7 +17,7 @@
     test("Conversion from String", function () {
         var itemKey = 'hello/world/foo/bar'.toItemKey();
 
-        ok(itemKey.isA(bookworm.ItemKey), "should return ItemKey instance");
+        ok(itemKey.isA(b$.ItemKey), "should return ItemKey instance");
         equal(itemKey.documentKey.documentType, 'hello', "should set document type");
         equal(itemKey.documentKey.documentId, 'world', "should set document ID");
         equal(itemKey.fieldName, 'foo', "should set field name");
@@ -30,7 +30,7 @@
     test("Conversion from Array", function () {
         var itemKey = ['hello', 'world', 'foo', 'bar'].toItemKey();
 
-        ok(itemKey.isA(bookworm.ItemKey), "should return ItemKey instance");
+        ok(itemKey.isA(b$.ItemKey), "should return ItemKey instance");
         equal(itemKey.documentKey.documentType, 'hello', "should set document type");
         equal(itemKey.documentKey.documentId, 'world', "should set document ID");
         equal(itemKey.fieldName, 'foo', "should set field name");
@@ -38,9 +38,9 @@
     });
 
     test("Conversion from EntityKey", function () {
-        var key = bookworm.EntityKey.create('foo', 'bar');
+        var key = b$.EntityKey.create('foo', 'bar');
 
-        ok(key.isA(bookworm.DocumentKey), "should return DocumentKey instance");
+        ok(key.isA(b$.DocumentKey), "should return DocumentKey instance");
         equal(key.documentType, 'foo', "should set document type");
         equal(key.documentId, 'bar', "should set document ID");
     });
@@ -57,7 +57,7 @@
         var itemKey = ['foo', 'bar', 'hello', 'world'].toItemKey(),
             fieldKey = itemKey.getFieldKey();
 
-        strictEqual(fieldKey.getBase(), bookworm.FieldKey, "should return FieldKey instance (not subclass)");
+        strictEqual(fieldKey.getBase(), b$.FieldKey, "should return FieldKey instance (not subclass)");
         equal(fieldKey.fieldName, 'hello', "should set field name");
         equal(fieldKey.documentKey.documentId, 'bar', "should set document ID");
         equal(fieldKey.documentKey.documentType, 'foo', "should set document type");
@@ -75,7 +75,7 @@
         var key = 'foo/bar/baz/hello'.toItemKey(),
             paths = [];
 
-        bookworm.metadata.addMocks({
+        b$.metadata.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
 
@@ -87,7 +87,7 @@
 
         key.hasItemMeta();
 
-        bookworm.metadata.removeMocks();
+        b$.metadata.removeMocks();
 
         deepEqual(paths, [
             'document>document>hasDocumentMeta',
@@ -100,13 +100,13 @@
 
         var key = 'foo/bar/baz/hello'.toItemKey();
 
-        bookworm.FieldKey.addMocks({
+        b$.FieldKey.addMocks({
             getMetaPath: function () {
                 return 'meta>path'.toPath();
             }
         });
 
-        bookworm.metadata.addMocks({
+        b$.metadata.addMocks({
             getNode: function (path) {
                 equal(path.toString(), 'meta>path>itemType', "should fetch item type from field metadata");
             }
@@ -114,14 +114,14 @@
 
         key.getItemType();
 
-        bookworm.FieldKey.removeMocks();
-        bookworm.metadata.removeMocks();
+        b$.FieldKey.removeMocks();
+        b$.metadata.removeMocks();
     });
 
     test("Conversion to String", function () {
-        equal(bookworm.ItemKey.create('hello', 'world', 'foo', 'bar').toString(), 'hello/world/foo/bar',
+        equal(b$.ItemKey.create('hello', 'world', 'foo', 'bar').toString(), 'hello/world/foo/bar',
             "should return correct item path string");
-        equal(bookworm.ItemKey.create('hello', 'world', 'foo', 'b/ar').toString(), 'hello/world/foo/b%2Far',
+        equal(b$.ItemKey.create('hello', 'world', 'foo', 'b/ar').toString(), 'hello/world/foo/b%2Far',
             "should URI encode path contents");
     });
 }());
