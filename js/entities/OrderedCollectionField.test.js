@@ -26,49 +26,22 @@
     });
 
     test("Item order getter", function () {
-        expect(7);
+        expect(3);
 
         var orderedCollection = b$.OrderedCollectionField.create('foo/bar/baz'.toFieldKey()),
-            getNodeArgs = [],
             orderNode = {};
 
         b$.Item.addMocks({
             getNode: function () {
-                // called twice
                 equal(this.itemKey.toString(), 'foo/bar/baz/hello', "should fetch item node from cache");
-                getNodeArgs.push(arguments);
+                deepEqual(arguments, {0: 'order'}, "should pass correct meta name to getNode");
                 return orderNode;
             }
         });
 
-        b$.ItemKey.addMocks({
-            hasItemMeta: function () {
-                // called twice
-                equal(this.toString(), 'foo/bar/baz/hello', "should test for item meta");
-                return true;
-            }
-        });
-
         strictEqual(orderedCollection.getItemOrder('hello'), orderNode, "should return order node");
-
-        b$.ItemKey.removeMocks();
-
-        b$.ItemKey.addMocks({
-            hasItemMeta: function () {
-                return false;
-            }
-        });
-
-        strictEqual(orderedCollection.getItemOrder('hello'), orderNode, "should return order node");
-
-        b$.ItemKey.removeMocks();
 
         b$.Item.removeMocks();
-
-        deepEqual(getNodeArgs, [
-            {0: 'order'},
-            {}
-        ], "should pass correct meta name to getNode");
     });
 
     test("Item key getter by order", function () {
@@ -96,7 +69,8 @@
         });
 
         equal(typeof orderedCollection.getItemKeyByOrder(3), 'undefined', "should return undefined for invalid order");
-        deepEqual(traversedItemsIds.sort(), ['foo', 'bar', 'baz'].sort(), "should get order until matching order found");
+        deepEqual(traversedItemsIds.sort(), ['foo', 'bar', 'baz'
+        ].sort(), "should get order until matching order found");
 
         result = orderedCollection.getItemKeyByOrder(0);
         ok(result.isA(b$.ItemKey), "should return ItemKey instance");

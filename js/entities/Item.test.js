@@ -42,7 +42,7 @@
     });
 
     test("Item meta getter", function () {
-        expect(4);
+        expect(2);
 
         var item = 'foo/bar/baz/hello'.toItem(),
             metaNode = {};
@@ -55,118 +55,44 @@
             }
         });
 
-        b$.ItemKey.addMocks({
-            hasItemMeta: function () {
-                equal(this.toString(), 'foo/bar/baz/hello', "should test for item metadata");
-                return true;
-            }
-        });
-
         strictEqual(item.getItemMeta('world'), metaNode, "should return meta node");
-
-        b$.ItemKey.removeMocks();
-
-        b$.ItemKey.addMocks({
-            hasItemMeta: function () {
-                return false;
-            }
-        });
-
-        equal(typeof item.getItemMeta('world'), 'undefined',
-            "should return undefined when item has no metadata");
-
-        b$.ItemKey.removeMocks();
 
         b$.Item.removeMocks();
     });
 
     test("Item value getter", function () {
-        expect(4);
+        expect(2);
 
         var item = 'foo/bar/baz/hello'.toItem(),
             valueNode = {};
 
         b$.Item.addMocks({
             getNode: function () {
-                deepEqual(arguments, {0: 'value'},
-                    "should fetch value node when item has meta");
+                deepEqual(arguments, {},
+                    "should fetch value node");
                 return valueNode;
-            }
-        });
-
-        b$.ItemKey.addMocks({
-            hasItemMeta: function () {
-                equal(this.toString(), 'foo/bar/baz/hello', "should test for item metadata");
-                return true;
             }
         });
 
         strictEqual(item.getItemValue(), valueNode, "should return value node");
 
         b$.Item.removeMocks();
-        b$.ItemKey.removeMocks();
-
-        b$.Item.addMocks({
-            getNode: function () {
-                equal(arguments.length, 0, "should fetch item node when field has no meta");
-                return valueNode;
-            }
-        });
-
-        b$.ItemKey.addMocks({
-            hasItemMeta: function () {
-                return false;
-            }
-        });
-
-        item.getFieldValue();
-
-        b$.Item.removeMocks();
-        b$.ItemKey.removeMocks();
     });
 
     test("Item value setter", function () {
-        expect(4);
+        expect(2);
 
         var item = 'foo/bar/baz/hello'.toItem(),
             valueNode = {};
 
         b$.Item.addMocks({
             setNode: function (value) {
-                deepEqual(arguments, {0: valueNode, 1: 'value'},
-                    "should set specified value on value node when item has meta");
-            }
-        });
-
-        b$.ItemKey.addMocks({
-            hasItemMeta: function () {
-                equal(this.toString(), 'foo/bar/baz/hello', "should test for item metadata");
-                return true;
+                deepEqual(arguments, {0: valueNode}, "should set specified value on item node");
             }
         });
 
         strictEqual(item.setItemValue(valueNode), item, "should be chainable");
 
         b$.Item.removeMocks();
-        b$.ItemKey.removeMocks();
-
-        b$.Item.addMocks({
-            setNode: function () {
-                deepEqual(arguments, {0: valueNode},
-                    "should set item node when field has no meta");
-                return valueNode;
-            }
-        });
-
-        b$.ItemKey.addMocks({
-            hasItemMeta: function () {
-                return false;
-            }
-        });
-
-        item.setItemValue(valueNode);
-
-        b$.Item.removeMocks();
-        b$.ItemKey.removeMocks();
     });
 }());

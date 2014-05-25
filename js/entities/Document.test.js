@@ -42,7 +42,7 @@
     });
 
     test("Meta node getter", function () {
-        expect(4);
+        expect(2);
 
         var document = 'foo/bar'.toDocument(),
             metaNode = {};
@@ -55,29 +55,9 @@
             }
         });
 
-        b$.DocumentKey.addMocks({
-            hasDocumentMeta: function () {
-                equal(this.toString(), 'foo/bar', "should test for document metadata");
-                return true;
-            }
-        });
-
         strictEqual(document.getDocumentMeta('hello'), metaNode, "should return meta node");
 
         b$.DocumentKey.removeMocks();
-
-        b$.DocumentKey.addMocks({
-            hasDocumentMeta: function () {
-                return false;
-            }
-        });
-
-        equal(typeof document.getDocumentMeta('hello'), 'undefined',
-            "should return undefined when document has no metadata");
-
-        b$.DocumentKey.removeMocks();
-
-        b$.Document.removeMocks();
     });
 
     test("Field entity getter", function () {

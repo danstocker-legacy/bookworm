@@ -62,6 +62,9 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
+             * Determines absolute path for the current Document entity's cache node.
+             * In case the entity node sits on a different path for a certain documentType,
+             * subclass DocumentKey and override .getEntityPath() to reflect the correct path.
              * @returns {sntls.Path}
              */
             getEntityPath: function () {
@@ -73,14 +76,6 @@ troop.postpone(bookworm, 'DocumentKey', function () {
              */
             getMetaPath: function () {
                 return ['document', this.documentType].toDocumentKey().getEntityPath();
-            },
-
-            /**
-             * Tells whether Document entity identified by the current key has metadata associated with it.
-             * @returns {boolean}
-             */
-            hasDocumentMeta: function () {
-                return bookworm.metadata.getNode(this.getMetaPath().appendKey('hasDocumentMeta'));
             },
 
             /**

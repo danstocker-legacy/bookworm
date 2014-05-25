@@ -66,19 +66,16 @@ troop.postpone(bookworm, 'FieldKey', function () {
             },
 
             /**
+             * Determines absolute path for the current Field entity's cache node.
+             * In case the Field entity node sits on a different path
+             * relative to the Document node for a certain documentType / fieldName combination,
+             * subclass FieldKey and override .getEntityPath() to reflect the correct path.
              * @returns {sntls.Path}
              */
             getEntityPath: function () {
-                var documentKey = this.documentKey,
-                    result = documentKey.getEntityPath();
-
-                if (documentKey.hasDocumentMeta()) {
-                    result.appendKey('fields');
-                }
-
-                result.appendKey(this.fieldName);
-
-                return result;
+                return this.documentKey
+                    .getEntityPath()
+                    .appendKey(this.fieldName);
             },
 
             /**
@@ -90,15 +87,8 @@ troop.postpone(bookworm, 'FieldKey', function () {
             },
 
             /**
-             * Tells whether Field entity identified by the current key has metadata associated with it.
-             * @returns {boolean}
-             */
-            hasFieldMeta: function () {
-                return bookworm.metadata.getNode(this.getMetaPath().appendKey('hasFieldMeta'));
-            },
-
-            /**
              * Retrieves field type string for the Field entity identified by the current key.
+             * Presupposes that the field has metadata.
              * @returns {string}
              */
             getFieldType: function () {

@@ -57,26 +57,15 @@ troop.postpone(bookworm, 'ItemKey', function () {
             },
 
             /**
+             * Determines absolute path for the current Item entity's cache node.
+             * In case the Item entity node sits on a different path
+             * relative to the Field node for a certain documentType / fieldName combination,
+             * subclass ItemKey and override .getEntityPath() to reflect the correct path.
              * @returns {sntls.Path}
              */
             getEntityPath: function () {
-                var result = base.getEntityPath.call(this);
-
-                if (base.hasFieldMeta.call(this)) {
-                    result.appendKey('value');
-                }
-
-                result.appendKey(this.itemId);
-
-                return result;
-            },
-
-            /**
-             * Tells whether Item entity identified by the current key has metadata associated with it.
-             * @returns {boolean}
-             */
-            hasItemMeta: function () {
-                return bookworm.metadata.getNode(this.getMetaPath().appendKey('hasItemMeta'));
+                return base.getEntityPath.call(this)
+                    .appendKey(this.itemId);
             },
 
             /**

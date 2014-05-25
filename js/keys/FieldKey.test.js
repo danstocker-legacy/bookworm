@@ -79,17 +79,6 @@
 
         ok(path.isA(sntls.Path), "should return Path instance");
         deepEqual(path.asArray, ['foo', 'bar', 'baz'], "should set path contents");
-
-        b$.DocumentKey.addMocks({
-            hasDocumentMeta: function () {
-                return true;
-            }
-        });
-
-        path = key.getEntityPath();
-        deepEqual(path.asArray, ['foo', 'bar', 'fields', 'baz'], "should set path contents (with document meta)");
-
-        b$.DocumentKey.removeMocks();
     });
 
     test("Meta path getter", function () {
@@ -98,31 +87,7 @@
 
         path = key.getMetaPath();
         ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['document', 'foo', 'fields', 'baz'], "should set path contents");
-    });
-
-    test("Field meta tester", function () {
-        var key = 'foo/bar/baz'.toFieldKey(),
-            paths = [];
-
-        b$.metadata.addMocks({
-            getNode: function (path) {
-                paths.push(path.toString());
-
-                // this is only called from .hasXXXMeta()
-                // returning true tells entity path getters to include document meta level
-                return true;
-            }
-        });
-
-        key.hasFieldMeta();
-
-        b$.metadata.removeMocks();
-
-        deepEqual(paths, [
-            'document>document>hasDocumentMeta',
-            'document>foo>fields>baz>hasFieldMeta'
-        ], "should fetch meta flags from cache");
+        deepEqual(path.asArray, ['document', 'foo', 'baz'], "should set path contents");
     });
 
     test("Field type getter", function () {

@@ -41,9 +41,7 @@ troop.postpone(bookworm, 'Item', function () {
              * @returns {*}
              */
             getItemMeta: function (metaName) {
-                return this.itemKey.hasItemMeta() ?
-                    this.getNode(metaName) :
-                    undefined;
+                return this.getNode(metaName);
             },
 
             /**
@@ -51,9 +49,7 @@ troop.postpone(bookworm, 'Item', function () {
              * @returns {*}
              */
             getItemValue: function () {
-                return this.itemKey.hasItemMeta() ?
-                    this.getNode('value') :
-                    this.getNode();
+                return this.getNode();
             },
 
             /**
@@ -62,12 +58,7 @@ troop.postpone(bookworm, 'Item', function () {
              * @returns {bookworm.Item}
              */
             setItemValue: function (value) {
-                if (this.itemKey.hasItemMeta()) {
-                    this.setNode(value, 'value');
-                } else {
-                    this.setNode(value);
-                }
-
+                this.setNode(value);
                 return this;
             }
         });

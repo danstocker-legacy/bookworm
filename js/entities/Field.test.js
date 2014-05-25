@@ -42,7 +42,7 @@
     });
 
     test("Field meta getter", function () {
-        expect(4);
+        expect(2);
 
         var field = 'foo/bar/baz'.toField(),
             metaNode = {};
@@ -55,118 +55,44 @@
             }
         });
 
-        b$.FieldKey.addMocks({
-            hasFieldMeta: function () {
-                equal(this.toString(), 'foo/bar/baz', "should test for field metadata");
-                return true;
-            }
-        });
-
         strictEqual(field.getFieldMeta('hello'), metaNode, "should return meta node");
-
-        b$.FieldKey.removeMocks();
-
-        b$.FieldKey.addMocks({
-            hasFieldMeta: function () {
-                return false;
-            }
-        });
-
-        equal(typeof field.getFieldMeta('hello'), 'undefined',
-            "should return undefined when field has no metadata");
-
-        b$.FieldKey.removeMocks();
 
         b$.Field.removeMocks();
     });
 
     test("Field value getter", function () {
-        expect(4);
+        expect(2);
 
         var field = 'foo/bar/baz'.toField(),
             valueNode = {};
 
         b$.Field.addMocks({
             getNode: function () {
-                deepEqual(arguments, {0: 'value'},
-                    "should fetch value node when field has meta");
+                deepEqual(arguments, {}, "should fetch field node");
                 return valueNode;
             }
         });
 
-        b$.FieldKey.addMocks({
-            hasFieldMeta: function () {
-                equal(this.toString(), 'foo/bar/baz', "should test for field metadata");
-                return true;
-            }
-        });
-
-        strictEqual(field.getFieldValue(), valueNode, "should return value node");
+        strictEqual(field.getFieldValue(), valueNode, "should return field node");
 
         b$.Field.removeMocks();
-        b$.FieldKey.removeMocks();
-
-        b$.Field.addMocks({
-            getNode: function () {
-                equal(arguments.length, 0, "should fetch field node when field has no meta");
-                return valueNode;
-            }
-        });
-
-        b$.FieldKey.addMocks({
-            hasFieldMeta: function () {
-                return false;
-            }
-        });
-
-        field.getFieldValue();
-
-        b$.Field.removeMocks();
-        b$.FieldKey.removeMocks();
     });
 
     test("Field value setter", function () {
-        expect(4);
+        expect(2);
 
         var field = 'foo/bar/baz'.toField(),
             valueNode = {};
 
         b$.Field.addMocks({
             setNode: function (value) {
-                deepEqual(arguments, {0: valueNode, 1: 'value'},
-                    "should set specified value on value node when field has meta");
-            }
-        });
-
-        b$.FieldKey.addMocks({
-            hasFieldMeta: function () {
-                equal(this.toString(), 'foo/bar/baz', "should test for field metadata");
-                return true;
+                deepEqual(arguments, {0: valueNode},
+                    "should set specified value on field node");
             }
         });
 
         strictEqual(field.setFieldValue(valueNode), field, "should be chainable");
 
         b$.Field.removeMocks();
-        b$.FieldKey.removeMocks();
-
-        b$.Field.addMocks({
-            setNode: function () {
-                deepEqual(arguments, {0: valueNode},
-                    "should set field node when field has no meta");
-                return valueNode;
-            }
-        });
-
-        b$.FieldKey.addMocks({
-            hasFieldMeta: function () {
-                return false;
-            }
-        });
-
-        field.setFieldValue(valueNode);
-
-        b$.Field.removeMocks();
-        b$.FieldKey.removeMocks();
     });
 }());

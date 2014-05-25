@@ -41,9 +41,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {*}
              */
             getFieldMeta: function (metaName) {
-                return this.fieldKey.hasFieldMeta() ?
-                    this.getNode(metaName) :
-                    undefined;
+                return this.getNode(metaName);
             },
 
             /**
@@ -51,9 +49,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {*}
              */
             getFieldValue: function () {
-                return this.fieldKey.hasFieldMeta() ?
-                    this.getNode('value') :
-                    this.getNode();
+                return this.getNode();
             },
 
             /**
@@ -62,12 +58,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {bookworm.Field}
              */
             setFieldValue: function (value) {
-                if (this.fieldKey.hasFieldMeta()) {
-                    this.setNode(value, 'value');
-                } else {
-                    this.setNode(value);
-                }
-
+                this.setNode(value);
                 return this;
             }
         });

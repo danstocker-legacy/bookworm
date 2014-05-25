@@ -71,30 +71,6 @@
         deepEqual(path.asArray, ['hello', 'world', 'foo', 'bar'], "should set path contents");
     });
 
-    test("Item meta tester", function () {
-        var key = 'foo/bar/baz/hello'.toItemKey(),
-            paths = [];
-
-        b$.metadata.addMocks({
-            getNode: function (path) {
-                paths.push(path.toString());
-
-                // this is only called from .hasXXXMeta()
-                // returning true tells entity path getters to include document meta level
-                return true;
-            }
-        });
-
-        key.hasItemMeta();
-
-        b$.metadata.removeMocks();
-
-        deepEqual(paths, [
-            'document>document>hasDocumentMeta',
-            'document>foo>fields>baz>hasItemMeta'
-        ], "should fetch meta flags from cache");
-    });
-
     test("Item type getter", function () {
         expect(1);
 

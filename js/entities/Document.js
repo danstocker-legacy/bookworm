@@ -41,9 +41,7 @@ troop.postpone(bookworm, 'Document', function () {
              * @returns {*}
              */
             getDocumentMeta: function (metaName) {
-                return this.documentKey.hasDocumentMeta() ?
-                    this.getNode(metaName) :
-                    undefined;
+                return this.getNode(metaName);
             },
 
             /**

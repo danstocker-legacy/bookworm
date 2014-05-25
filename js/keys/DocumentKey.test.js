@@ -84,22 +84,6 @@
         deepEqual(path.asArray, ['document', 'foo'], "should set path contents correctly");
     });
 
-    test("Metadata tester", function () {
-        expect(1);
-
-        var key = 'foo/bar'.toDocumentKey();
-
-        b$.metadata.addMocks({
-            getNode: function (path) {
-                equal(path.toString(), 'document>foo>hasDocumentMeta', "should fetch value from correct path");
-            }
-        });
-
-        key.hasDocumentMeta();
-
-        b$.metadata.removeMocks();
-    });
-
     test("Conversion to String", function () {
         equal(b$.DocumentKey.create('foo', 'bar').toString(), 'foo/bar', 'should concatenate type / ID with slash');
         equal(b$.DocumentKey.create('f/oo', 'b/ar').toString(), 'f%2Foo/b%2Far', 'should URI encode type / ID');
