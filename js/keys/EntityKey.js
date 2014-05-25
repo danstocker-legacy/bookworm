@@ -10,7 +10,7 @@ troop.postpone(bookworm, 'EntityKey', function () {
 
     /**
      * Abstract class for identifying Entities.
-     * A EntityKey may be resolved to a cache path, relying on metadata information about the Entity.
+     * A EntityKey may be resolved to a cache path.
      * @class
      * @extends troop.Base
      */
@@ -32,8 +32,8 @@ troop.postpone(bookworm, 'EntityKey', function () {
      */
 
     /**
-     * Retrieves meta node path associated with the current key.
-     * @name bookworm.EntityKey#getMetaPath
+     * Retrieves config node path associated with the current key.
+     * @name bookworm.EntityKey#getConfigPath
      * @function
      * @returns {sntls.Path}
      */

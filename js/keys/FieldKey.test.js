@@ -85,7 +85,7 @@
         var key = 'foo/bar/baz'.toFieldKey(),
             path;
 
-        path = key.getMetaPath();
+        path = key.getConfigPath();
         ok(path.isA(sntls.Path), "should return Path instance");
         deepEqual(path.asArray, ['document', 'foo', 'baz'], "should set path contents");
     });
@@ -95,12 +95,12 @@
             paths;
 
         b$.FieldKey.addMocks({
-            getMetaPath: function () {
+            getConfigPath: function () {
                 return 'meta>path'.toPath();
             }
         });
 
-        b$.metadata.addMocks({
+        b$.config.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
                 return undefined;
@@ -110,14 +110,14 @@
         paths = [];
         key.getFieldType();
 
-        b$.metadata.removeMocks();
+        b$.config.removeMocks();
 
         deepEqual(paths, [
             "meta>path>fieldType",
             "meta>path"
         ], "should try metadata first, then field value");
 
-        b$.metadata.addMocks({
+        b$.config.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
                 return 'fieldType';
@@ -127,7 +127,7 @@
         paths = [];
         key.getFieldType();
 
-        b$.metadata.removeMocks();
+        b$.config.removeMocks();
         b$.FieldKey.removeMocks();
 
         deepEqual(paths, [

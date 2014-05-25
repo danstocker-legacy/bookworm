@@ -74,7 +74,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             /**
              * @returns {sntls.Path}
              */
-            getMetaPath: function () {
+            getConfigPath: function () {
                 return ['document', this.documentType].toDocumentKey().getEntityPath();
             },
 

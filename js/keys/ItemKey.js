@@ -73,7 +73,7 @@ troop.postpone(bookworm, 'ItemKey', function () {
              * @returns {string}
              */
             getItemType: function () {
-                return bookworm.metadata.getNode(this.getMetaPath().appendKey('itemType'));
+                return bookworm.config.getNode(this.getConfigPath().appendKey('itemType'));
             },
 
             /**

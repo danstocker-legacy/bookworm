@@ -1,16 +1,16 @@
 /*global dessert, troop, sntls, flock, bookworm */
-troop.postpone(bookworm, 'metadata', function () {
+troop.postpone(bookworm, 'config', function () {
     "use strict";
 
     /**
      * Non-evented cache for documents describing document types and their fields.
      * @type {sntls.Tree}
      */
-    bookworm.metadata = sntls.Tree.create({
+    bookworm.config = sntls.Tree.create({
         /** Metadata node, contains information about document types and their fields. */
         document: {
             //@formatter:off
-//          /** Sample metadata document. */
+//          /** Sample config document. */
 //          user: {
 //              name: {
 //                  /** Field contains string */

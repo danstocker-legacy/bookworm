@@ -81,7 +81,7 @@ troop.postpone(bookworm, 'FieldKey', function () {
             /**
              * @returns {sntls.Path}
              */
-            getMetaPath: function () {
+            getConfigPath: function () {
                 var metaFieldKey = ['document', this.documentKey.documentType, this.fieldName].toFieldKey();
                 return metaFieldKey.getEntityPath();
             },
@@ -92,11 +92,11 @@ troop.postpone(bookworm, 'FieldKey', function () {
              * @returns {string}
              */
             getFieldType: function () {
-                var metadata = bookworm.metadata,
-                    typeMetaPath = this.getMetaPath();
+                var config = bookworm.config,
+                    typeMetaPath = this.getConfigPath();
 
-                return metadata.getNode(typeMetaPath.clone().appendKey('fieldType')) ||
-                       metadata.getNode(typeMetaPath);
+                return config.getNode(typeMetaPath.clone().appendKey('fieldType')) ||
+                       config.getNode(typeMetaPath);
             },
 
             /**

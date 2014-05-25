@@ -77,21 +77,21 @@
         var key = 'foo/bar/baz/hello'.toItemKey();
 
         b$.FieldKey.addMocks({
-            getMetaPath: function () {
+            getConfigPath: function () {
                 return 'meta>path'.toPath();
             }
         });
 
-        b$.metadata.addMocks({
+        b$.config.addMocks({
             getNode: function (path) {
-                equal(path.toString(), 'meta>path>itemType', "should fetch item type from field metadata");
+                equal(path.toString(), 'meta>path>itemType', "should fetch item type from field config");
             }
         });
 
         key.getItemType();
 
         b$.FieldKey.removeMocks();
-        b$.metadata.removeMocks();
+        b$.config.removeMocks();
     });
 
     test("Conversion to String", function () {

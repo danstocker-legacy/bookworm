@@ -78,7 +78,7 @@
 
     test("Metadata path getter", function () {
         var key = 'foo/bar'.toDocumentKey(),
-            path = key.getMetaPath();
+            path = key.getConfigPath();
 
         ok(path.isA(sntls.Path), "should return CachePath instance");
         deepEqual(path.asArray, ['document', 'foo'], "should set path contents correctly");
