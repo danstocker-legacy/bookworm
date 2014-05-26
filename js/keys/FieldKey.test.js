@@ -74,31 +74,64 @@
     });
 
     test("Entity path getter", function () {
-        var key = 'foo/bar/baz'.toFieldKey(),
-            path = key.getEntityPath();
+        expect(3);
 
-        ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['foo', 'bar', 'baz'], "should set path contents");
-    });
-
-    test("Meta path getter", function () {
-        var key = 'foo/bar/baz'.toFieldKey(),
+        var fieldKey = 'foo/bar/baz'.toFieldKey(),
+            documentEntityPath = 'document>entity'.toPath(),
+            entityPath = {},
             path;
 
-        path = key.getConfigPath();
-        ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['document', 'foo', 'baz'], "should set path contents");
+        b$.DocumentKey.addMocks({
+            getEntityPath: function () {
+                equal(this.toString(), 'foo/bar', "should get entity key from document key");
+                return documentEntityPath;
+            }
+        });
+
+        documentEntityPath.addMocks({
+            appendKey: function (fieldName) {
+                equal(fieldName, fieldKey.fieldName, "should append field name to document entity path");
+                return entityPath;
+            }
+        });
+
+        path = fieldKey.getEntityPath();
+
+        b$.DocumentKey.removeMocks();
+
+        strictEqual(path, entityPath, "should return correct field path");
+    });
+
+    test("Attribute path getter", function () {
+        expect(3);
+
+        var fieldKey = 'foo/bar/baz'.toFieldKey(),
+            entityPath = 'entity>path'.toPath(),
+            attributePath = {},
+            path;
+
+        fieldKey.addMocks({
+            getEntityPath: function () {
+                ok(true, "should fetch entity path for current key");
+                return entityPath;
+            }
+        });
+
+        entityPath.addMocks({
+            appendKey: function (key) {
+                equal(key, 'hello', "should append attribute to entity path");
+                return attributePath;
+            }
+        });
+
+        path = fieldKey.getAttributePath('hello');
+
+        strictEqual(path, attributePath, "should return attribute path");
     });
 
     test("Field type getter", function () {
-        var key = 'foo/bar/baz'.toFieldKey(),
+        var fieldKey = 'foo/bar/baz'.toFieldKey(),
             paths;
-
-        b$.FieldKey.addMocks({
-            getConfigPath: function () {
-                return 'meta>path'.toPath();
-            }
-        });
 
         b$.config.addMocks({
             getNode: function (path) {
@@ -108,14 +141,14 @@
         });
 
         paths = [];
-        key.getFieldType();
+        fieldKey.getFieldType();
 
         b$.config.removeMocks();
 
         deepEqual(paths, [
-            "meta>path>fieldType",
-            "meta>path"
-        ], "should try metadata first, then field value");
+            "document>foo>baz>fieldType",
+            "document>foo>baz"
+        ], "should try attribute first, then field value");
 
         b$.config.addMocks({
             getNode: function (path) {
@@ -125,14 +158,41 @@
         });
 
         paths = [];
-        key.getFieldType();
+        fieldKey.getFieldType();
 
         b$.config.removeMocks();
-        b$.FieldKey.removeMocks();
 
         deepEqual(paths, [
-            "meta>path>fieldType"
-        ], "should fetch field type from metadata if it is found there");
+            "document>foo>baz>fieldType"
+        ], "should fetch field type from attribute if it is found there");
+    });
+
+    test("Value path getter", function () {
+        expect(2);
+
+        var fieldKey = 'foo/bar/baz'.toFieldKey(),
+            entityPath = {},
+            path;
+
+        fieldKey.addMocks({
+            getEntityPath: function () {
+                ok(true, "should fetch entity path for current key");
+                return entityPath;
+            }
+        });
+
+        path = fieldKey.getValuePath();
+
+        strictEqual(path, entityPath, "should return entity path");
+    });
+
+    test("Config path getter", function () {
+        var fieldKey = 'foo/bar/baz'.toFieldKey(),
+            path;
+
+        path = fieldKey.getConfigPath();
+        ok(path.isA(sntls.Path), "should return Path instance");
+        deepEqual(path.asArray, ['document', 'foo', 'baz'], "should set path contents");
     });
 
     test("Conversion to String", function () {

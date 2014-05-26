@@ -23,7 +23,7 @@ troop.postpone(bookworm, 'CollectionField', function () {
              * @returns {object}
              */
             getItems: function () {
-                return this.getFieldValue();
+                return this.getValue();
             },
 
             /**
@@ -31,7 +31,7 @@ troop.postpone(bookworm, 'CollectionField', function () {
              * @returns {sntls.Collection}
              */
             getItemsAsCollection: function () {
-                return sntls.Collection.create(this.getFieldValue());
+                return sntls.Collection.create(this.getValue());
             }
         });
 });

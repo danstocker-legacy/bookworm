@@ -20,6 +20,17 @@ troop.postpone(bookworm, 'FieldKey', function () {
      * @extends bookworm.EntityKey
      */
     bookworm.FieldKey = self
+        .addPrivateMethods(/** @lends bookworm.FieldKey# */{
+            /**
+             * Retrieves FieldKey pointing to the config node associated with the current
+             * documentType / fieldName combination.
+             * @returns {bookworm.FieldKey}
+             * @private
+             */
+            _getConfigFieldKey: function () {
+                return ['document', this.documentKey.documentType, this.fieldName].toFieldKey();
+            }
+        })
         .addMethods(/** @lends bookworm.FieldKey# */{
             /**
              * @param {string} documentType
@@ -66,9 +77,9 @@ troop.postpone(bookworm, 'FieldKey', function () {
             },
 
             /**
-             * Determines absolute path for the current Field entity's cache node.
-             * In case the Field entity node sits on a different path
-             * relative to the Document node for a certain documentType / fieldName combination,
+             * Determines absolute path to the current Field's entity node.
+             * In case field node sits on a different path relative to the Document node
+             * for a certain documentType / fieldName combination,
              * subclass FieldKey and override .getEntityPath() to reflect the correct path.
              * @returns {sntls.Path}
              */
@@ -79,24 +90,50 @@ troop.postpone(bookworm, 'FieldKey', function () {
             },
 
             /**
+             * Determines absolute path to the specified attribute of the current Field.
+             * In case attribute node sits on a different path relative the Field node
+             * for a certain documentType / fieldName combination,
+             * subclass FieldKey and override .getAttributePath() to reflect the correct path.
+             * @param {string} attribute
              * @returns {sntls.Path}
              */
-            getConfigPath: function () {
-                var metaFieldKey = ['document', this.documentKey.documentType, this.fieldName].toFieldKey();
-                return metaFieldKey.getEntityPath();
+            getAttributePath: function (attribute) {
+                return this.getEntityPath()
+                    .appendKey(attribute);
             },
 
             /**
-             * Retrieves field type string for the Field entity identified by the current key.
-             * Presupposes that the field has metadata.
+             * Retrieves the value of a specific attribute (fieldType) on the config document matching
+             * the current documentType / fieldName. When no such field attribute is found,
+             * returns the config field value itself.
              * @returns {string}
              */
             getFieldType: function () {
                 var config = bookworm.config,
-                    typeMetaPath = this.getConfigPath();
+                    configFieldKey = this._getConfigFieldKey();
 
-                return config.getNode(typeMetaPath.clone().appendKey('fieldType')) ||
-                       config.getNode(typeMetaPath);
+                return config.getNode(configFieldKey.getAttributePath('fieldType')) ||
+                       config.getNode(configFieldKey.getEntityPath());
+            },
+
+            /**
+             * Determines absolute path to the current Field entity's value node.
+             * In case field value node sits on a different path relative the Field node
+             * for a certain documentType / fieldName combination,
+             * subclass FieldKey and override .getValuePath() to reflect the correct path.
+             * By default, the value path is same as the entity path.
+             * @returns {sntls.Path}
+             */
+            getValuePath: function () {
+                return this.getEntityPath();
+            },
+
+            /**
+             * @returns {sntls.Path}
+             */
+            getConfigPath: function () {
+                return this._getConfigFieldKey()
+                    .getEntityPath();
             },
 
             /**

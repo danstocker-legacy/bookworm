@@ -26,8 +26,8 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
                 var itemKey = this.fieldKey.getItemKey(itemId),
                     item = itemKey.toItem();
 
-                return item.getItemMeta('order') ||
-                       item.getItemValue();
+                return item.getAttribute('order') ||
+                       item.getValue();
             },
 
             /**

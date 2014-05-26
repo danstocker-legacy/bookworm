@@ -48,7 +48,7 @@
             result;
 
         b$.Field.addMocks({
-            getFieldValue: function () {
+            getValue: function () {
                 equal(this.fieldKey.toString(), 'foo/bar/baz', "should get field value");
                 return itemsNode;
             }
@@ -69,7 +69,7 @@
             result;
 
         b$.Field.addMocks({
-            getFieldValue: function () {
+            getValue: function () {
                 equal(this.fieldKey.toString(), 'foo/bar/baz', "should get field value");
                 return itemsNode;
             }

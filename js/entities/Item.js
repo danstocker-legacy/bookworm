@@ -33,33 +33,6 @@ troop.postpone(bookworm, 'Item', function () {
                  * @type {bookworm.ItemKey}
                  */
                 this.itemKey = itemKey;
-            },
-
-            /**
-             * Fetches item metadata node from cache.
-             * @param {string} metaName
-             * @returns {*}
-             */
-            getItemMeta: function (metaName) {
-                return this.getNode(metaName);
-            },
-
-            /**
-             * Fetches item value node from cache.
-             * @returns {*}
-             */
-            getItemValue: function () {
-                return this.getNode();
-            },
-
-            /**
-             * Replaces item value node with the specified value.
-             * @param {*} value
-             * @returns {bookworm.Item}
-             */
-            setItemValue: function (value) {
-                this.setNode(value);
-                return this;
             }
         });
 });

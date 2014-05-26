@@ -57,7 +57,7 @@ troop.postpone(bookworm, 'ItemKey', function () {
             },
 
             /**
-             * Determines absolute path for the current Item entity's cache node.
+             * Determines absolute path for the current Item's entity node.
              * In case the Item entity node sits on a different path
              * relative to the Field node for a certain documentType / fieldName combination,
              * subclass ItemKey and override .getEntityPath() to reflect the correct path.

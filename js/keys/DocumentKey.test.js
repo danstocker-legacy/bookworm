@@ -76,11 +76,38 @@
         deepEqual(path.asArray, ['foo', 'bar'], "should set path contents correctly");
     });
 
-    test("Metadata path getter", function () {
+    test("Attribute path getter", function () {
+        expect(3);
+
+        var documentKey = 'foo/bar'.toFieldKey(),
+            entityPath = 'entity>path'.toPath(),
+            attributePath = {},
+            path;
+
+        documentKey.addMocks({
+            getEntityPath: function () {
+                ok(true, "should fetch entity path for current key");
+                return entityPath;
+            }
+        });
+
+        entityPath.addMocks({
+            appendKey: function (key) {
+                equal(key, 'hello', "should append attribute to entity path");
+                return attributePath;
+            }
+        });
+
+        path = documentKey.getAttributePath('hello');
+
+        strictEqual(path, attributePath, "should return attribute path");
+    });
+
+    test("Config path getter", function () {
         var key = 'foo/bar'.toDocumentKey(),
             path = key.getConfigPath();
 
-        ok(path.isA(sntls.Path), "should return CachePath instance");
+        ok(path.isA(sntls.Path), "should return Path instance");
         deepEqual(path.asArray, ['document', 'foo'], "should set path contents correctly");
     });
 

@@ -64,11 +64,59 @@
     });
 
     test("Entity path getter", function () {
-        var itemKey = 'hello/world/foo/bar'.toItemKey(),
-            path = itemKey.getEntityPath();
+        expect(3);
 
-        ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['hello', 'world', 'foo', 'bar'], "should set path contents");
+        var itemKey = 'foo/bar/baz/A'.toItemKey(),
+            fieldEntityPath = 'field>entity'.toPath(),
+            entityPath = {},
+            path;
+
+        b$.FieldKey.addMocks({
+            getEntityPath: function () {
+                strictEqual(this, itemKey, "should get entity key from field key");
+                return fieldEntityPath;
+            }
+        });
+
+        fieldEntityPath.addMocks({
+            appendKey: function (itemId) {
+                equal(itemId, itemKey.itemId, "should append item ID to field entity path");
+                return entityPath;
+            }
+        });
+
+        path = itemKey.getEntityPath();
+
+        b$.FieldKey.removeMocks();
+
+        strictEqual(path, entityPath, "should return correct item entity path");
+    });
+
+    test("Attribute path getter", function () {
+        expect(3);
+
+        var itemKey = 'foo/bar/baz/A'.toItemKey(),
+            entityPath = 'entity>path'.toPath(),
+            attributePath = {},
+            path;
+
+        itemKey.addMocks({
+            getEntityPath: function () {
+                equal(this.toString(), 'foo/bar/baz/A', "should fetch entity path for current key");
+                return entityPath;
+            }
+        });
+
+        entityPath.addMocks({
+            appendKey: function (key) {
+                equal(key, 'hello', "should append attribute to entity path");
+                return attributePath;
+            }
+        });
+
+        path = itemKey.getAttributePath('hello');
+
+        strictEqual(path, attributePath, "should return attribute path");
     });
 
     test("Item type getter", function () {
@@ -78,13 +126,13 @@
 
         b$.FieldKey.addMocks({
             getConfigPath: function () {
-                return 'meta>path'.toPath();
+                return 'config>path'.toPath();
             }
         });
 
         b$.config.addMocks({
             getNode: function (path) {
-                equal(path.toString(), 'meta>path>itemType', "should fetch item type from field config");
+                equal(path.toString(), 'config>path>itemType', "should fetch item type from field config");
             }
         });
 
@@ -92,6 +140,33 @@
 
         b$.FieldKey.removeMocks();
         b$.config.removeMocks();
+    });
+
+    test("Value path getter", function () {
+        expect(2);
+
+        var itemKey = 'foo/bar/baz/A'.toItemKey(),
+            entityPath = {},
+            path;
+
+        itemKey.addMocks({
+            getEntityPath: function () {
+                equal(this.toString(), 'foo/bar/baz/A', "should fetch entity path for current key");
+                return entityPath;
+            }
+        });
+
+        path = itemKey.getValuePath();
+
+        strictEqual(path, entityPath, "should return entity path");
+    });
+
+    test("Config path getter", function () {
+        var itemKey = 'foo/bar/baz/A'.toItemKey(),
+            path = itemKey.getConfigPath();
+
+        ok(path.isA(sntls.Path), "should return Path instance");
+        ok(path.equals(itemKey.getFieldKey().getConfigPath()), "should return same config path as FieldKey");
     });
 
     test("Conversion to String", function () {

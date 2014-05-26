@@ -62,13 +62,25 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
-             * Determines absolute path for the current Document entity's cache node.
-             * In case the entity node sits on a different path for a certain documentType,
+             * Determines absolute path to the current Document's entity node.
+             * In case document node sits on a different path for a certain documentType,
              * subclass DocumentKey and override .getEntityPath() to reflect the correct path.
              * @returns {sntls.Path}
              */
             getEntityPath: function () {
                 return [this.documentType, this.documentId].toPath();
+            },
+
+            /**
+             * Determines absolute path to the specified attribute of the current Document.
+             * In case attribute node sits on a different path for a certain documentType,
+             * subclass DocumentKey and override .getAttributePath() to reflect the correct path.
+             * @param {string} attribute
+             * @returns {sntls.Path}
+             */
+            getAttributePath: function (attribute) {
+                return this.getEntityPath()
+                    .appendKey(attribute);
             },
 
             /**

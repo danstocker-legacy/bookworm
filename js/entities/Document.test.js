@@ -41,23 +41,31 @@
         strictEqual(document.documentKey, documentKey, "should set document key");
     });
 
-    test("Meta node getter", function () {
-        expect(2);
+    test("Attribute node getter", function () {
+        expect(3);
 
         var document = 'foo/bar'.toDocument(),
-            metaNode = {};
+            attributePath = {},
+            attributeNode = {};
 
-        b$.Document.addMocks({
-            getNode: function () {
-                deepEqual(arguments, {0: 'hello'},
-                    "should fetch the metadata node from right under the entity node");
-                return metaNode;
+        document.documentKey.addMocks({
+            getAttributePath: function (attribute) {
+                equal(attribute, 'hello', "should get attribute path for specified attribute");
+                return attributePath;
             }
         });
 
-        strictEqual(document.getDocumentMeta('hello'), metaNode, "should return meta node");
+        b$.documents.addMocks({
+            getNode: function (path) {
+                strictEqual(path, attributePath,
+                    "should fetch the node from attribute path");
+                return attributeNode;
+            }
+        });
 
-        b$.DocumentKey.removeMocks();
+        strictEqual(document.getDocumentAttribute('hello'), attributeNode, "should return attribute node");
+
+        b$.documents.removeMocks();
     });
 
     test("Field entity getter", function () {

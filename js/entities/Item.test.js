@@ -41,58 +41,107 @@
         equal(item.itemKey.toString(), 'foo/bar/baz/hello', "should set item key");
     });
 
-    test("Item meta getter", function () {
-        expect(2);
+    test("Item attribute getter", function () {
+        expect(3);
 
-        var item = 'foo/bar/baz/hello'.toItem(),
-            metaNode = {};
+        var item = 'foo/bar/baz/A'.toItem(),
+            attributePath = {},
+            attributeNode = {};
 
-        b$.Item.addMocks({
-            getNode: function () {
-                deepEqual(arguments, {0: 'world'},
-                    "should fetch the metadata node from right under the entity node");
-                return metaNode;
+        item.itemKey.addMocks({
+            getAttributePath: function (attribute) {
+                equal(attribute, 'hello', "should fetch path for specified attribute");
+                return attributePath;
             }
         });
 
-        strictEqual(item.getItemMeta('world'), metaNode, "should return meta node");
+        b$.documents.addMocks({
+            getNode: function (path) {
+                strictEqual(path, attributePath, "should fetch node at attribute path");
+                return attributeNode;
+            }
+        });
 
-        b$.Item.removeMocks();
+        strictEqual(item.getAttribute('hello'), attributeNode, "should return attribute node");
+
+        b$.documents.removeMocks();
+    });
+
+    test("Item attribute setter", function () {
+        expect(4);
+
+        var item = 'foo/bar/baz/A'.toItem(),
+            attributePath = {},
+            attributeNode = {};
+
+        item.itemKey.addMocks({
+            getAttributePath: function (attribute) {
+                ok(true, "should fetch attribute path for current key");
+                return attributePath;
+            }
+        });
+
+        b$.documents.addMocks({
+            setNode: function (path, node) {
+                strictEqual(path, attributePath, "should set node at attribute path");
+                strictEqual(node, attributeNode, "should set specified value at attribute path");
+            }
+        });
+
+        strictEqual(item.setAttribute('hello', attributeNode), item, "should be chainable");
+
+        b$.documents.removeMocks();
     });
 
     test("Item value getter", function () {
-        expect(2);
+        expect(3);
 
-        var item = 'foo/bar/baz/hello'.toItem(),
+        var item = 'foo/bar/baz/A'.toItem(),
+            valuePath = {},
             valueNode = {};
 
-        b$.Item.addMocks({
-            getNode: function () {
-                deepEqual(arguments, {},
-                    "should fetch value node");
+        item.itemKey.addMocks({
+            getValuePath: function () {
+                ok(true, "should fetch value path for current key");
+                return valuePath;
+            }
+        });
+
+        b$.documents.addMocks({
+            getNode: function (path) {
+                strictEqual(path, valuePath, "should fetch node at specified value path");
                 return valueNode;
             }
         });
 
-        strictEqual(item.getItemValue(), valueNode, "should return value node");
+        strictEqual(item.getValue(), valueNode, "should return value node");
 
-        b$.Item.removeMocks();
+        b$.documents.removeMocks();
     });
 
     test("Item value setter", function () {
-        expect(2);
+        expect(4);
 
-        var item = 'foo/bar/baz/hello'.toItem(),
+        var item = 'foo/bar/baz/A'.toItem(),
+            valuePath = {},
             valueNode = {};
 
-        b$.Item.addMocks({
-            setNode: function (value) {
-                deepEqual(arguments, {0: valueNode}, "should set specified value on item node");
+        item.itemKey.addMocks({
+            getValuePath: function () {
+                ok(true, "should fetch value path for current key");
+                return valuePath;
             }
         });
 
-        strictEqual(item.setItemValue(valueNode), item, "should be chainable");
+        b$.documents.addMocks({
+            setNode: function (path, value) {
+                strictEqual(path, valuePath, "should set node at specified value path");
+                strictEqual(value, valueNode, "should set specified value node at path");
+            }
+        });
 
-        b$.Item.removeMocks();
+        strictEqual(item.setValue(valueNode), item, "should be chainable");
+
+        b$.documents.removeMocks();
     });
 }());

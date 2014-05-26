@@ -26,15 +26,20 @@
     });
 
     test("Item order getter", function () {
-        expect(3);
+        expect(4);
 
         var orderedCollection = b$.OrderedCollectionField.create('foo/bar/baz'.toFieldKey()),
             orderNode = {};
 
         b$.Item.addMocks({
-            getNode: function () {
-                equal(this.itemKey.toString(), 'foo/bar/baz/hello', "should fetch item node from cache");
-                deepEqual(arguments, {0: 'order'}, "should pass correct meta name to getNode");
+            getAttribute: function (attribute) {
+                equal(this.itemKey.toString(), 'foo/bar/baz/hello', "should fetch attribute for specified item");
+                ok(attribute, 'order', "should attempt to fetch order attribute");
+                return undefined;
+            },
+
+            getValue: function () {
+                equal(this.itemKey.toString(), 'foo/bar/baz/hello', "should fetch value node of specified item");
                 return orderNode;
             }
         });
@@ -69,8 +74,9 @@
         });
 
         equal(typeof orderedCollection.getItemKeyByOrder(3), 'undefined', "should return undefined for invalid order");
-        deepEqual(traversedItemsIds.sort(), ['foo', 'bar', 'baz'
-        ].sort(), "should get order until matching order found");
+        deepEqual(traversedItemsIds.sort(),
+            ['foo', 'bar', 'baz'].sort(),
+            "should get order until matching order found");
 
         result = orderedCollection.getItemKeyByOrder(0);
         ok(result.isA(b$.ItemKey), "should return ItemKey instance");

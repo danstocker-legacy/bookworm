@@ -36,29 +36,42 @@ troop.postpone(bookworm, 'Field', function () {
             },
 
             /**
-             * Fetches field metadata node from cache.
-             * @param {string} metaName
+             * Fetches field attribute node from cache.
+             * @param {string} attribute
              * @returns {*}
              */
-            getFieldMeta: function (metaName) {
-                return this.getNode(metaName);
+            getAttribute: function (attribute) {
+                var attributePath = this.fieldKey.getAttributePath(attribute);
+                return bookworm.documents.getNode(attributePath);
+            },
+
+            /**
+             * Sets field attribute node in cache.
+             * @param {string} attribute
+             * @param {*} attributeNode
+             * @returns {*}
+             */
+            setAttribute: function (attribute, attributeNode) {
+                var attributePath = this.fieldKey.getAttributePath(attribute);
+                bookworm.documents.setNode(attributePath, attributeNode);
+                return this;
             },
 
             /**
              * Fetches field value node from cache.
              * @returns {*}
              */
-            getFieldValue: function () {
-                return this.getNode();
+            getValue: function () {
+                return bookworm.documents.getNode(this.fieldKey.getValuePath());
             },
 
             /**
-             * Replaces field value node with the specified value.
+             * Sets field value node to the specified value.
              * @param {*} value
              * @returns {bookworm.Field}
              */
-            setFieldValue: function (value) {
-                this.setNode(value);
+            setValue: function (value) {
+                bookworm.documents.setNode(this.fieldKey.getValuePath(), value);
                 return this;
             }
         });

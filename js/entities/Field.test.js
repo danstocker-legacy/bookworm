@@ -41,58 +41,107 @@
         strictEqual(field.fieldKey, fieldKey, "should set field key");
     });
 
-    test("Field meta getter", function () {
-        expect(2);
+    test("Field attribute getter", function () {
+        expect(3);
 
         var field = 'foo/bar/baz'.toField(),
-            metaNode = {};
+            attributePath = {},
+            attributeNode = {};
 
-        b$.Field.addMocks({
-            getNode: function () {
-                deepEqual(arguments, {0: 'hello'},
-                    "should fetch the metadata node from right under the entity node");
-                return metaNode;
+        field.fieldKey.addMocks({
+            getAttributePath: function (attribute) {
+                equal(attribute, 'hello', "should fetch path for specified attribute");
+                return attributePath;
             }
         });
 
-        strictEqual(field.getFieldMeta('hello'), metaNode, "should return meta node");
+        b$.documents.addMocks({
+            getNode: function (path) {
+                strictEqual(path, attributePath, "should fetch node at attribute path");
+                return attributeNode;
+            }
+        });
 
-        b$.Field.removeMocks();
+        strictEqual(field.getAttribute('hello'), attributeNode, "should return attribute node");
+
+        b$.documents.removeMocks();
+    });
+
+    test("Field attribute setter", function () {
+        expect(4);
+
+        var field = 'foo/bar/baz'.toField(),
+            attributePath = {},
+            attributeNode = {};
+
+        field.fieldKey.addMocks({
+            getAttributePath: function (attribute) {
+                equal(attribute, 'hello', "should fetch path for specified attribute");
+                return attributePath;
+            }
+        });
+
+        b$.documents.addMocks({
+            setNode: function (path, node) {
+                strictEqual(path, attributePath, "should set node at attribute path");
+                strictEqual(node, attributeNode, "should set specified value at attribute path");
+            }
+        });
+
+        strictEqual(field.setAttribute('hello', attributeNode), field, "should be chainable");
+
+        b$.documents.removeMocks();
     });
 
     test("Field value getter", function () {
-        expect(2);
+        expect(3);
 
         var field = 'foo/bar/baz'.toField(),
+            valuePath = {},
             valueNode = {};
 
-        b$.Field.addMocks({
-            getNode: function () {
-                deepEqual(arguments, {}, "should fetch field node");
+        field.fieldKey.addMocks({
+            getValuePath: function () {
+                ok(true, "should fetch value path for current key");
+                return valuePath;
+            }
+        });
+
+        b$.documents.addMocks({
+            getNode: function (path) {
+                strictEqual(path, valuePath, "should fetch node at specified value path");
                 return valueNode;
             }
         });
 
-        strictEqual(field.getFieldValue(), valueNode, "should return field node");
+        strictEqual(field.getValue(), valueNode, "should return value node");
 
-        b$.Field.removeMocks();
+        b$.documents.removeMocks();
     });
 
     test("Field value setter", function () {
-        expect(2);
+        expect(4);
 
         var field = 'foo/bar/baz'.toField(),
+            valuePath = {},
             valueNode = {};
 
-        b$.Field.addMocks({
-            setNode: function (value) {
-                deepEqual(arguments, {0: valueNode},
-                    "should set specified value on field node");
+        field.fieldKey.addMocks({
+            getValuePath: function () {
+                ok(true, "should fetch value path for current key");
+                return valuePath;
             }
         });
 
-        strictEqual(field.setFieldValue(valueNode), field, "should be chainable");
+        b$.documents.addMocks({
+            setNode: function (path, value) {
+                strictEqual(path, valuePath, "should set node at specified value path");
+                strictEqual(value, valueNode, "should set specified value node at path");
+            }
+        });
 
-        b$.Field.removeMocks();
+        strictEqual(field.setValue(valueNode), field, "should be chainable");
+
+        b$.documents.removeMocks();
     });
 }());

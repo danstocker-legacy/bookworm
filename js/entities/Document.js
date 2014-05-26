@@ -36,12 +36,13 @@ troop.postpone(bookworm, 'Document', function () {
             },
 
             /**
-             * Fetches document metadata node from cache.
-             * @param {string} metaName
+             * Fetches document attribute node from cache.
+             * @param {string} attribute
              * @returns {*}
              */
-            getDocumentMeta: function (metaName) {
-                return this.getNode(metaName);
+            getDocumentAttribute: function (attribute) {
+                var attributePath = this.documentKey.getAttributePath(attribute);
+                return bookworm.documents.getNode(attributePath);
             },
 
             /**
