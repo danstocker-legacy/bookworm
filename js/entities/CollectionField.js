@@ -32,6 +32,15 @@ troop.postpone(bookworm, 'CollectionField', function () {
              */
             getItemsAsCollection: function () {
                 return sntls.Collection.create(this.getValue());
+            },
+
+            /**
+             * Retrieves Item entity matching the specified item ID.
+             * @param {string} itemId
+             * @returns {bookworm.Item}
+             */
+            getItem: function (itemId) {
+                return this.fieldKey.getItemKey(itemId).toItem();
             }
         });
 });

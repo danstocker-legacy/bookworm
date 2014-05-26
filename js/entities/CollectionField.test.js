@@ -82,4 +82,14 @@
 
         b$.Field.removeMocks();
     });
+
+    test("Item getter", function () {
+        var collection = b$.CollectionField.create('foo/bar/baz'.toFieldKey()),
+            result;
+
+        result = collection.getItem('A');
+
+        ok(result.isA(b$.Item), "should return Item instance");
+        equal(result.itemKey.toString(), 'foo/bar/baz/A', "should set the correct item key on the returned Item");
+    });
 }());
