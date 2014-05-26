@@ -57,14 +57,14 @@
             result;
 
         b$.OrderedCollectionField.addMocks({
-            getItemsAsCollection: function () {
+            getItems: function () {
                 // called twice
                 equal(this.fieldKey.toString(), 'foo/bar/baz', "should fetch collection items");
-                return sntls.Collection.create({
+                return {
                     'foo': 1,
                     'bar': 2,
                     'baz': 3
-                });
+                };
             },
 
             getItemOrder: function (itemId) {
@@ -83,5 +83,49 @@
         equal(result.itemId, 'foo', "should return ItemKey with matching item ID");
 
         b$.OrderedCollectionField.removeMocks();
+    });
+
+    test("Item getter by order", function () {
+        expect(3);
+
+        var orderedCollection = b$.OrderedCollectionField.create('foo/bar/baz'.toFieldKey()),
+            itemKey = 'item>key'.toItemKey(),
+            item;
+
+        orderedCollection.addMocks({
+            getItemKeyByOrder: function (order) {
+                equal(order, 2, "should fetch item key by order");
+                return itemKey;
+            }
+        });
+
+        item = orderedCollection.getItemByOrder(2);
+
+        ok(item.isA(b$.Item), "should return Item instance");
+        strictEqual(item.itemKey, itemKey,
+            "should return item with ItemKey matching the specified order");
+    });
+
+    test("Max order getter", function () {
+        var orderedCollection = b$.OrderedCollectionField.create('foo/bar/baz'.toFieldKey()),
+            itemsNode = {
+                A: 2,
+                B: 12,
+                C: 0,
+                D: 3
+            };
+
+        orderedCollection.addMocks({
+            getItems: function () {
+                ok(true, "should fetch items node");
+                return itemsNode;
+            },
+
+            getItemOrder: function (itemId) {
+                return itemsNode[itemId];
+            }
+        });
+
+        equal(orderedCollection.getMaxOrder(), 12, "should get highest order");
     });
 }());

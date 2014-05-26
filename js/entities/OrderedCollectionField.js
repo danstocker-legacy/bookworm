@@ -31,21 +31,63 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
             },
 
             /**
-             * Retrieves item key from collection matching the specified order.
+             * Retrieves ItemKey from collection matching the specified order.
              * @param {number} order
              * @returns {undefined}
              */
             getItemKeyByOrder: function (order) {
-                var that = this,
-                    result;
+                var result,
+                    itemsNode = this.getItems(),
+                    itemIds,
+                    i, itemId;
 
-                this.getItemsAsCollection()
-                    .forEachItem(function (item, itemId) {
-                        if (that.getItemOrder(itemId) === order) {
-                            result = that.fieldKey.getItemKey(itemId);
-                            return false;
+                if (itemsNode) {
+                    itemIds = Object.keys(itemsNode);
+                    for (i = 0; i < itemIds.length; i++) {
+                        itemId = itemIds[i];
+                        if (this.getItemOrder(itemId) === order) {
+                            result = this.fieldKey.getItemKey(itemId);
+                            break;
                         }
-                    });
+                    }
+                }
+
+                return result;
+            },
+
+            /**
+             * Retrieves Item entity from collection matching the specified order.
+             * @param {number} order
+             * @returns {bookworm.Item}
+             */
+            getItemByOrder: function (order) {
+                var itemKey = this.getItemKeyByOrder(order);
+                return itemKey ?
+                    itemKey.toItem() :
+                    undefined;
+            },
+
+            /**
+             * Retrieves highest item order from collection.
+             * TODO: Implement (optionally) indexed version.
+             * @returns {number}
+             */
+            getMaxOrder: function () {
+                var result = Number.MIN_VALUE,
+                    itemsNode = this.getItems(),
+                    itemIds,
+                    i, itemId, itemOrder;
+
+                if (itemsNode) {
+                    itemIds = Object.keys(itemsNode);
+                    for (i = 0; i < itemIds.length; i++) {
+                        itemId = itemIds[i];
+                        itemOrder = this.getItemOrder(itemId);
+                        if (itemOrder > result) {
+                            result = itemOrder;
+                        }
+                    }
+                }
 
                 return result;
             }
