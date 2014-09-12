@@ -89,16 +89,18 @@ troop.postpone(bookworm, 'Entity', function () {
 
             /**
              * Replaces entity node with the specified value.
-             * Extra arguments will be appended to the entity path.
+             * Extra arguments (string or sntls.Path) will be appended to the entity path.
              * @param {*} value
              * @returns {bookworm.Entity}
              */
             setNode: function (value) {
                 var dataPath = this.entityKey.getEntityPath();
 
-                if (arguments.length) {
-                    bookworm.documents.setNode(dataPath.append(slice.call(arguments, 1).toPath()), value);
+                if (arguments.length > 1) {
+                    dataPath = dataPath.append(slice.call(arguments, 1).toPath());
                 }
+
+                bookworm.documents.setNode(dataPath, value);
 
                 return this;
             }
