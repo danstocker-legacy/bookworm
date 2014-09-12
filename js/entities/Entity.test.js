@@ -130,4 +130,20 @@
 
         b$.documents.removeMocks();
     });
+
+    test("Node removal", function () {
+        expect(2);
+
+        var entity = b$.Entity.create('foo/bar'.toDocumentKey());
+
+        b$.documents.addMocks({
+            unsetKey: function (path) {
+                equal(path.toString(), 'foo>bar>world', "should remove key from cache at the entity's extended path");
+            }
+        });
+
+        strictEqual(entity.unsetKey('world'), entity, "should be chainable");
+
+        b$.documents.removeMocks();
+    });
 }());

@@ -33,6 +33,9 @@ troop.postpone(bookworm, 'Entity', function () {
             /**
              * Fetches entity node from cache.
              * Arguments will be appended to the entity path.
+             * @example
+             * // will fetch the node under 'foo>bar' relative to the entity root
+             * entity.getNode('foo', 'bar');
              * @returns {*}
              */
             getNode: function () {
@@ -89,7 +92,10 @@ troop.postpone(bookworm, 'Entity', function () {
 
             /**
              * Replaces entity node with the specified value.
-             * Extra arguments (string or sntls.Path) will be appended to the entity path.
+             * Extra arguments will be appended to the entity path.
+             * @example
+             * // will set 'hello world' on the path 'foo>bar' relative to the entity root
+             * entity.setNode('hello world', 'foo', 'bar');
              * @param {*} value
              * @returns {bookworm.Entity}
              */
@@ -101,6 +107,26 @@ troop.postpone(bookworm, 'Entity', function () {
                 }
 
                 bookworm.documents.setNode(dataPath, value);
+
+                return this;
+            },
+
+            /**
+             * Removes entity node from cache.
+             * Arguments will be appended to the entity path.
+             * @example
+             * // will remove the node under 'foo>bar' relative to the entity root
+             * entity.unsetKey('foo', 'bar');
+             * @returns {bookworm.Entity}
+             */
+            unsetKey: function () {
+                var dataPath = this.entityKey.getEntityPath();
+
+                if (arguments.length) {
+                    dataPath = dataPath.append(slice.call(arguments).toPath());
+                }
+
+                bookworm.documents.unsetKey(dataPath);
 
                 return this;
             }
