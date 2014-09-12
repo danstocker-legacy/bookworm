@@ -1,7 +1,7 @@
 {
     "name"           : "bookworm",
-    "version"        : "0.1.1",
-    "description"    : "Bookworm",
+    "version"        : "0.1.2",
+    "description"    : "Document framework",
     "keywords"       : [
         "document",
         "cache",
