@@ -40,7 +40,7 @@ troop.postpone(bookworm, 'CollectionField', function () {
              * @returns {bookworm.Item}
              */
             getItem: function (itemId) {
-                return this.fieldKey.getItemKey(itemId).toItem();
+                return this.entityKey.getItemKey(itemId).toItem();
             }
         });
 });

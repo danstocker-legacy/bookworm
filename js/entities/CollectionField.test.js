@@ -49,7 +49,7 @@
 
         b$.Field.addMocks({
             getValue: function () {
-                equal(this.fieldKey.toString(), 'foo/bar/baz', "should get field value");
+                equal(this.entityKey.toString(), 'foo/bar/baz', "should get field value");
                 return itemsNode;
             }
         });
@@ -70,7 +70,7 @@
 
         b$.Field.addMocks({
             getValue: function () {
-                equal(this.fieldKey.toString(), 'foo/bar/baz', "should get field value");
+                equal(this.entityKey.toString(), 'foo/bar/baz', "should get field value");
                 return itemsNode;
             }
         });
@@ -90,6 +90,6 @@
         result = collection.getItem('A');
 
         ok(result.isA(b$.Item), "should return Item instance");
-        equal(result.itemKey.toString(), 'foo/bar/baz/A', "should set the correct item key on the returned Item");
+        equal(result.entityKey.toString(), 'foo/bar/baz/A', "should set the correct item key on the returned Item");
     });
 }());

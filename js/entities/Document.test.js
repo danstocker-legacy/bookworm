@@ -73,6 +73,6 @@
             field = document.getField('baz');
 
         ok(field.isA(b$.Field), "should return Field instance");
-        equal(field.fieldKey.toString(), 'foo/bar/baz', "should set field key on returned entity");
+        equal(field.entityKey.toString(), 'foo/bar/baz', "should set field key on returned entity");
     });
 }());

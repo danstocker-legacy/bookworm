@@ -13,24 +13,20 @@
         raises(function () {
             b$.Item.create('foo/bar/baz'.toFieldKey());
         }, "should raise exception on invalid item key argument");
-
-        var item = b$.Item.create('foo/bar/baz/hello'.toItemKey());
-
-        strictEqual(item.itemKey, item.entityKey, "should set item key");
     });
 
     test("Conversion from String", function () {
         var item = 'foo/bar/baz/hello'.toItem();
 
         ok(item.isA(b$.Item), "should return Item instance");
-        equal(item.itemKey.toString(), 'foo/bar/baz/hello', "should set item key");
+        equal(item.entityKey.toString(), 'foo/bar/baz/hello', "should set item key");
     });
 
     test("Conversion from Array", function () {
         var item = ['foo', 'bar', 'baz', 'hello'].toItem();
 
         ok(item.isA(b$.Item), "should return Item instance");
-        equal(item.itemKey.toString(), 'foo/bar/baz/hello', "should set item key");
+        equal(item.entityKey.toString(), 'foo/bar/baz/hello', "should set item key");
     });
 
     test("Conversion from FieldKey", function () {
@@ -38,7 +34,7 @@
             item = itemKey.toItem();
 
         ok(item.isA(b$.Item), "should return Item instance");
-        equal(item.itemKey.toString(), 'foo/bar/baz/hello', "should set item key");
+        equal(item.entityKey.toString(), 'foo/bar/baz/hello', "should set item key");
     });
 
     test("Item attribute getter", function () {
@@ -48,7 +44,7 @@
             attributePath = {},
             attributeNode = {};
 
-        item.itemKey.addMocks({
+        item.entityKey.addMocks({
             getAttributePath: function (attribute) {
                 equal(attribute, 'hello', "should fetch path for specified attribute");
                 return attributePath;
@@ -74,7 +70,7 @@
             attributePath = {},
             attributeNode = {};
 
-        item.itemKey.addMocks({
+        item.entityKey.addMocks({
             getAttributePath: function (attribute) {
                 ok(true, "should fetch attribute path for current key");
                 return attributePath;
@@ -100,7 +96,7 @@
             valuePath = {},
             valueNode = {};
 
-        item.itemKey.addMocks({
+        item.entityKey.addMocks({
             getValuePath: function () {
                 ok(true, "should fetch value path for current key");
                 return valuePath;
@@ -126,7 +122,7 @@
             valuePath = {},
             valueNode = {};
 
-        item.itemKey.addMocks({
+        item.entityKey.addMocks({
             getValuePath: function () {
                 ok(true, "should fetch value path for current key");
                 return valuePath;

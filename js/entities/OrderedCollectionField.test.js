@@ -33,13 +33,13 @@
 
         b$.Item.addMocks({
             getAttribute: function (attribute) {
-                equal(this.itemKey.toString(), 'foo/bar/baz/hello', "should fetch attribute for specified item");
+                equal(this.entityKey.toString(), 'foo/bar/baz/hello', "should fetch attribute for specified item");
                 ok(attribute, 'order', "should attempt to fetch order attribute");
                 return undefined;
             },
 
             getValue: function () {
-                equal(this.itemKey.toString(), 'foo/bar/baz/hello', "should fetch value node of specified item");
+                equal(this.entityKey.toString(), 'foo/bar/baz/hello', "should fetch value node of specified item");
                 return orderNode;
             }
         });
@@ -59,7 +59,7 @@
         b$.OrderedCollectionField.addMocks({
             getItems: function () {
                 // called twice
-                equal(this.fieldKey.toString(), 'foo/bar/baz', "should fetch collection items");
+                equal(this.entityKey.toString(), 'foo/bar/baz', "should fetch collection items");
                 return {
                     'foo': 1,
                     'bar': 2,
@@ -102,7 +102,7 @@
         item = orderedCollection.getItemByOrder(2);
 
         ok(item.isA(b$.Item), "should return Item instance");
-        strictEqual(item.itemKey, itemKey,
+        strictEqual(item.entityKey, itemKey,
             "should return item with ItemKey matching the specified order");
     });
 

@@ -29,10 +29,9 @@ troop.postpone(bookworm, 'Item', function () {
 
                 /**
                  * Item key associated with current entity.
-                 * Same as entityKey.
+                 * @name bookworm.Item#entityKey
                  * @type {bookworm.ItemKey}
                  */
-                this.itemKey = itemKey;
             }
         });
 });

@@ -23,7 +23,7 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
              * @returns {number}
              */
             getItemOrder: function (itemId) {
-                var itemKey = this.fieldKey.getItemKey(itemId),
+                var itemKey = this.entityKey.getItemKey(itemId),
                     item = itemKey.toItem();
 
                 return item.getAttribute('order') ||
@@ -46,7 +46,7 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
                     for (i = 0; i < itemIds.length; i++) {
                         itemId = itemIds[i];
                         if (this.getItemOrder(itemId) === order) {
-                            result = this.fieldKey.getItemKey(itemId);
+                            result = this.entityKey.getItemKey(itemId);
                             break;
                         }
                     }

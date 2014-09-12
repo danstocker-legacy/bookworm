@@ -29,10 +29,9 @@ troop.postpone(bookworm, 'Field', function () {
 
                 /**
                  * Field key associated with current entity.
-                 * Same as entityKey.
+                 * @name bookworm.Field#entityKey
                  * @type {bookworm.FieldKey}
                  */
-                this.fieldKey = fieldKey;
             },
 
             /**
@@ -41,7 +40,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {*}
              */
             getAttribute: function (attribute) {
-                var attributePath = this.fieldKey.getAttributePath(attribute);
+                var attributePath = this.entityKey.getAttributePath(attribute);
                 return bookworm.documents.getNode(attributePath);
             },
 
@@ -52,7 +51,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {*}
              */
             setAttribute: function (attribute, attributeNode) {
-                var attributePath = this.fieldKey.getAttributePath(attribute);
+                var attributePath = this.entityKey.getAttributePath(attribute);
                 bookworm.documents.setNode(attributePath, attributeNode);
                 return this;
             },
@@ -62,7 +61,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {*}
              */
             getValue: function () {
-                return bookworm.documents.getNode(this.fieldKey.getValuePath());
+                return bookworm.documents.getNode(this.entityKey.getValuePath());
             },
 
             /**
@@ -71,7 +70,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {bookworm.Field}
              */
             setValue: function (value) {
-                bookworm.documents.setNode(this.fieldKey.getValuePath(), value);
+                bookworm.documents.setNode(this.entityKey.getValuePath(), value);
                 return this;
             }
         });

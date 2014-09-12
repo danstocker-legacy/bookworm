@@ -13,24 +13,20 @@
         raises(function () {
             b$.Field.create('foo/bar/baz');
         }, "should raise exception on invalid field key argument");
-
-        var field = b$.Field.create('foo/bar/baz'.toFieldKey());
-
-        strictEqual(field.fieldKey, field.entityKey, "should set field key");
     });
 
     test("Conversion from String", function () {
         var field = 'foo/bar/baz'.toField();
 
         ok(field.isA(b$.Field), "should return Field instance");
-        equal(field.fieldKey.toString(), 'foo/bar/baz', "should set field key");
+        equal(field.entityKey.toString(), 'foo/bar/baz', "should set field key");
     });
 
     test("Conversion from Array", function () {
         var field = ['foo', 'bar', 'baz'].toField();
 
         ok(field.isA(b$.Field), "should return Field instance");
-        equal(field.fieldKey.toString(), 'foo/bar/baz', "should set field key");
+        equal(field.entityKey.toString(), 'foo/bar/baz', "should set field key");
     });
 
     test("Conversion from FieldKey", function () {
@@ -38,7 +34,7 @@
             field = fieldKey.toField();
 
         ok(field.isA(b$.Field), "should return Field instance");
-        strictEqual(field.fieldKey, fieldKey, "should set field key");
+        strictEqual(field.entityKey, fieldKey, "should set field key");
     });
 
     test("Field attribute getter", function () {
@@ -48,7 +44,7 @@
             attributePath = {},
             attributeNode = {};
 
-        field.fieldKey.addMocks({
+        field.entityKey.addMocks({
             getAttributePath: function (attribute) {
                 equal(attribute, 'hello', "should fetch path for specified attribute");
                 return attributePath;
@@ -74,7 +70,7 @@
             attributePath = {},
             attributeNode = {};
 
-        field.fieldKey.addMocks({
+        field.entityKey.addMocks({
             getAttributePath: function (attribute) {
                 equal(attribute, 'hello', "should fetch path for specified attribute");
                 return attributePath;
@@ -100,7 +96,7 @@
             valuePath = {},
             valueNode = {};
 
-        field.fieldKey.addMocks({
+        field.entityKey.addMocks({
             getValuePath: function () {
                 ok(true, "should fetch value path for current key");
                 return valuePath;
@@ -126,7 +122,7 @@
             valuePath = {},
             valueNode = {};
 
-        field.fieldKey.addMocks({
+        field.entityKey.addMocks({
             getValuePath: function () {
                 ok(true, "should fetch value path for current key");
                 return valuePath;
