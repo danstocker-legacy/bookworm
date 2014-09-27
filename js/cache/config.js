@@ -31,23 +31,3 @@ troop.postpone(bookworm, 'config', function () {
         }
     });
 });
-
-troop.postpone(bookworm, 'entities', function () {
-    "use strict";
-
-    /**
-     * Evented cache for application-domain entities.
-     * @type {flock.EventedTree}
-     */
-    bookworm.entities = flock.EventedTree.create();
-});
-
-troop.postpone(bookworm, 'index', function () {
-    "use strict";
-
-    /**
-     * Non-evented cache for application-domain indexes.
-     * @type {sntls.Tree}
-     */
-    bookworm.index = sntls.Tree.create();
-});
