@@ -13,24 +13,20 @@
         raises(function () {
             b$.Document.create('foo');
         }, "should raise exception on invalid document key argument");
-
-        var document = b$.Document.create('foo/bar'.toDocumentKey());
-
-        strictEqual(document.documentKey, document.entityKey, "should set document key");
     });
 
     test("Conversion from String", function () {
         var document = 'foo/bar'.toDocument();
 
         ok(document.isA(b$.Document), "should return Document instance");
-        equal(document.documentKey.toString(), 'foo/bar', "should set document key");
+        equal(document.entityKey.toString(), 'foo/bar', "should set document key");
     });
 
     test("Conversion from Array", function () {
         var document = ['foo', 'bar'].toDocument();
 
         ok(document.isA(b$.Document), "should return Document instance");
-        equal(document.documentKey.toString(), 'foo/bar', "should set document key");
+        equal(document.entityKey.toString(), 'foo/bar', "should set document key");
     });
 
     test("Conversion from DocumentKey", function () {
@@ -38,7 +34,7 @@
             document = documentKey.toDocument();
 
         ok(document.isA(b$.Document), "should return Document instance");
-        strictEqual(document.documentKey, documentKey, "should set document key");
+        strictEqual(document.entityKey, documentKey, "should set document key");
     });
 
     test("Attribute node getter", function () {
@@ -48,7 +44,7 @@
             attributePath = {},
             attributeNode = {};
 
-        document.documentKey.addMocks({
+        document.entityKey.addMocks({
             getAttributePath: function (attribute) {
                 equal(attribute, 'hello', "should get attribute path for specified attribute");
                 return attributePath;

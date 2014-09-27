@@ -6,6 +6,7 @@ troop.postpone(bookworm, 'Field', function () {
         self = base.extend();
 
     /**
+     * Creates a Field instance.
      * @name bookworm.Field.create
      * @function
      * @param {bookworm.FieldKey} fieldKey
@@ -13,6 +14,8 @@ troop.postpone(bookworm, 'Field', function () {
      */
 
     /**
+     * The Field entity class implements an API for document field nodes in the cache. Allows access and modification
+     * of the field's value and attributes.
      * @class
      * @extends bookworm.Entity
      */
@@ -82,7 +85,7 @@ troop.amendPostponed(bookworm, 'FieldKey', function () {
     bookworm.FieldKey
         .addMethods(/** @lends bookworm.FieldKey */{
             /**
-             * Creates Field instance based on the current field key.
+             * Converts `FieldKey` to `Field`.
              * @returns {bookworm.Field}
              */
             toField: function () {
@@ -98,7 +101,7 @@ troop.amendPostponed(bookworm, 'FieldKey', function () {
         String.prototype,
         /** @lends String# */{
             /**
-             * Creates Field instance based on the current string as key.
+             * Converts `String` to `Field` instance, assuming the string is a serialized `FieldKey`.
              * @returns {bookworm.Field}
              */
             toField: function () {
@@ -112,7 +115,7 @@ troop.amendPostponed(bookworm, 'FieldKey', function () {
         Array.prototype,
         /** @lends Array# */{
             /**
-             * Creates Field instance based on the current Array of string as key.
+             * Converts `Array` to `Field` instance, assuming the array is a field key in array notation.
              * @returns {bookworm.Field}
              */
             toField: function () {

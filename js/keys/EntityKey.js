@@ -3,6 +3,9 @@ troop.postpone(bookworm, 'EntityKey', function () {
     "use strict";
 
     /**
+     * Creates an EntityKey instance.
+     * Do not create EntityKey instances directly, only through its subclasses,
+     * unless suitable surrogates have been set up.
      * @name bookworm.EntityKey.create
      * @function
      * @returns {bookworm.EntityKey}
@@ -10,14 +13,14 @@ troop.postpone(bookworm, 'EntityKey', function () {
 
     /**
      * Abstract class for identifying Entities.
-     * A EntityKey may be resolved to a cache path.
+     * A EntityKey may be resolved to an entity path.
      * @class
      * @extends troop.Base
      */
     bookworm.EntityKey = troop.Base.extend();
 
     /**
-     * Tells whether specified key is identical to the current one.
+     * Tells whether specified entity key is identical to the current one.
      * @name bookworm.EntityKey#equals
      * @function
      * @param {bookworm.EntityKey} key
@@ -25,14 +28,14 @@ troop.postpone(bookworm, 'EntityKey', function () {
      */
 
     /**
-     * Resolves key to the cache path of the Entity.
+     * Resolves key to a path that points to the entity node in the cache.
      * @name bookworm.EntityKey#getEntityPath
      * @function
      * @returns {sntls.Path}
      */
 
     /**
-     * Resolves key to the cache path associated with the specified entity attribute.
+     * Resolves key to a path that points to the specified entity attribute in the cache.
      * @name bookworm.EntityKey#getAttributePath
      * @function
      * @param {string} attribute
@@ -40,7 +43,7 @@ troop.postpone(bookworm, 'EntityKey', function () {
      */
 
     /**
-     * Retrieves config node path associated with the current key.
+     * Retrieves config node path for the current key.
      * @name bookworm.EntityKey#getConfigPath
      * @function
      * @returns {sntls.Path}
@@ -51,12 +54,10 @@ troop.postpone(bookworm, 'EntityKey', function () {
     "use strict";
 
     dessert.addTypes(/** @lends dessert */{
-        /** Tells whether expression is an EntityKey */
         isEntityKey: function (expr) {
             return bookworm.EntityKey.isBaseOf(expr);
         },
 
-        /** Tells whether expression is optionally an EntityKey */
         isEntityKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
                    bookworm.EntityKey.isBaseOf(expr);
@@ -67,7 +68,7 @@ troop.postpone(bookworm, 'EntityKey', function () {
         String.prototype,
         /** @lends String# */{
             /**
-             * Converts string to EntityKey instance.
+             * Converts `String` to `EntityKey` instance. Assumes that string is a serialized `EntityKey`.
              * @returns {bookworm.EntityKey}
              */
             toEntityKey: function () {
@@ -85,7 +86,7 @@ troop.postpone(bookworm, 'EntityKey', function () {
         Array.prototype,
         /** @lends Array# */{
             /**
-             * Converts Array to EntityKey instance.
+             * Converts `Array` to `EntityKey` instance. Assumes that array is an entity key in array notation.
              * @returns {bookworm.EntityKey}
              */
             toEntityKey: function () {

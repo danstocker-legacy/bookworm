@@ -6,12 +6,19 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
         self = base.extend();
 
     /**
+     * Creates an OrderedCollectionField instance.
+     * OrderedCollectionField instances may be created via `bookworm.Field.create` provided that the `config`
+     * cache defines the field type as 'ordered-collection'.
      * @name bookworm.OrderedCollectionField.create
      * @function
+     * @param {string} fieldKey Identifies ordered collection field.
      * @returns {bookworm.OrderedCollectionField}
      */
 
     /**
+     * The OrderedCollectionField class defines an API for collections the items of which are in a pre-defined order.
+     * Provides methods for accessing information about item order, as well as retrieving items based on order.
+     * TODO: Add managed index for fetching items by order.
      * @class
      * @extends bookworm.CollectionField
      */
@@ -31,7 +38,7 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
             },
 
             /**
-             * Retrieves ItemKey from collection matching the specified order.
+             * Retrieves `ItemKey` from collection matching the specified order.
              * @param {number} order
              * @returns {undefined}
              */
@@ -56,7 +63,7 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
             },
 
             /**
-             * Retrieves Item entity from collection matching the specified order.
+             * Retrieves `Item` entity from collection matching the specified order.
              * @param {number} order
              * @returns {bookworm.Item}
              */
@@ -69,7 +76,6 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
 
             /**
              * Retrieves highest item order from collection.
-             * TODO: Implement (optionally) indexed version.
              * @returns {number}
              */
             getMaxOrder: function () {

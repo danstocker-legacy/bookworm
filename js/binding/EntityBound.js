@@ -3,7 +3,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
     "use strict";
 
     /**
-     * Trait that binds instances of the host class to events firing inside the document cache
+     * The EntityBound trait binds instances of the host class to events firing inside the document cache
      * on specific entities.
      * @class
      * @extends troop.Base
@@ -98,16 +98,14 @@ troop.postpone(bookworm, 'EntityBound', function () {
             }
         })
         .addMethods(/** @lends bookworm.EntityBound# */{
-            /**
-             * Call from host class .init().
-             */
+            /** Call from host class .init(). */
             init: function () {
                 /** @type {sntls.Dictionary} */
                 this.cacheBindings = sntls.Dictionary.create();
             },
 
             /**
-             * Tells whether current cache bound instance is bound to any entity keys.
+             * Tells whether current instance is bound to any entity keys.
              * @returns {boolean}
              */
             isBound: function () {
@@ -115,7 +113,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Binds to a specified entity event.
+             * Binds instance to the specified entity event.
              * Any event originating from within the entity's node will be captured by the handler.
              * @param {bookworm.EntityKey} entityKey Identifies entity to bind to.
              * @param {string} eventName Identifies event to bind to.
@@ -128,7 +126,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Binds to a specified entity event.
+             * Binds instance to the specified entity event.
              * Only events triggered on the entity's node will be captured by the handler.
              * @param {bookworm.EntityKey} entityKey Identifies entity to bind to.
              * @param {string} eventName Identifies event to bind to.
@@ -141,9 +139,9 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Removes all bindings from current instance associated with the specified entity key and event name.
-             * @param {bookworm.EntityKey} entityKey Identifies entity to bind to.
-             * @param {string} eventName Identifies event to bind to.
+             * Removes all bindings from current instance being associated with the specified entity key and event name.
+             * @param {bookworm.EntityKey} entityKey Identifies entity the instance is bound to.
+             * @param {string} eventName Identifies event the instance is bound to.
              * @returns {bookworm.EntityBound}
              */
             unbindFromEntity: function (entityKey, eventName) {
@@ -152,7 +150,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Binds to change events occurring on the specified entity key.
+             * Binds instance to change events that reach the specified entity key.
              * Any event originating from within the entity's node will be captured by the handler.
              * @param {bookworm.EntityKey} entityKey Identifies entity to bind to.
              * @param {string} methodName Identifies handler method on current class.
@@ -164,7 +162,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Binds to change events occurring on the specified entity key.
+             * Binds instance to change events triggered on the specified entity key.
              * Only events triggered on the entity's node will be captured by the handler.
              * @param {bookworm.EntityKey} entityKey Identifies entity to bind to.
              * @param {string} methodName Identifies handler method on current class.
@@ -186,7 +184,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Binds to access events occurring on the specified entity key.
+             * Binds instance to access events that reach the specified entity key.
              * Any event originating from within the entity's node will be captured by the handler.
              * @param {bookworm.EntityKey} entityKey Identifies entity to bind to.
              * @param {string} methodName Identifies handler method on current class.
@@ -198,7 +196,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Binds to change events occurring on the specified entity key.
+             * Binds instance to change events triggered on the specified entity key.
              * Only events triggered on the entity's node will be captured by the handler.
              * @param {bookworm.EntityKey} entityKey Identifies entity to bind to.
              * @param {string} methodName Identifies handler method on current class.

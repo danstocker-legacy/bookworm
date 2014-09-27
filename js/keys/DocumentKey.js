@@ -6,15 +6,18 @@ troop.postpone(bookworm, 'DocumentKey', function () {
         self = base.extend();
 
     /**
+     * Creates a DocumentKey instance.
+     * DocumentKey instances may also be created via conversion from string, array, and `sntls.Path`,
+     * as well as instantiating `EntityKey` with suitable arguments.
      * @name bookworm.DocumentKey.create
      * @function
-     * @param {string} documentType
-     * @param {string} documentId
+     * @param {string} documentType Identifies document type.
+     * @param {string} documentId Identifies document in the context of its document type.
      * @returns {bookworm.DocumentKey}
      */
 
     /**
-     * Identifies a Document entity.
+     * The DocumentKey class identifies document nodes in the cache.
      * @class
      * @extends bookworm.EntityKey
      */
@@ -40,6 +43,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
+             * Tells whether the specified `DocumentKey` instance is equivalent to the current one.
              * @param {bookworm.DocumentKey} documentKey
              */
             equals: function (documentKey) {
@@ -49,7 +53,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
-             * Creates a FieldKey instance based on the current document key and the specified field name.
+             * Creates a `FieldKey` instance based on the current document key and the specified field name.
              * @param {string} fieldName
              * @returns {bookworm.FieldKey}
              */
@@ -62,9 +66,9 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
-             * Determines absolute path to the current Document's entity node.
-             * In case document node sits on a different path for a certain documentType,
-             * subclass DocumentKey and override .getEntityPath() to reflect the correct path.
+             * Determines absolute path to the entity node of the document identified by the current key.
+             * In case document node sits on a different path for a certain `documentType`,
+             * subclass `DocumentKey` and override `.getEntityPath()` to reflect the correct path.
              * @returns {sntls.Path}
              */
             getEntityPath: function () {
@@ -72,10 +76,10 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
-             * Determines absolute path to the specified attribute of the current Document.
-             * In case attribute node sits on a different path for a certain documentType,
-             * subclass DocumentKey and override .getAttributePath() to reflect the correct path.
-             * @param {string} attribute
+             * Determines absolute path to the specified attribute of the document identified by the current key.
+             * In case attribute node sits on a different path for a certain `documentType`,
+             * subclass `DocumentKey` and override `.getAttributePath()` to reflect the correct path.
+             * @param {string} attribute Identifies document attribute.
              * @returns {sntls.Path}
              */
             getAttributePath: function (attribute) {
@@ -84,6 +88,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
+             * Determines the absolute path to the config node of the current document.
              * @returns {sntls.Path}
              */
             getConfigPath: function () {
@@ -91,6 +96,9 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
+             * Serializes current document key.
+             * @example
+             * bookworm.DocumentKey.create('user', '1234').toString() // "user/1234"
              * @returns {string}
              */
             toString: function () {
@@ -114,7 +122,7 @@ troop.amendPostponed(sntls, 'Path', function () {
     sntls.Path
         .addMethods(/** @lends sntls.Path */{
             /**
-             * Converts cache Path to DocumentKey instance.
+             * Converts `Path` to `DocumentKey` instance. Here the path is not a cache path.
              * @returns {bookworm.DocumentKey}
              */
             toDocumentKey: function () {
@@ -127,6 +135,7 @@ troop.postpone(bookworm, 'DocumentKeyCollection', function () {
     "use strict";
 
     /**
+     * Creates a DocumentKeyCollection instance.
      * @name bookworm.DocumentKeyCollection.create
      * @function
      * @param {object} [items]
@@ -134,6 +143,10 @@ troop.postpone(bookworm, 'DocumentKeyCollection', function () {
      */
 
     /**
+     * The DocumentKeyCollection offers a simplified way of dealing with multiple document keys.
+     * @example
+     * // retrieves a collection of `Document` instances based on the specified document keys
+     * ['user/1234', 'user/4321'].toDocumentKeyCollection().toDocument();
      * @class
      * @extends {sntls.Collection}
      * @extends {bookworm.DocumentKey}
@@ -147,7 +160,7 @@ troop.amendPostponed(sntls, 'Hash', function () {
     sntls.Hash
         .addMethods(/** @lends sntls.Hash */{
             /**
-             * Converts Hash instance to DocumentKeyCollection instance.
+             * Converts `Hash` instance to `DocumentKeyCollection` instance.
              * @returns {bookworm.DocumentKeyCollection}
              */
             toDocumentKeyCollection: function () {
@@ -160,12 +173,10 @@ troop.amendPostponed(sntls, 'Hash', function () {
     "use strict";
 
     dessert.addTypes(/** @lends dessert */{
-        /** Tells whether expression is a DocumentKey */
         isDocumentKey: function (expr) {
             return bookworm.DocumentKey.isBaseOf(expr);
         },
 
-        /** Tells whether expression is optionally a DocumentKey */
         isDocumentKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
                    bookworm.DocumentKey.isBaseOf(expr);
@@ -176,7 +187,7 @@ troop.amendPostponed(sntls, 'Hash', function () {
         String.prototype,
         /** @lends String# */{
             /**
-             * Converts string to a DocumentKey instance.
+             * Converts `String` to a `DocumentKey` instance. Assumes string is a serialized document key.
              * @returns {bookworm.DocumentKey}
              */
             toDocumentKey: function () {
@@ -194,7 +205,8 @@ troop.amendPostponed(sntls, 'Hash', function () {
         Array.prototype,
         /** @lends Array# */{
             /**
-             * Converts array of strings (key components) to a DocumentKey instance.
+             * Converts `Array` (of strings) to a `DocumentKey` instance.
+             * Assumes array is a document key in array notation.
              * @returns {bookworm.DocumentKey}
              * @example
              * ['foo', 'bar'].toDocumentKey() // single document key
@@ -204,7 +216,7 @@ troop.amendPostponed(sntls, 'Hash', function () {
             },
 
             /**
-             * Converts array of strings (keys) to a DocumentKeyCollection.
+             * Converts `Array` (of `DocumentKey` instances) to a `DocumentKeyCollection` instance.
              * @returns {bookworm.DocumentKeyCollection}
              * @example
              * ['foo/bar', 'foo/baz'].toDocumentKeyCollection() // collection of document keys

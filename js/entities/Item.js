@@ -6,6 +6,7 @@ troop.postpone(bookworm, 'Item', function () {
         self = base.extend();
 
     /**
+     * Creates an Item instance.
      * @name bookworm.Item.create
      * @function
      * @param {bookworm.ItemKey} itemKey
@@ -13,6 +14,7 @@ troop.postpone(bookworm, 'Item', function () {
      */
 
     /**
+     * The Item class implements an API for collection item nodes in the cache.
      * @class
      * @extends bookworm.Field
      */
@@ -58,7 +60,7 @@ troop.amendPostponed(bookworm, 'ItemKey', function () {
         String.prototype,
         /** @lends String# */{
             /**
-             * Creates Item instance based on the current string as key.
+             * Converts `String` to `Item` instance, assuming the string is a serialized `ItemKey`.
              * @returns {bookworm.Item}
              */
             toItem: function () {
@@ -72,7 +74,7 @@ troop.amendPostponed(bookworm, 'ItemKey', function () {
         Array.prototype,
         /** @lends Array# */{
             /**
-             * Creates Item instance based on the current Array of string as key.
+             * Converts `Array` to `Item` instance, assuming the array is an item key in array notation.
              * @returns {bookworm.Item}
              */
             toItem: function () {

@@ -6,16 +6,21 @@ troop.postpone(bookworm, 'ReferenceItemKey', function () {
         self = base.extend();
 
     /**
+     * Creates ReferenceItemKey instance.
+     * ReferenceItemKey instances may also be created via conversion from string, array,
+     * as well as instantiating `ItemKey` or `EntityKey` with suitable arguments.
      * @name bookworm.ReferenceItemKey.create
      * @function
-     * @param {string} documentType
-     * @param {string} documentId
-     * @param {string} fieldName
-     * @param {string} ref
+     * @param {string} documentType Identifies type of document the current item belongs to.
+     * @param {string} documentId Identifies the document (within document type) the current item belongs to.
+     * @param {string} fieldName Identifies field (within document) the current item belongs to.
+     * @param {string} ref Serialized `DocumentKey` identifying the referred document.
      * @returns {bookworm.ReferenceItemKey}
      */
 
     /**
+     * The ReferenceItemKey identifies an item node in the cache, the item ID of which is a document reference
+     * (serialized `DocumentKey`).
      * @class
      * @extends bookworm.ItemKey
      */
@@ -63,12 +68,10 @@ troop.amendPostponed(bookworm, 'EntityKey', function () {
     "use strict";
 
     dessert.addTypes(/** @lends dessert */{
-        /** Tells whether expression is a ReferenceItemKey */
         isReferenceItemKey: function (expr) {
             return bookworm.ReferenceItemKey.isBaseOf(expr);
         },
 
-        /** Tells whether expression is optionally a ReferenceItemKey */
         isReferenceItemKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
                    bookworm.ReferenceItemKey.isBaseOf(expr);
@@ -79,7 +82,7 @@ troop.amendPostponed(bookworm, 'EntityKey', function () {
         String.prototype,
         /** @lends String# */{
             /**
-             * Converts string to ReferenceItemKey.
+             * Converts `String` to a `ReferenceItemKey` instance. Assumes the string to be a serialized `ReferenceItemKey`.
              * @returns {bookworm.ReferenceItemKey}
              */
             toReferenceItemKey: function () {
@@ -100,7 +103,8 @@ troop.amendPostponed(bookworm, 'EntityKey', function () {
         Array.prototype,
         /** @lends Array# */{
             /**
-             * Converts Array of strings to ReferenceItemKey.
+             * Converts `Array` (of strings) to a `ReferenceItemKey` instance.
+             * Assumes the array to be a reference item key in array notation.
              * @returns {bookworm.ReferenceItemKey}
              */
             toReferenceItemKey: function () {

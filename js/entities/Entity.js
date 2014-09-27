@@ -5,14 +5,17 @@ troop.postpone(bookworm, 'Entity', function () {
     var slice = Array.prototype.slice;
 
     /**
+     * Creates an Entity instance.
+     * Entity instantiation is expected to be done via subclasses, unless there are suitable surrogates defined.
      * @name bookworm.Entity.create
      * @function
-     * @param {bookworm.EntityKey} entityKey
+     * @param {bookworm.EntityKey} entityKey Identifies entity.
      * @returns {bookworm.Entity}
      */
 
     /**
-     * Base class for models.
+     * The Entity class serves as the base class for all entities. It provides an API to access and modify the cache
+     * node represented by the entity.
      * @class
      * @extends troop.Base
      */

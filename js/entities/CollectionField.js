@@ -6,20 +6,24 @@ troop.postpone(bookworm, 'CollectionField', function () {
         self = base.extend();
 
     /**
+     * Creates a CollectionField instance.
+     * CollectionField instances may be created via `bookworm.Field.create` provided that the `config` cache defines
+     * the field type as 'collection'.
      * @name bookworm.CollectionField.create
      * @function
-     * @param {bookworm.FieldKey} fieldKey
+     * @param {bookworm.FieldKey} fieldKey Identifies collection field.
      * @returns {bookworm.CollectionField}
      */
 
     /**
+     * The CollectionField class implements an API for composite document fields, granting access to items.
      * @class
      * @extends bookworm.Field
      */
     bookworm.CollectionField = self
         .addMethods(/** @lends bookworm.CollectionField# */{
             /**
-             * Fetches node from cache containing collection items.
+             * Fetches node from cache containing the collection items.
              * @returns {object}
              */
             getItems: function () {
@@ -27,7 +31,7 @@ troop.postpone(bookworm, 'CollectionField', function () {
             },
 
             /**
-             * Fetches items node wrapped in a Collection.
+             * Fetches items node wrapped in a `Collection` instance.
              * @returns {sntls.Collection}
              */
             getItemsAsCollection: function () {
@@ -35,7 +39,7 @@ troop.postpone(bookworm, 'CollectionField', function () {
             },
 
             /**
-             * Retrieves Item entity matching the specified item ID.
+             * Retrieves `Item` entity matching the specified item ID.
              * @param {string} itemId
              * @returns {bookworm.Item}
              */

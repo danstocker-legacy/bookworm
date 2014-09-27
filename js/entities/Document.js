@@ -6,13 +6,17 @@ troop.postpone(bookworm, 'Document', function () {
         self = base.extend();
 
     /**
+     * Creates a Document instance.
+     * A `Document` instance may also be created via conversion from string, array, and `DocumentKey`.
      * @name bookworm.Document.create
      * @function
-     * @param {bookworm.DocumentKey} documentKey
+     * @param {bookworm.DocumentKey} documentKey Identifies document.
      * @returns {bookworm.Document}
      */
 
     /**
+     * The Document class implements an API for document nodes,
+     * granting access to the document's fields and attributes.
      * @class
      * @extends bookworm.Entity
      */
@@ -24,15 +28,13 @@ troop.postpone(bookworm, 'Document', function () {
              */
             init: function (documentKey) {
                 dessert.isDocumentKey(documentKey, "Invalid document key");
-
                 base.init.call(this, documentKey);
 
                 /**
-                 * Document key associated with current entity.
-                 * Same as entityKey.
+                 * Field key associated with current entity.
+                 * @name bookworm.Field#entityKey
                  * @type {bookworm.DocumentKey}
                  */
-                this.documentKey = documentKey;
             },
 
             /**
@@ -41,7 +43,7 @@ troop.postpone(bookworm, 'Document', function () {
              * @returns {*}
              */
             getDocumentAttribute: function (attribute) {
-                var attributePath = this.documentKey.getAttributePath(attribute);
+                var attributePath = this.entityKey.getAttributePath(attribute);
                 return bookworm.documents.getNode(attributePath);
             },
 
@@ -51,7 +53,7 @@ troop.postpone(bookworm, 'Document', function () {
              * @returns {bookworm.Field}
              */
             getField: function (fieldName) {
-                return this.documentKey.getFieldKey(fieldName).toField();
+                return this.entityKey.getFieldKey(fieldName).toField();
             }
         });
 });
@@ -62,7 +64,7 @@ troop.amendPostponed(bookworm, 'DocumentKey', function () {
     bookworm.DocumentKey
         .addMethods(/** @lends bookworm.DocumentKey */{
             /**
-             * Creates Document instance based on the current document key.
+             * Converts `DocumentKey` to `Document`.
              * @returns {bookworm.Document}
              */
             toDocument: function () {
@@ -78,7 +80,7 @@ troop.amendPostponed(bookworm, 'DocumentKey', function () {
         String.prototype,
         /** @lends String# */{
             /**
-             * Creates Document instance based on the current string as key.
+             * Converts `String` to `Document` instance, assuming the string is a serialized `DocumentKey`.
              * @returns {bookworm.Document}
              */
             toDocument: function () {
@@ -92,7 +94,7 @@ troop.amendPostponed(bookworm, 'DocumentKey', function () {
         Array.prototype,
         /** @lends Array# */{
             /**
-             * Creates Document instance based on the current Array of strings as key.
+             * Converts `Array` to `Document` instance, assuming the array is a document key in array notation.
              * @returns {bookworm.Document}
              */
             toDocument: function () {
