@@ -3,7 +3,7 @@ troop.postpone(bookworm, 'config', function () {
     "use strict";
 
     /**
-     * Non-evented cache for documents describing document types and their fields.
+     * Non-evented cache for entities describing document types and their fields.
      * @type {sntls.Tree}
      */
     bookworm.config = sntls.Tree.create({
@@ -32,14 +32,14 @@ troop.postpone(bookworm, 'config', function () {
     });
 });
 
-troop.postpone(bookworm, 'documents', function () {
+troop.postpone(bookworm, 'entities', function () {
     "use strict";
 
     /**
-     * Evented cache for application-domain documents.
+     * Evented cache for application-domain entities.
      * @type {flock.EventedTree}
      */
-    bookworm.documents = flock.EventedTree.create();
+    bookworm.entities = flock.EventedTree.create();
 });
 
 troop.postpone(bookworm, 'index', function () {

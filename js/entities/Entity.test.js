@@ -17,7 +17,7 @@
             entityNode = {},
             paths = [];
 
-        b$.documents.addMocks({
+        b$.entities.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
                 return entityNode;
@@ -27,7 +27,7 @@
         strictEqual(entity.getNode(), entityNode, "should return node retrieved from cache");
         entity.getNode('baz');
 
-        b$.documents.removeMocks();
+        b$.entities.removeMocks();
 
         deepEqual(paths, [
             'foo>bar',
@@ -65,7 +65,7 @@
 
         sntls.Tree.addMocks({
             getNode: function (path) {
-                strictEqual(this, b$.documents, "should fetch node from ");
+                strictEqual(this, b$.entities, "should fetch node from ");
                 equal(path.toString(), 'foo>bar>baz', "should call Tree node getter with appended path");
                 return entityNode;
             }
@@ -119,7 +119,7 @@
 
         var entity = b$.Entity.create('foo/bar'.toDocumentKey());
 
-        b$.documents.addMocks({
+        b$.entities.addMocks({
             setNode: function (path, value) {
                 equal(path.toString(), 'foo>bar>world', "should set node in cache on the entity's extended path");
                 equal(value, 'hello', "should set correct value in cache");
@@ -128,7 +128,7 @@
 
         strictEqual(entity.setNode('hello', 'world'), entity, "should be chainable");
 
-        b$.documents.removeMocks();
+        b$.entities.removeMocks();
     });
 
     test("Node removal", function () {
@@ -136,7 +136,7 @@
 
         var entity = b$.Entity.create('foo/bar'.toDocumentKey());
 
-        b$.documents.addMocks({
+        b$.entities.addMocks({
             unsetKey: function (path) {
                 equal(path.toString(), 'foo>bar>world', "should remove key from cache at the entity's extended path");
             }
@@ -144,6 +144,6 @@
 
         strictEqual(entity.unsetKey('world'), entity, "should be chainable");
 
-        b$.documents.removeMocks();
+        b$.entities.removeMocks();
     });
 }());

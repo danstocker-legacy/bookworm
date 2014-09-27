@@ -44,7 +44,7 @@ troop.postpone(bookworm, 'Document', function () {
              */
             getDocumentAttribute: function (attribute) {
                 var attributePath = this.entityKey.getAttributePath(attribute);
-                return bookworm.documents.getNode(attributePath);
+                return bookworm.entities.getNode(attributePath);
             },
 
             /**

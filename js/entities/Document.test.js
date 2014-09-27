@@ -51,7 +51,7 @@
             }
         });
 
-        b$.documents.addMocks({
+        b$.entities.addMocks({
             getNode: function (path) {
                 strictEqual(path, attributePath,
                     "should fetch the node from attribute path");
@@ -61,7 +61,7 @@
 
         strictEqual(document.getDocumentAttribute('hello'), attributeNode, "should return attribute node");
 
-        b$.documents.removeMocks();
+        b$.entities.removeMocks();
     });
 
     test("Field entity getter", function () {

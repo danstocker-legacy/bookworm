@@ -60,7 +60,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
                         };
 
                 // subscribing to changes
-                bookworm.documents.subscribeTo(eventName, dataPath, handler);
+                bookworm.entities.subscribeTo(eventName, dataPath, handler);
 
                 // adding entry to subscription registry
                 this.cacheBindings.addItem(bindingSignature, handler);
@@ -88,7 +88,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
 
                     // going over handlers and unsubscribing from each
                     for (i = 0; i < handlers.length; i++) {
-                        bookworm.documents
+                        bookworm.entities
                             .unsubscribeFrom(eventName, entityKey.getEntityPath(), handlers[i]);
                     }
 

@@ -44,7 +44,7 @@ troop.postpone(bookworm, 'Field', function () {
              */
             getAttribute: function (attribute) {
                 var attributePath = this.entityKey.getAttributePath(attribute);
-                return bookworm.documents.getNode(attributePath);
+                return bookworm.entities.getNode(attributePath);
             },
 
             /**
@@ -55,7 +55,7 @@ troop.postpone(bookworm, 'Field', function () {
              */
             setAttribute: function (attribute, attributeNode) {
                 var attributePath = this.entityKey.getAttributePath(attribute);
-                bookworm.documents.setNode(attributePath, attributeNode);
+                bookworm.entities.setNode(attributePath, attributeNode);
                 return this;
             },
 
@@ -64,7 +64,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {*}
              */
             getValue: function () {
-                return bookworm.documents.getNode(this.entityKey.getValuePath());
+                return bookworm.entities.getNode(this.entityKey.getValuePath());
             },
 
             /**
@@ -73,7 +73,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {bookworm.Field}
              */
             setValue: function (value) {
-                bookworm.documents.setNode(this.entityKey.getValuePath(), value);
+                bookworm.entities.setNode(this.entityKey.getValuePath(), value);
                 return this;
             }
         });

@@ -51,7 +51,7 @@
             }
         });
 
-        b$.documents.addMocks({
+        b$.entities.addMocks({
             getNode: function (path) {
                 strictEqual(path, attributePath, "should fetch node at attribute path");
                 return attributeNode;
@@ -60,7 +60,7 @@
 
         strictEqual(item.getAttribute('hello'), attributeNode, "should return attribute node");
 
-        b$.documents.removeMocks();
+        b$.entities.removeMocks();
     });
 
     test("Item attribute setter", function () {
@@ -77,7 +77,7 @@
             }
         });
 
-        b$.documents.addMocks({
+        b$.entities.addMocks({
             setNode: function (path, node) {
                 strictEqual(path, attributePath, "should set node at attribute path");
                 strictEqual(node, attributeNode, "should set specified value at attribute path");
@@ -86,7 +86,7 @@
 
         strictEqual(item.setAttribute('hello', attributeNode), item, "should be chainable");
 
-        b$.documents.removeMocks();
+        b$.entities.removeMocks();
     });
 
     test("Item value getter", function () {
@@ -103,7 +103,7 @@
             }
         });
 
-        b$.documents.addMocks({
+        b$.entities.addMocks({
             getNode: function (path) {
                 strictEqual(path, valuePath, "should fetch node at specified value path");
                 return valueNode;
@@ -112,7 +112,7 @@
 
         strictEqual(item.getValue(), valueNode, "should return value node");
 
-        b$.documents.removeMocks();
+        b$.entities.removeMocks();
     });
 
     test("Item value setter", function () {
@@ -129,7 +129,7 @@
             }
         });
 
-        b$.documents.addMocks({
+        b$.entities.addMocks({
             setNode: function (path, value) {
                 strictEqual(path, valuePath, "should set node at specified value path");
                 strictEqual(value, valueNode, "should set specified value node at path");
@@ -138,6 +138,6 @@
 
         strictEqual(item.setValue(valueNode), item, "should be chainable");
 
-        b$.documents.removeMocks();
+        b$.entities.removeMocks();
     });
 }());

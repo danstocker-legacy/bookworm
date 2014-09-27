@@ -48,7 +48,7 @@ troop.postpone(bookworm, 'Entity', function () {
                     entityPath = entityPath.append(slice.call(arguments).toPath());
                 }
 
-                return bookworm.documents.getNode(entityPath);
+                return bookworm.entities.getNode(entityPath);
             },
 
             /**
@@ -72,7 +72,7 @@ troop.postpone(bookworm, 'Entity', function () {
                     entityPath = entityPath.append(slice.call(arguments).toPath());
                 }
 
-                return sntls.Tree.getNode.call(bookworm.documents, entityPath);
+                return sntls.Tree.getNode.call(bookworm.entities, entityPath);
             },
 
             /**
@@ -109,7 +109,7 @@ troop.postpone(bookworm, 'Entity', function () {
                     dataPath = dataPath.append(slice.call(arguments, 1).toPath());
                 }
 
-                bookworm.documents.setNode(dataPath, value);
+                bookworm.entities.setNode(dataPath, value);
 
                 return this;
             },
@@ -129,7 +129,7 @@ troop.postpone(bookworm, 'Entity', function () {
                     dataPath = dataPath.append(slice.call(arguments).toPath());
                 }
 
-                bookworm.documents.unsetKey(dataPath);
+                bookworm.entities.unsetKey(dataPath);
 
                 return this;
             }

@@ -50,7 +50,7 @@
 
         var bound = BoundClass.create();
 
-        b$.documents.addMocks({
+        b$.entities.addMocks({
             subscribeTo: function (eventName, cachePath, handler) {
                 equal(eventName, 'hello', "should pass event name to subscription");
                 equal(cachePath.toString(), 'foo>bar', "should pass cache path to subscription");
@@ -67,7 +67,7 @@
 
         bound._bindToEntity('foo/bar'.toDocumentKey(), 'hello', 'onEntityEvent');
 
-        b$.documents.removeMocks();
+        b$.entities.removeMocks();
     });
 
     test("Internal event unbinder", function () {
@@ -76,7 +76,7 @@
         var bound = BoundClass.create();
         bound._bindToEntity('foo/bar'.toDocumentKey(), 'hello', 'onEntityEvent');
 
-        b$.documents.addMocks({
+        b$.entities.addMocks({
             unsubscribeFrom: function (eventName, cachePath, handler) {
                 equal(eventName, 'hello', "should pass event name to unsubsciption");
                 equal(cachePath.toString(), 'foo>bar', "should pass cache path to unsubscription");
@@ -103,7 +103,7 @@
 
         bound._unbindFromEntity('foo/bar'.toDocumentKey(), 'hello');
 
-        b$.documents.removeMocks();
+        b$.entities.removeMocks();
     });
 
     test("Bounding tester", function () {
