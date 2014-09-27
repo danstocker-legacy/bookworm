@@ -20,6 +20,10 @@
         "evan"   : "~0.4.1",
         "flock"  : "~0.3.1"
     },
+    "repository"     : {
+        "type": "git",
+        "url" : "git://github.com/danstocker/bookworm.git"
+    },
     "devDependencies": {
         "phil"                : "~0.2.3",
         "grunt"               : "~0.4.1",
