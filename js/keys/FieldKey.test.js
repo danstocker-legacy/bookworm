@@ -146,8 +146,8 @@
         b$.config.removeMocks();
 
         deepEqual(paths, [
-            "document>foo>baz>fieldType",
-            "document>foo>baz"
+            "document>document>foo>baz>fieldType",
+            "document>document>foo>baz"
         ], "should try attribute first, then field value");
 
         b$.config.addMocks({
@@ -163,7 +163,7 @@
         b$.config.removeMocks();
 
         deepEqual(paths, [
-            "document>foo>baz>fieldType"
+            "document>document>foo>baz>fieldType"
         ], "should fetch field type from attribute if it is found there");
     });
 
@@ -192,7 +192,7 @@
 
         path = fieldKey.getConfigPath();
         ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['document', 'foo', 'baz'], "should set path contents");
+        deepEqual(path.asArray, ['document', 'document', 'foo', 'baz'], "should set path contents");
     });
 
     test("Conversion to String", function () {

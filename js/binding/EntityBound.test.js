@@ -53,7 +53,7 @@
         b$.entities.addMocks({
             subscribeTo: function (eventName, cachePath, handler) {
                 equal(eventName, 'hello', "should pass event name to subscription");
-                equal(cachePath.toString(), 'foo>bar', "should pass cache path to subscription");
+                equal(cachePath.toString(), 'document>foo>bar', "should pass cache path to subscription");
                 equal(typeof handler, 'function', "shoudl pass handler to subscription");
             }
         });
@@ -79,7 +79,7 @@
         b$.entities.addMocks({
             unsubscribeFrom: function (eventName, cachePath, handler) {
                 equal(eventName, 'hello', "should pass event name to unsubsciption");
-                equal(cachePath.toString(), 'foo>bar', "should pass cache path to unsubscription");
+                equal(cachePath.toString(), 'document>foo>bar', "should pass cache path to unsubscription");
                 equal(typeof handler, 'function', "should pass subscribed handler to unsubscription");
             }
         });

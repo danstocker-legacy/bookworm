@@ -73,7 +73,7 @@
             path = key.getEntityPath();
 
         ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['foo', 'bar'], "should set path contents correctly");
+        deepEqual(path.asArray, ['document', 'foo', 'bar'], "should set path contents correctly");
     });
 
     test("Attribute path getter", function () {
@@ -108,7 +108,7 @@
             path = key.getConfigPath();
 
         ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['document', 'foo'], "should set path contents correctly");
+        deepEqual(path.asArray, ['document', 'document', 'foo'], "should set path contents correctly");
     });
 
     test("Conversion to String", function () {

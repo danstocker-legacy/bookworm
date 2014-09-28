@@ -8,25 +8,27 @@ troop.postpone(bookworm, 'config', function () {
      */
     bookworm.config = sntls.Tree.create({
         document: {
-            //@formatter:off
-//          /** Sample config document. */
-//          user: {
-//              name: {
-//                  /** Field contains string */
-//                  fieldType: 'string'
-//              },
-//              age: {
-//                  /** Field contains number */
-//                  fieldType: 'number'
-//              },
-//              emails: {
-//                  /** Field contains collection */
-//                  fieldType: 'collection',
-//                  /** Items are strings */
-//                  itemType: 'string'
-//              }
-//          }
-            //@formatter:on
+            document: {
+                //@formatter:off
+//                /** Sample config document. */
+//                user: {
+//                    name  : {
+//                        /** Field contains string */
+//                        fieldType: 'string'
+//                    },
+//                    age   : {
+//                        /** Field contains number */
+//                        fieldType: 'number'
+//                    },
+//                    emails: {
+//                        /** Field contains collection */
+//                        fieldType: 'collection',
+//                        /** Items are strings */
+//                        itemType : 'string'
+//                    }
+//                }
+                //@formatter:on
+            }
         }
     });
 });

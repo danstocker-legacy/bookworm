@@ -30,8 +30,8 @@
         b$.entities.removeMocks();
 
         deepEqual(paths, [
-            'foo>bar',
-            'foo>bar>baz'
+            'document>foo>bar',
+            'document>foo>bar>baz'
         ], "should append extra arguments to cache path");
     });
 
@@ -66,7 +66,7 @@
         sntls.Tree.addMocks({
             getNode: function (path) {
                 strictEqual(this, b$.entities, "should fetch node from ");
-                equal(path.toString(), 'foo>bar>baz', "should call Tree node getter with appended path");
+                equal(path.toString(), 'document>foo>bar>baz', "should call Tree node getter with appended path");
                 return entityNode;
             }
         });
@@ -121,7 +121,7 @@
 
         b$.entities.addMocks({
             setNode: function (path, value) {
-                equal(path.toString(), 'foo>bar>world', "should set node in cache on the entity's extended path");
+                equal(path.toString(), 'document>foo>bar>world', "should set node in cache on the entity's extended path");
                 equal(value, 'hello', "should set correct value in cache");
             }
         });
@@ -138,7 +138,7 @@
 
         b$.entities.addMocks({
             unsetKey: function (path) {
-                equal(path.toString(), 'foo>bar>world', "should remove key from cache at the entity's extended path");
+                equal(path.toString(), 'document>foo>bar>world', "should remove key from cache at the entity's extended path");
             }
         });
 

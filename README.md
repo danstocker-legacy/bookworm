@@ -40,7 +40,7 @@ Examples
 
     'user/1234/name'.toField().setValue("John Smith");
 
-Will set the value "John Smith" on the node in `bookworm.entities` (instance of `flock.EventedTree`) on the path that corresponds to the field 'user/1234/name'. By default, this is mapped to the path `'documentType>documentId>fieldName'.toPath()`, but the mapping may be changed by subclassing `FieldKey` and providing a suitable surrogate.
+Will set the value "John Smith" on the node in `bookworm.entities` (instance of `flock.EventedTree`) on the path that corresponds to the field 'user/1234/name'. By default, this is mapped to the path `'document>documentType>documentId>fieldName'.toPath()`, but the mapping may be changed by subclassing `FieldKey` and providing a suitable surrogate.
 
 ### Checking a document's presence
 
