@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: keys/ItemKey.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: keys/ItemKey.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'ItemKey', function () {
+    "use strict";
+
+    var base = bookworm.FieldKey,
+        self = base.extend();
+
+    /**
+     * Creates an ItemKey instance.
+     * ItemKey instances may also be created via conversion from string, array, and `sntls.Path`,
+     * as well as instantiating `EntityKey` with suitable arguments.
+     * @name bookworm.ItemKey.create
+     * @function
+     * @param {string} documentType Identifies type of document the current item belongs to.
+     * @param {string} documentId Identifies the document (within document type) the current item belongs to.
+     * @param {string} fieldName Identifies field (within document) the current item belongs to.
+     * @param {string} itemId Identifies item (within field).
+     * @returns {bookworm.ItemKey}
+     */
+
+    /**
+     * The ItemKey class identifies item entity nodes in the cache.
+     * `ItemKey` subclasses `FieldKey` so that any method that accepts `FieldKey` as argument, would also accept
+     * `ItemKey`. Whatever works with fields, should also work with collection items.
+     * @class
+     * @extends bookworm.FieldKey
+     */
+    bookworm.ItemKey = self
+        .addMethods(/** @lends bookworm.ItemKey# */{
+            /**
+             * @param {string} documentType
+             * @param {string} documentId
+             * @param {string} fieldName
+             * @param {string} itemId
+             * @ignore
+             */
+            init: function (documentType, documentId, fieldName, itemId) {
+                base.init.call(this, documentType, documentId, fieldName);
+
+                /**
+                 * Identifies item in collection.
+                 * @type {string}
+                 */
+                this.itemId = itemId;
+            },
+
+            /**
+             * Tells whether specified `ItemKey` instance is equivalent to the current one.
+             * @param {bookworm.ItemKey} itemKey
+             * @returns {boolean}
+             */
+            equals: function (itemKey) {
+                return bookworm.FieldKey.equals.call(this, itemKey) &&
+                       this.itemId === itemKey.itemId;
+            },
+
+            /**
+             * Creates a field key that is parent of the item identified by the current key.
+             * @returns {bookworm.FieldKey}
+             */
+            getFieldKey: function () {
+                var documentKey = this.documentKey;
+                return [documentKey.documentType, documentKey.documentId, this.fieldName].toFieldKey();
+            },
+
+            /**
+             * Determines absolute path for the item identified by the current key.
+             * In case the item entity node sits on a different path
+             * relative to the field node for a certain `documentType` / `fieldName` combination,
+             * subclass `ItemKey` and override `.getEntityPath()` to reflect the correct path.
+             * @returns {sntls.Path}
+             */
+            getEntityPath: function () {
+                return base.getEntityPath.call(this)
+                    .appendKey(this.itemId);
+            },
+
+            /**
+             * Retrieves item type string for the item entity identified by the current key.
+             * @returns {string}
+             */
+            getItemType: function () {
+                return bookworm.config.getNode(this.getConfigPath().appendKey('itemType'));
+            },
+
+            /**
+             * Serializes current item key.
+             * @example
+             * bookworm.ItemKey.create('user', '1234', 'phones', 'work').toString() // "user/1234/phones/work"
+             * @returns {string}
+             */
+            toString: function () {
+                return bookworm.FieldKey.toString.call(this) + '/' + encodeURIComponent(this.itemId);
+            }
+        });
+});
+
+troop.amendPostponed(bookworm, 'EntityKey', function () {
+    "use strict";
+
+    bookworm.EntityKey
+        .addSurrogate(bookworm, 'ItemKey', function () {
+            return arguments.length === 4 &&
+                   !arguments[3].toDocumentKey().documentId;
+        });
+});
+
+(function () {
+    "use strict";
+
+    dessert.addTypes(/** @lends dessert */{
+        /** @param {bookworm.ItemKey} expr */
+        isItemKey: function (expr) {
+            return bookworm.ItemKey.isBaseOf(expr);
+        },
+
+        /** @param {bookworm.ItemKey} [expr] */
+        isItemKeyOptional: function (expr) {
+            return typeof expr === 'undefined' ||
+                   bookworm.ItemKey.isBaseOf(expr);
+        }
+    });
+
+    troop.Properties.addProperties.call(
+        String.prototype,
+        /** @lends String# */{
+            /**
+             * Converts `String` to `ItemKey`. Assumes the string to be serialized `ItemKey`.
+             * @returns {bookworm.ItemKey}
+             */
+            toItemKey: function () {
+                var parts = this.split('/');
+
+                return bookworm.ItemKey.create(
+                    decodeURIComponent(parts[0]),
+                    decodeURIComponent(parts[1]),
+                    decodeURIComponent(parts[2]),
+                    decodeURIComponent(parts[3])
+                );
+            }
+        },
+        false, false, false
+    );
+
+    troop.Properties.addProperties.call(
+        Array.prototype,
+        /** @lends Array# */{
+            /**
+             * Converts `Array` (of strings) to `ItemKey`. Assumes the array is an item key in array notation.
+             * @returns {bookworm.ItemKey}
+             */
+            toItemKey: function () {
+                return bookworm.ItemKey.create(this[0], this[1], this[2], this[3]);
+            }
+        },
+        false, false, false
+    );
+}());
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Array.html">Array</a></li><li><a href="bookworm.CollectionField.html">CollectionField</a></li><li><a href="bookworm.Document.html">Document</a></li><li><a href="bookworm.DocumentKey.html">DocumentKey</a></li><li><a href="bookworm.DocumentKeyCollection.html">DocumentKeyCollection</a></li><li><a href="bookworm.Entity.html">Entity</a></li><li><a href="bookworm.EntityBound.html">EntityBound</a></li><li><a href="bookworm.EntityKey.html">EntityKey</a></li><li><a href="bookworm.Field.html">Field</a></li><li><a href="bookworm.FieldKey.html">FieldKey</a></li><li><a href="bookworm.Item.html">Item</a></li><li><a href="bookworm.ItemKey.html">ItemKey</a></li><li><a href="bookworm.OrderedCollectionField.html">OrderedCollectionField</a></li><li><a href="bookworm.ReferenceItemKey.html">ReferenceItemKey</a></li><li><a href="dessert.html">dessert</a></li><li><a href="sntls.Hash.html">Hash</a></li><li><a href="sntls.Path.html">Path</a></li><li><a href="String.html">String</a></li></ul><h3>Namespaces</h3><ul><li><a href="bookworm.html">bookworm</a></li><li><a href="flock.html">flock</a></li><li><a href="sntls.html">sntls</a></li><li><a href="troop.html">troop</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Sep 28 2014 19:54:42 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Index</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Index</h1>
+    
+    
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>Bookworm</h1>
+
+<p><em>Document framework</em></p>
+
+<p><a href="https://github.com/danstocker/bookworm/wiki">Wiki</a></p>
+
+<p><a href="http://danstocker.github.io/bookworm">Reference</a></p>
+
+<p>Bookworm is an isomorphic library that helps organizing the application&#39;s model layer into a document oriented structure. Through entity classes the Bookworm API allows for access and modification of <a href="https://github.com/danstocker/flock">flock</a>-based cache nodes. Instead of using absolute paths, Bookworm entities may be accessed relying only on their identifiers (keys).</p>
+
+<p>The <em>document oriented structure</em> means that the model layer is organized into these units:</p>
+
+<ul><li>the <em>document</em>, identified by a <em>document type</em> and <em>document ID</em><ul><li>a <code>DocumentKey</code> instance identifies a document</li><li>the <code>Document</code> class implements its API</li><li>for application-domain document functionality, subclass <code>Document</code></li></ul></li><li>the <em>field</em>, identified by a document reference, and a <em>field name</em><ul><li>a <code>FieldKey</code> instance identifies a field</li><li>the <code>Field</code>, <code>CollectionField</code>, and <code>OrderedCollectionField</code> classes implement its API</li></ul></li><li>the <em>collection item</em>, identified by the (collection) field, and an <em>item ID</em><ul><li>an <code>ItemKey</code> instance identifies an item</li><li>the <code>Item</code> class implements its API</li></ul></li></ul>
+
+<p>Fields and collection items can have the &#39;reference&#39; type, pointing to other entities. (Common application is the collection of references.)</p>
+
+<h2>Cache</h2>
+
+<p>The Bookworm cache is an in-memory datastore based on <a href="https://github.com/danstocker/flock">flock</a>, and <a href="http://danstocker.github.io/sntls/sntls.Tree.html">sntls.Tree</a>.</p>
+
+<p>The cache is composed of three containers:</p>
+
+<ul><li><code>bookworm.entities</code>: Evented datastore that contains <em>all</em> entities of the application. Entity classes provide access to the contents of this container.</li><li><code>bookworm.config</code>: Non-evented datastore containing configuration information, most importantly field and collection item types. Look in <em>js/cache/config.js</em> or the non-minified distribution for the structure. The contents of this container are expected to be initialized before those parts of the application that use the Bookworm API.</li><li><code>bookworm.index</code>: Non-evented datastore that holds user-defined indexes for lookups, search, etc. There is no imposed structure for this container, the content is completely up to the application implementation.</li></ul>
+
+<h2>Examples</h2>
+
+<h3>Setting field value</h3>
+
+<pre><code>&#39;user/1234/name&#39;.toField().setValue(&quot;John Smith&quot;);</code></pre>
+
+<p>Will set the value &quot;John Smith&quot; on the node in <code>bookworm.entities</code> (instance of <code>flock.EventedTree</code>) on the path that corresponds to the field &#39;user/1234/name&#39;. By default, this is mapped to the path <code>&#39;document&gt;documentType&gt;documentId&gt;fieldName&#39;.toPath()</code>, but the mapping may be changed by subclassing <code>FieldKey</code> and providing a suitable surrogate.</p>
+
+<h3>Checking a document&#39;s presence</h3>
+
+<pre><code>!!&#39;user/1234&#39;.toDocument().getSilentNode();</code></pre>
+
+<p>Will not trigger access event signaling that the node is missing. Use <code>.getNode()</code> to allow access events to be triggered.</p>
+
+<h3>Obtaining a field key from document key</h3>
+
+<pre><code>var userKey = &#39;user/1234&#39;.toDocumentKey(),
+    nameKey = userKey.getFieldKey(&#39;name&#39;);</code></pre>
+
+<p>is the same as:</p>
+
+<pre><code>var nameKey = &#39;user/1234/name&#39;.toFieldKey();</code></pre></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Array.html">Array</a></li><li><a href="bookworm.CollectionField.html">CollectionField</a></li><li><a href="bookworm.Document.html">Document</a></li><li><a href="bookworm.DocumentKey.html">DocumentKey</a></li><li><a href="bookworm.DocumentKeyCollection.html">DocumentKeyCollection</a></li><li><a href="bookworm.Entity.html">Entity</a></li><li><a href="bookworm.EntityBound.html">EntityBound</a></li><li><a href="bookworm.EntityKey.html">EntityKey</a></li><li><a href="bookworm.Field.html">Field</a></li><li><a href="bookworm.FieldKey.html">FieldKey</a></li><li><a href="bookworm.Item.html">Item</a></li><li><a href="bookworm.ItemKey.html">ItemKey</a></li><li><a href="bookworm.OrderedCollectionField.html">OrderedCollectionField</a></li><li><a href="bookworm.ReferenceItemKey.html">ReferenceItemKey</a></li><li><a href="dessert.html">dessert</a></li><li><a href="sntls.Hash.html">Hash</a></li><li><a href="sntls.Path.html">Path</a></li><li><a href="String.html">String</a></li></ul><h3>Namespaces</h3><ul><li><a href="bookworm.html">bookworm</a></li><li><a href="flock.html">flock</a></li><li><a href="sntls.html">sntls</a></li><li><a href="troop.html">troop</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Sep 28 2014 19:54:42 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+</body>
+</html>

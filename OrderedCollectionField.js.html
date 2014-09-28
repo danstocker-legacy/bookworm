@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: entities/OrderedCollectionField.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: entities/OrderedCollectionField.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'OrderedCollectionField', function () {
+    "use strict";
+
+    var base = bookworm.CollectionField,
+        self = base.extend();
+
+    /**
+     * Creates an OrderedCollectionField instance.
+     * OrderedCollectionField instances may be created via `bookworm.Field.create` provided that the `config`
+     * cache defines the field type as 'ordered-collection'.
+     * @name bookworm.OrderedCollectionField.create
+     * @function
+     * @param {string} fieldKey Identifies ordered collection field.
+     * @returns {bookworm.OrderedCollectionField}
+     */
+
+    /**
+     * The OrderedCollectionField class defines an API for collections the items of which are in a pre-defined order.
+     * Provides methods for accessing information about item order, as well as retrieving items based on order.
+     * TODO: Add managed index for fetching items by order.
+     * @class
+     * @extends bookworm.CollectionField
+     */
+    bookworm.OrderedCollectionField = self
+        .addMethods(/** @lends bookworm.OrderedCollectionField# */{
+            /**
+             * Fetches item order for specified item ID.
+             * @param {string} itemId
+             * @returns {number}
+             */
+            getItemOrder: function (itemId) {
+                var itemKey = this.entityKey.getItemKey(itemId),
+                    item = itemKey.toItem();
+
+                return item.getAttribute('order') ||
+                       item.getValue();
+            },
+
+            /**
+             * Retrieves `ItemKey` from collection matching the specified order.
+             * @param {number} order
+             * @returns {undefined}
+             */
+            getItemKeyByOrder: function (order) {
+                var result,
+                    itemsNode = this.getItems(),
+                    itemIds,
+                    i, itemId;
+
+                if (itemsNode) {
+                    itemIds = Object.keys(itemsNode);
+                    for (i = 0; i &lt; itemIds.length; i++) {
+                        itemId = itemIds[i];
+                        if (this.getItemOrder(itemId) === order) {
+                            result = this.entityKey.getItemKey(itemId);
+                            break;
+                        }
+                    }
+                }
+
+                return result;
+            },
+
+            /**
+             * Retrieves `Item` entity from collection matching the specified order.
+             * @param {number} order
+             * @returns {bookworm.Item}
+             */
+            getItemByOrder: function (order) {
+                var itemKey = this.getItemKeyByOrder(order);
+                return itemKey ?
+                    itemKey.toItem() :
+                    undefined;
+            },
+
+            /**
+             * Retrieves highest item order from collection.
+             * @returns {number}
+             */
+            getMaxOrder: function () {
+                var result = Number.MIN_VALUE,
+                    itemsNode = this.getItems(),
+                    itemIds,
+                    i, itemId, itemOrder;
+
+                if (itemsNode) {
+                    itemIds = Object.keys(itemsNode);
+                    for (i = 0; i &lt; itemIds.length; i++) {
+                        itemId = itemIds[i];
+                        itemOrder = this.getItemOrder(itemId);
+                        if (itemOrder > result) {
+                            result = itemOrder;
+                        }
+                    }
+                }
+
+                return result;
+            }
+        });
+});
+
+troop.amendPostponed(bookworm, 'Field', function () {
+    "use strict";
+
+    bookworm.Field
+        .addSurrogate(bookworm, 'OrderedCollectionField', function (/**bookworm.FieldKey*/fieldKey) {
+            return fieldKey.getFieldType() === 'ordered-collection';
+        });
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Array.html">Array</a></li><li><a href="bookworm.CollectionField.html">CollectionField</a></li><li><a href="bookworm.Document.html">Document</a></li><li><a href="bookworm.DocumentKey.html">DocumentKey</a></li><li><a href="bookworm.DocumentKeyCollection.html">DocumentKeyCollection</a></li><li><a href="bookworm.Entity.html">Entity</a></li><li><a href="bookworm.EntityBound.html">EntityBound</a></li><li><a href="bookworm.EntityKey.html">EntityKey</a></li><li><a href="bookworm.Field.html">Field</a></li><li><a href="bookworm.FieldKey.html">FieldKey</a></li><li><a href="bookworm.Item.html">Item</a></li><li><a href="bookworm.ItemKey.html">ItemKey</a></li><li><a href="bookworm.OrderedCollectionField.html">OrderedCollectionField</a></li><li><a href="bookworm.ReferenceItemKey.html">ReferenceItemKey</a></li><li><a href="dessert.html">dessert</a></li><li><a href="sntls.Hash.html">Hash</a></li><li><a href="sntls.Path.html">Path</a></li><li><a href="String.html">String</a></li></ul><h3>Namespaces</h3><ul><li><a href="bookworm.html">bookworm</a></li><li><a href="flock.html">flock</a></li><li><a href="sntls.html">sntls</a></li><li><a href="troop.html">troop</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Sep 28 2014 19:54:42 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+</body>
+</html>

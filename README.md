@@ -1,4 +1,0 @@
-d'Ache
-======
-
-*Document Cache*

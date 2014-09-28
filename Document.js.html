@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: entities/Document.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: entities/Document.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'Document', function () {
+    "use strict";
+
+    var base = bookworm.Entity,
+        self = base.extend();
+
+    /**
+     * Creates a Document instance.
+     * A `Document` instance may also be created via conversion from string, array, and `DocumentKey`.
+     * @name bookworm.Document.create
+     * @function
+     * @param {bookworm.DocumentKey} documentKey Identifies document.
+     * @returns {bookworm.Document}
+     */
+
+    /**
+     * The Document class implements an API for document nodes,
+     * granting access to the document's fields and attributes.
+     * @class
+     * @extends bookworm.Entity
+     */
+    bookworm.Document = self
+        .addMethods(/** @lends bookworm.Document# */{
+            /**
+             * @param {bookworm.DocumentKey} documentKey
+             * @ignore
+             */
+            init: function (documentKey) {
+                dessert.isDocumentKey(documentKey, "Invalid document key");
+                base.init.call(this, documentKey);
+
+                /**
+                 * Document key associated with current entity.
+                 * @name bookworm.Document#entityKey
+                 * @type {bookworm.DocumentKey}
+                 */
+            },
+
+            /**
+             * Fetches document attribute node from cache.
+             * @param {string} attribute
+             * @returns {*}
+             */
+            getDocumentAttribute: function (attribute) {
+                var attributePath = this.entityKey.getAttributePath(attribute);
+                return bookworm.entities.getNode(attributePath);
+            },
+
+            /**
+             * Retrieves Field entity matching the specified field name.
+             * @param {string} fieldName
+             * @returns {bookworm.Field}
+             */
+            getField: function (fieldName) {
+                return this.entityKey.getFieldKey(fieldName).toField();
+            }
+        });
+});
+
+troop.amendPostponed(bookworm, 'DocumentKey', function () {
+    "use strict";
+
+    bookworm.DocumentKey
+        .addMethods(/** @lends bookworm.DocumentKey */{
+            /**
+             * Converts `DocumentKey` to `Document`.
+             * @returns {bookworm.Document}
+             */
+            toDocument: function () {
+                return bookworm.Document.create(this);
+            }
+        });
+});
+
+(function () {
+    "use strict";
+
+    troop.Properties.addProperties.call(
+        String.prototype,
+        /** @lends String# */{
+            /**
+             * Converts `String` to `Document` instance, assuming the string is a serialized `DocumentKey`.
+             * @returns {bookworm.Document}
+             */
+            toDocument: function () {
+                return bookworm.Document.create(this.toDocumentKey());
+            }
+        },
+        false, false, false
+    );
+
+    troop.Properties.addProperties.call(
+        Array.prototype,
+        /** @lends Array# */{
+            /**
+             * Converts `Array` to `Document` instance, assuming the array is a document key in array notation.
+             * @returns {bookworm.Document}
+             */
+            toDocument: function () {
+                return bookworm.Document.create(this.toDocumentKey());
+            }
+        },
+        false, false, false
+    );
+}());
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Array.html">Array</a></li><li><a href="bookworm.CollectionField.html">CollectionField</a></li><li><a href="bookworm.Document.html">Document</a></li><li><a href="bookworm.DocumentKey.html">DocumentKey</a></li><li><a href="bookworm.DocumentKeyCollection.html">DocumentKeyCollection</a></li><li><a href="bookworm.Entity.html">Entity</a></li><li><a href="bookworm.EntityBound.html">EntityBound</a></li><li><a href="bookworm.EntityKey.html">EntityKey</a></li><li><a href="bookworm.Field.html">Field</a></li><li><a href="bookworm.FieldKey.html">FieldKey</a></li><li><a href="bookworm.Item.html">Item</a></li><li><a href="bookworm.ItemKey.html">ItemKey</a></li><li><a href="bookworm.OrderedCollectionField.html">OrderedCollectionField</a></li><li><a href="bookworm.ReferenceItemKey.html">ReferenceItemKey</a></li><li><a href="dessert.html">dessert</a></li><li><a href="sntls.Hash.html">Hash</a></li><li><a href="sntls.Path.html">Path</a></li><li><a href="String.html">String</a></li></ul><h3>Namespaces</h3><ul><li><a href="bookworm.html">bookworm</a></li><li><a href="flock.html">flock</a></li><li><a href="sntls.html">sntls</a></li><li><a href="troop.html">troop</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Sep 28 2014 19:54:42 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+</body>
+</html>

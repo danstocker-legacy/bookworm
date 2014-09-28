@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: entities/Entity.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: entities/Entity.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'Entity', function () {
+    "use strict";
+
+    var slice = Array.prototype.slice;
+
+    /**
+     * Creates an Entity instance.
+     * Entity instantiation is expected to be done via subclasses, unless there are suitable surrogates defined.
+     * @name bookworm.Entity.create
+     * @function
+     * @param {bookworm.EntityKey} entityKey Identifies entity.
+     * @returns {bookworm.Entity}
+     */
+
+    /**
+     * The Entity class serves as the base class for all entities. It provides an API to access and modify the cache
+     * node represented by the entity.
+     * @class
+     * @extends troop.Base
+     */
+    bookworm.Entity = troop.Base.extend()
+        .addMethods(/** @lends bookworm.Entity */{
+            /**
+             * @param {bookworm.EntityKey} entityKey
+             * @ignore
+             */
+            init: function (entityKey) {
+                /**
+                 * Key that identifies the entity.
+                 * @type {bookworm.EntityKey}
+                 */
+                this.entityKey = entityKey;
+            },
+
+            /**
+             * Fetches entity node from cache.
+             * Arguments will be appended to the entity path.
+             * @example
+             * // will fetch the node under 'foo>bar' relative to the entity root
+             * entity.getNode('foo', 'bar');
+             * @returns {*}
+             */
+            getNode: function () {
+                var entityPath = this.entityKey.getEntityPath();
+
+                if (arguments.length) {
+                    entityPath = entityPath.append(slice.call(arguments).toPath());
+                }
+
+                return bookworm.entities.getNode(entityPath);
+            },
+
+            /**
+             * Fetches entity node from cache, wrapped in a Hash instance.
+             * Arguments will be appended to the entity path.
+             * @returns {sntls.Hash}
+             */
+            getNodeAsHash: function () {
+                return sntls.Hash.create(this.getNode.apply(this, arguments));
+            },
+
+            /**
+             * Fetches entity node from cache without triggering access events.
+             * Arguments will be appended to the entity path.
+             * @returns {*}
+             */
+            getSilentNode: function () {
+                var entityPath = this.entityKey.getEntityPath();
+
+                if (arguments.length) {
+                    entityPath = entityPath.append(slice.call(arguments).toPath());
+                }
+
+                return sntls.Tree.getNode.call(bookworm.entities, entityPath);
+            },
+
+            /**
+             * Fetches entity node from cache, wrapped in a Hash instance, without triggering access events.
+             * Arguments will be appended to the entity path.
+             * @returns {sntls.Hash}
+             */
+            getSilentNodeAsHash: function () {
+                return sntls.Hash.create(this.getSilentNode.apply(this, arguments));
+            },
+
+            /**
+             * Touches entity node, triggering access event when absent, but not returning the node itself.
+             * @returns {bookworm.Entity}
+             */
+            touchNode: function () {
+                this.getNode();
+                return this;
+            },
+
+            /**
+             * Replaces entity node with the specified value.
+             * Extra arguments will be appended to the entity path.
+             * @example
+             * // will set 'hello world' on the path 'foo>bar' relative to the entity root
+             * entity.setNode('hello world', 'foo', 'bar');
+             * @param {*} value
+             * @returns {bookworm.Entity}
+             */
+            setNode: function (value) {
+                var dataPath = this.entityKey.getEntityPath();
+
+                if (arguments.length > 1) {
+                    dataPath = dataPath.append(slice.call(arguments, 1).toPath());
+                }
+
+                bookworm.entities.setNode(dataPath, value);
+
+                return this;
+            },
+
+            /**
+             * Removes entity node from cache.
+             * Arguments will be appended to the entity path.
+             * @example
+             * // will remove the node under 'foo>bar' relative to the entity root
+             * entity.unsetKey('foo', 'bar');
+             * @returns {bookworm.Entity}
+             */
+            unsetKey: function () {
+                var dataPath = this.entityKey.getEntityPath();
+
+                if (arguments.length) {
+                    dataPath = dataPath.append(slice.call(arguments).toPath());
+                }
+
+                bookworm.entities.unsetKey(dataPath);
+
+                return this;
+            }
+        });
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Array.html">Array</a></li><li><a href="bookworm.CollectionField.html">CollectionField</a></li><li><a href="bookworm.Document.html">Document</a></li><li><a href="bookworm.DocumentKey.html">DocumentKey</a></li><li><a href="bookworm.DocumentKeyCollection.html">DocumentKeyCollection</a></li><li><a href="bookworm.Entity.html">Entity</a></li><li><a href="bookworm.EntityBound.html">EntityBound</a></li><li><a href="bookworm.EntityKey.html">EntityKey</a></li><li><a href="bookworm.Field.html">Field</a></li><li><a href="bookworm.FieldKey.html">FieldKey</a></li><li><a href="bookworm.Item.html">Item</a></li><li><a href="bookworm.ItemKey.html">ItemKey</a></li><li><a href="bookworm.OrderedCollectionField.html">OrderedCollectionField</a></li><li><a href="bookworm.ReferenceItemKey.html">ReferenceItemKey</a></li><li><a href="dessert.html">dessert</a></li><li><a href="sntls.Hash.html">Hash</a></li><li><a href="sntls.Path.html">Path</a></li><li><a href="String.html">String</a></li></ul><h3>Namespaces</h3><ul><li><a href="bookworm.html">bookworm</a></li><li><a href="flock.html">flock</a></li><li><a href="sntls.html">sntls</a></li><li><a href="troop.html">troop</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Sep 28 2014 19:54:42 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+</body>
+</html>

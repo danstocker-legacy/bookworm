@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: keys/ReferenceItemKey.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: keys/ReferenceItemKey.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/*global dessert, troop, sntls, bookworm */
+troop.postpone(bookworm, 'ReferenceItemKey', function () {
+    "use strict";
+
+    var base = bookworm.ItemKey,
+        self = base.extend();
+
+    /**
+     * Creates ReferenceItemKey instance.
+     * ReferenceItemKey instances may also be created via conversion from string, array,
+     * as well as instantiating `ItemKey` or `EntityKey` with suitable arguments.
+     * @name bookworm.ReferenceItemKey.create
+     * @function
+     * @param {string} documentType Identifies type of document the current item belongs to.
+     * @param {string} documentId Identifies the document (within document type) the current item belongs to.
+     * @param {string} fieldName Identifies field (within document) the current item belongs to.
+     * @param {string} ref Serialized `DocumentKey` identifying the referred document.
+     * @returns {bookworm.ReferenceItemKey}
+     */
+
+    /**
+     * The ReferenceItemKey identifies an item node in the cache, the item ID of which is a document reference
+     * (serialized `DocumentKey`).
+     * @class
+     * @extends bookworm.ItemKey
+     */
+    bookworm.ReferenceItemKey = self
+        .addMethods(/** @lends bookworm.ReferenceItemKey# */{
+            /**
+             * @param {string} documentType
+             * @param {string} documentId
+             * @param {string} fieldName
+             * @param {string} ref
+             * @ignore
+             */
+            init: function (documentType, documentId, fieldName, ref) {
+                base.init.call(this, documentType, documentId, fieldName, ref);
+
+                /**
+                 * Key referenced by item ID.
+                 * @type {bookworm.DocumentKey}
+                 */
+                this.referenceKey = ref.toDocumentKey();
+            }
+        });
+});
+
+troop.amendPostponed(bookworm, 'ItemKey', function () {
+    "use strict";
+
+    bookworm.ItemKey
+        .addSurrogate(bookworm, 'ReferenceItemKey', function (documentType, documentId, fieldName, itemId) {
+            return itemId.toDocumentKey().documentId;
+        });
+});
+
+troop.amendPostponed(bookworm, 'EntityKey', function () {
+    "use strict";
+
+    bookworm.EntityKey
+        .addSurrogate(bookworm, 'ReferenceItemKey', function () {
+            return arguments.length === 4 &&
+                   arguments[3].toDocumentKey().documentId;
+        });
+});
+
+(function () {
+    "use strict";
+
+    dessert.addTypes(/** @lends dessert */{
+        /** @param {bookworm.ReferenceItemKey} expr */
+        isReferenceItemKey: function (expr) {
+            return bookworm.ReferenceItemKey.isBaseOf(expr);
+        },
+
+        /** @param {bookworm.ReferenceItemKey} [expr] */
+        isReferenceItemKeyOptional: function (expr) {
+            return typeof expr === 'undefined' ||
+                   bookworm.ReferenceItemKey.isBaseOf(expr);
+        }
+    });
+
+    troop.Properties.addProperties.call(
+        String.prototype,
+        /** @lends String# */{
+            /**
+             * Converts `String` to a `ReferenceItemKey` instance. Assumes the string to be a serialized `ReferenceItemKey`.
+             * @returns {bookworm.ReferenceItemKey}
+             */
+            toReferenceItemKey: function () {
+                var parts = this.split('/');
+                return bookworm.ReferenceItemKey.create(
+                    decodeURIComponent(parts[0]),
+                    decodeURIComponent(parts[1]),
+                    decodeURIComponent(parts[2]),
+                    decodeURIComponent(parts[3])
+                );
+
+            }
+        },
+        false, false, false
+    );
+
+    troop.Properties.addProperties.call(
+        Array.prototype,
+        /** @lends Array# */{
+            /**
+             * Converts `Array` (of strings) to a `ReferenceItemKey` instance.
+             * Assumes the array to be a reference item key in array notation.
+             * @returns {bookworm.ReferenceItemKey}
+             */
+            toReferenceItemKey: function () {
+                return bookworm.ReferenceItemKey.create(this[0], this[1], this[2], this[3]);
+            }
+        },
+        false, false, false
+    );
+}());
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="Array.html">Array</a></li><li><a href="bookworm.CollectionField.html">CollectionField</a></li><li><a href="bookworm.Document.html">Document</a></li><li><a href="bookworm.DocumentKey.html">DocumentKey</a></li><li><a href="bookworm.DocumentKeyCollection.html">DocumentKeyCollection</a></li><li><a href="bookworm.Entity.html">Entity</a></li><li><a href="bookworm.EntityBound.html">EntityBound</a></li><li><a href="bookworm.EntityKey.html">EntityKey</a></li><li><a href="bookworm.Field.html">Field</a></li><li><a href="bookworm.FieldKey.html">FieldKey</a></li><li><a href="bookworm.Item.html">Item</a></li><li><a href="bookworm.ItemKey.html">ItemKey</a></li><li><a href="bookworm.OrderedCollectionField.html">OrderedCollectionField</a></li><li><a href="bookworm.ReferenceItemKey.html">ReferenceItemKey</a></li><li><a href="dessert.html">dessert</a></li><li><a href="sntls.Hash.html">Hash</a></li><li><a href="sntls.Path.html">Path</a></li><li><a href="String.html">String</a></li></ul><h3>Namespaces</h3><ul><li><a href="bookworm.html">bookworm</a></li><li><a href="flock.html">flock</a></li><li><a href="sntls.html">sntls</a></li><li><a href="troop.html">troop</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Sep 28 2014 19:54:42 GMT+0100 (BST)
+</footer>
+
+<script> prettyPrint(); </script>
+</body>
+</html>
