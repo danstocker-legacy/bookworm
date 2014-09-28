@@ -3,6 +3,8 @@ Bookworm
 
 *Document framework*
 
+[Wiki](https://github.com/danstocker/bookworm/wiki)
+
 [Reference](http://danstocker.github.io/bookworm)
 
 Bookworm is an isomorphic library that helps organizing the application's model layer into a document oriented structure. Through entity classes the Bookworm API allows for access and modification of [flock](https://github.com/danstocker/flock)-based cache nodes. Instead of using absolute paths, Bookworm entities may be accessed relying only on their identifiers (keys).
