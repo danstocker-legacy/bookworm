@@ -7,7 +7,6 @@ troop.postpone(bookworm, 'config', function () {
      * @type {sntls.Tree}
      */
     bookworm.config = sntls.Tree.create({
-        /** Config node, contains information about document types and their fields. */
         document: {
             //@formatter:off
 //          /** Sample config document. */
