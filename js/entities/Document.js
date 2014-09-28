@@ -31,8 +31,8 @@ troop.postpone(bookworm, 'Document', function () {
                 base.init.call(this, documentKey);
 
                 /**
-                 * Field key associated with current entity.
-                 * @name bookworm.Field#entityKey
+                 * Document key associated with current entity.
+                 * @name bookworm.Document#entityKey
                  * @type {bookworm.DocumentKey}
                  */
             },

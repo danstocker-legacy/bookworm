@@ -182,15 +182,18 @@ troop.amendPostponed(sntls, 'Path', function () {
     "use strict";
 
     dessert.addTypes(/** @lends dessert */{
+        /** @param {bookworm.FieldKey} expr */
         isFieldKey: function (expr) {
             return bookworm.FieldKey.isBaseOf(expr);
         },
 
+        /** @param {bookworm.FieldKey} expr */
         isFieldKeyStrict: function (expr) {
             return bookworm.FieldKey.isBaseOf(expr) &&
                    expr.getBase() === bookworm.FieldKey;
         },
 
+        /** @param {bookworm.FieldKey} [expr] */
         isFieldKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
                    bookworm.FieldKey.isBaseOf(expr);

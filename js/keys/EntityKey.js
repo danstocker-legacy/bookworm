@@ -54,10 +54,12 @@ troop.postpone(bookworm, 'EntityKey', function () {
     "use strict";
 
     dessert.addTypes(/** @lends dessert */{
+        /** @param {bookworm.EntityKey} expr */
         isEntityKey: function (expr) {
             return bookworm.EntityKey.isBaseOf(expr);
         },
 
+        /** @param {bookworm.EntityKey} [expr] */
         isEntityKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
                    bookworm.EntityKey.isBaseOf(expr);

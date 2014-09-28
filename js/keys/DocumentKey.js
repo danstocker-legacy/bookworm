@@ -173,10 +173,12 @@ troop.amendPostponed(sntls, 'Hash', function () {
     "use strict";
 
     dessert.addTypes(/** @lends dessert */{
+        /** @param {bookworm.DocumentKey} expr */
         isDocumentKey: function (expr) {
             return bookworm.DocumentKey.isBaseOf(expr);
         },
 
+        /** @param {bookworm.DocumentKey} [expr] */
         isDocumentKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
                    bookworm.DocumentKey.isBaseOf(expr);
