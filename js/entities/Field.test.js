@@ -77,8 +77,8 @@
             }
         });
 
-        b$.entities.addMocks({
-            getSilentNode: function (path) {
+        sntls.Tree.addMocks({
+            getNode: function (path) {
                 strictEqual(path, attributePath, "should fetch node silently at attribute path");
                 return attributeNode;
             }
@@ -86,7 +86,7 @@
 
         strictEqual(field.getSilentAttribute('hello'), attributeNode, "should return attribute node");
 
-        b$.entities.removeMocks();
+        sntls.Tree.removeMocks();
     });
 
     test("Field attribute setter", function () {
@@ -155,8 +155,8 @@
             }
         });
 
-        b$.entities.addMocks({
-            getSilentNode: function (path) {
+        sntls.Tree.addMocks({
+            getNode: function (path) {
                 strictEqual(path, valuePath, "should fetch node silently at specified value path");
                 return valueNode;
             }
@@ -164,7 +164,7 @@
 
         strictEqual(field.getSilentValue(), valueNode, "should return value node");
 
-        b$.entities.removeMocks();
+        sntls.Tree.removeMocks();
     });
 
     test("Field value setter", function () {

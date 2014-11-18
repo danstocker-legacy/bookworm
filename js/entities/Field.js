@@ -54,7 +54,7 @@ troop.postpone(bookworm, 'Field', function () {
              */
             getSilentAttribute: function (attribute) {
                 var attributePath = this.entityKey.getAttributePath(attribute);
-                return bookworm.entities.getSilentNode(attributePath);
+                return bookworm.entities.toTree().getNode(attributePath);
             },
 
             /**
@@ -82,7 +82,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {*}
              */
             getSilentValue: function () {
-                return bookworm.entities.getSilentNode(this.entityKey.getValuePath());
+                return bookworm.entities.toTree().getNode(this.entityKey.getValuePath());
             },
 
             /**
