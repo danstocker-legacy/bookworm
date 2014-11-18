@@ -21,6 +21,11 @@ troop.postpone(bookworm, 'EntityKey', function () {
         .addMethods(/** @lends bookworm.EntityKey# */{
             /** @ignore */
             init: function () {
+            },
+
+            /** @returns {string} */
+            toString: function () {
+                return '';
             }
         });
 
