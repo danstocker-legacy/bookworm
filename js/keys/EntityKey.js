@@ -17,7 +17,12 @@ troop.postpone(bookworm, 'EntityKey', function () {
      * @class
      * @extends troop.Base
      */
-    bookworm.EntityKey = troop.Base.extend();
+    bookworm.EntityKey = troop.Base.extend()
+        .addMethods(/** @lends bookworm.EntityKey# */{
+            /** @ignore */
+            init: function () {
+            }
+        });
 
     /**
      * Tells whether specified entity key is identical to the current one.
