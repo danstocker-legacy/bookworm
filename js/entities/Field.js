@@ -48,6 +48,16 @@ troop.postpone(bookworm, 'Field', function () {
             },
 
             /**
+             * Fetches field attribute node from cache without triggering access events.
+             * @param {string} attribute
+             * @returns {*}
+             */
+            getSilentAttribute: function (attribute) {
+                var attributePath = this.entityKey.getAttributePath(attribute);
+                return bookworm.entities.getSilentNode(attributePath);
+            },
+
+            /**
              * Sets field attribute node in cache.
              * @param {string} attribute
              * @param {*} attributeNode
@@ -65,6 +75,14 @@ troop.postpone(bookworm, 'Field', function () {
              */
             getValue: function () {
                 return bookworm.entities.getNode(this.entityKey.getValuePath());
+            },
+
+            /**
+             * Fetches field value node from cache without triggering access events.
+             * @returns {*}
+             */
+            getSilentValue: function () {
+                return bookworm.entities.getSilentNode(this.entityKey.getValuePath());
             },
 
             /**

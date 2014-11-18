@@ -63,6 +63,32 @@
         b$.entities.removeMocks();
     });
 
+    test("Silent field attribute getter", function () {
+        expect(3);
+
+        var field = 'foo/bar/baz'.toField(),
+            attributePath = {},
+            attributeNode = {};
+
+        field.entityKey.addMocks({
+            getAttributePath: function (attribute) {
+                equal(attribute, 'hello', "should fetch path for specified attribute");
+                return attributePath;
+            }
+        });
+
+        b$.entities.addMocks({
+            getSilentNode: function (path) {
+                strictEqual(path, attributePath, "should fetch node silently at attribute path");
+                return attributeNode;
+            }
+        });
+
+        strictEqual(field.getSilentAttribute('hello'), attributeNode, "should return attribute node");
+
+        b$.entities.removeMocks();
+    });
+
     test("Field attribute setter", function () {
         expect(4);
 
@@ -111,6 +137,32 @@
         });
 
         strictEqual(field.getValue(), valueNode, "should return value node");
+
+        b$.entities.removeMocks();
+    });
+
+    test("Silent field value getter", function () {
+        expect(3);
+
+        var field = 'foo/bar/baz'.toField(),
+            valuePath = {},
+            valueNode = {};
+
+        field.entityKey.addMocks({
+            getValuePath: function () {
+                ok(true, "should fetch value path for current key");
+                return valuePath;
+            }
+        });
+
+        b$.entities.addMocks({
+            getSilentNode: function (path) {
+                strictEqual(path, valuePath, "should fetch node silently at specified value path");
+                return valueNode;
+            }
+        });
+
+        strictEqual(field.getSilentValue(), valueNode, "should return value node");
 
         b$.entities.removeMocks();
     });
