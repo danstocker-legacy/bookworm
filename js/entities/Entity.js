@@ -20,7 +20,7 @@ troop.postpone(bookworm, 'Entity', function () {
      * @extends troop.Base
      */
     bookworm.Entity = troop.Base.extend()
-        .addMethods(/** @lends bookworm.Entity */{
+        .addMethods(/** @lends bookworm.Entity# */{
             /**
              * @param {bookworm.EntityKey} entityKey
              * @ignore
