@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, flock, b$ */
+/*global dessert, troop, sntls, flock, bookworm */
 /*global module, test, expect, ok, equal, strictEqual, notStrictEqual, deepEqual, notDeepEqual, raises */
 (function () {
     "use strict";
@@ -7,25 +7,25 @@
 
     test("Instantiation", function () {
         raises(function () {
-            b$.Document.create();
+            bookworm.Document.create();
         }, "should raise exception on missing document key argument");
 
         raises(function () {
-            b$.Document.create('foo');
+            bookworm.Document.create('foo');
         }, "should raise exception on invalid document key argument");
     });
 
     test("Conversion from String", function () {
         var document = 'foo/bar'.toDocument();
 
-        ok(document.isA(b$.Document), "should return Document instance");
+        ok(document.isA(bookworm.Document), "should return Document instance");
         equal(document.entityKey.toString(), 'foo/bar', "should set document key");
     });
 
     test("Conversion from Array", function () {
         var document = ['foo', 'bar'].toDocument();
 
-        ok(document.isA(b$.Document), "should return Document instance");
+        ok(document.isA(bookworm.Document), "should return Document instance");
         equal(document.entityKey.toString(), 'foo/bar', "should set document key");
     });
 
@@ -33,7 +33,7 @@
         var documentKey = ['foo', 'bar'].toDocumentKey(),
             document = documentKey.toDocument();
 
-        ok(document.isA(b$.Document), "should return Document instance");
+        ok(document.isA(bookworm.Document), "should return Document instance");
         strictEqual(document.entityKey, documentKey, "should set document key");
     });
 
@@ -51,7 +51,7 @@
             }
         });
 
-        b$.entities.addMocks({
+        bookworm.entities.addMocks({
             getNode: function (path) {
                 strictEqual(path, attributePath,
                     "should fetch the node from attribute path");
@@ -61,14 +61,14 @@
 
         strictEqual(document.getDocumentAttribute('hello'), attributeNode, "should return attribute node");
 
-        b$.entities.removeMocks();
+        bookworm.entities.removeMocks();
     });
 
     test("Field entity getter", function () {
         var document = 'foo/bar'.toDocument(),
             field = document.getField('baz');
 
-        ok(field.isA(b$.Field), "should return Field instance");
+        ok(field.isA(bookworm.Field), "should return Field instance");
         equal(field.entityKey.toString(), 'foo/bar/baz', "should set field key on returned entity");
     });
 }());

@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, flock, b$ */
+/*global dessert, troop, sntls, flock, bookworm */
 /*global module, test, expect, ok, equal, strictEqual, notStrictEqual, deepEqual, notDeepEqual, raises */
 (function () {
     "use strict";
@@ -6,10 +6,10 @@
     module("Entity Binding");
 
     var BoundClass = troop.Base.extend()
-        .addTrait(b$.EntityBound)
+        .addTrait(bookworm.EntityBound)
         .addMethods({
             init: function () {
-                b$.EntityBound.init.call(this);
+                bookworm.EntityBound.init.call(this);
             },
 
             onEntityEvent: function () {
@@ -18,13 +18,13 @@
 
     test("Binding signature getter", function () {
         equal(
-            b$.EntityBound._getBindingSignature('bar/baz'.toDocumentKey(), 'foo'),
+            bookworm.EntityBound._getBindingSignature('bar/baz'.toDocumentKey(), 'foo'),
             'bar/baz|foo',
             "should concatenate the event name and key"
         );
 
         equal(
-            b$.EntityBound._getBindingSignature('bar/baz'.toDocumentKey(), 'foo|'),
+            bookworm.EntityBound._getBindingSignature('bar/baz'.toDocumentKey(), 'foo|'),
             'bar/baz|foo%7C',
             "should URI encode the event name in the output string"
         );
@@ -32,13 +32,13 @@
 
     test("Binding signature parser", function () {
         deepEqual(
-            b$.EntityBound._parseBindingSignature('foo/bar|hello'),
+            bookworm.EntityBound._parseBindingSignature('foo/bar|hello'),
             ['foo/bar'.toDocumentKey(), 'hello'],
             "should extract the event name and document key instance from signature"
         );
 
         deepEqual(
-            b$.EntityBound._parseBindingSignature('foo/bar/baz|hello'),
+            bookworm.EntityBound._parseBindingSignature('foo/bar/baz|hello'),
             ['foo/bar/baz'.toFieldKey(), 'hello'],
             "should extract the event name and field key instance from signature"
         );
@@ -50,7 +50,7 @@
 
         var bound = BoundClass.create();
 
-        b$.entities.addMocks({
+        bookworm.entities.addMocks({
             subscribeTo: function (eventName, cachePath, handler) {
                 equal(eventName, 'hello', "should pass event name to subscription");
                 equal(cachePath.toString(), 'document>foo>bar', "should pass cache path to subscription");
@@ -67,7 +67,7 @@
 
         bound._bindToEntity('foo/bar'.toDocumentKey(), 'hello', 'onEntityEvent');
 
-        b$.entities.removeMocks();
+        bookworm.entities.removeMocks();
     });
 
     test("Internal event unbinder", function () {
@@ -76,7 +76,7 @@
         var bound = BoundClass.create();
         bound._bindToEntity('foo/bar'.toDocumentKey(), 'hello', 'onEntityEvent');
 
-        b$.entities.addMocks({
+        bookworm.entities.addMocks({
             unsubscribeFrom: function (eventName, cachePath, handler) {
                 equal(eventName, 'hello', "should pass event name to unsubsciption");
                 equal(cachePath.toString(), 'document>foo>bar', "should pass cache path to unsubscription");
@@ -103,7 +103,7 @@
 
         bound._unbindFromEntity('foo/bar'.toDocumentKey(), 'hello');
 
-        b$.entities.removeMocks();
+        bookworm.entities.removeMocks();
     });
 
     test("Bounding tester", function () {

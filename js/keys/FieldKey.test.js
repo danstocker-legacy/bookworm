@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, b$ */
+/*global dessert, troop, sntls, bookworm */
 /*global module, test, expect, ok, equal, strictEqual, notStrictEqual, deepEqual, notDeepEqual, raises */
 (function () {
     "use strict";
@@ -6,9 +6,9 @@
     module("Field Key");
 
     test("Instantiation", function () {
-        var fieldKey = b$.FieldKey.create('hello', 'world', 'foo');
+        var fieldKey = bookworm.FieldKey.create('hello', 'world', 'foo');
 
-        ok(fieldKey.documentKey.isA(b$.DocumentKey), "should set document key");
+        ok(fieldKey.documentKey.isA(bookworm.DocumentKey), "should set document key");
         equal(fieldKey.documentKey.documentType, 'hello', "should set document type");
         equal(fieldKey.documentKey.documentId, 'world', "should set document ID");
         equal(fieldKey.fieldName, 'foo', "should set field name");
@@ -18,7 +18,7 @@
         var key;
 
         key = 'foo/bar/baz'.toFieldKey();
-        ok(key.isA(b$.FieldKey), "should return FieldKey instance");
+        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
@@ -31,16 +31,16 @@
         var key;
 
         key = ['foo', 'bar', 'baz'].toFieldKey();
-        ok(key.isA(b$.FieldKey), "should return FieldKey instance");
+        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
     });
 
     test("Conversion from EntityKey", function () {
-        var key = b$.EntityKey.create('foo', 'bar', 'baz');
+        var key = bookworm.EntityKey.create('foo', 'bar', 'baz');
 
-        ok(key.isA(b$.FieldKey), "should return FieldKey instance");
+        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
@@ -49,7 +49,7 @@
     test("Conversion from Path", function () {
         var key = 'foo>bar>baz'.toPath().toFieldKey();
 
-        ok(key.isA(b$.FieldKey), "should return FieldKey instance");
+        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
         equal(key.documentKey.documentType, 'foo', "should set document type");
         equal(key.documentKey.documentId, 'bar', "should set document ID");
         equal(key.fieldName, 'baz', "should set field name");
@@ -65,8 +65,8 @@
         var fieldKey = 'foo/bar/baz'.toFieldKey(),
             itemKey = fieldKey.getItemKey('hello');
 
-        ok(itemKey.isA(b$.ItemKey), "should return an ItemKey instance");
-        ok(itemKey.documentKey.isA(b$.DocumentKey), "should set document key");
+        ok(itemKey.isA(bookworm.ItemKey), "should return an ItemKey instance");
+        ok(itemKey.documentKey.isA(bookworm.DocumentKey), "should set document key");
         equal(itemKey.documentKey.documentType, 'foo', "should set document type");
         equal(itemKey.documentKey.documentId, 'bar', "should set document ID");
         equal(itemKey.fieldName, 'baz', "should set field name");
@@ -81,7 +81,7 @@
             entityPath = {},
             path;
 
-        b$.DocumentKey.addMocks({
+        bookworm.DocumentKey.addMocks({
             getEntityPath: function () {
                 equal(this.toString(), 'foo/bar', "should get entity key from document key");
                 return documentEntityPath;
@@ -97,7 +97,7 @@
 
         path = fieldKey.getEntityPath();
 
-        b$.DocumentKey.removeMocks();
+        bookworm.DocumentKey.removeMocks();
 
         strictEqual(path, entityPath, "should return correct field path");
     });
@@ -133,7 +133,7 @@
         var fieldKey = 'foo/bar/baz'.toFieldKey(),
             paths;
 
-        b$.config.addMocks({
+        bookworm.config.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
                 return undefined;
@@ -143,14 +143,14 @@
         paths = [];
         fieldKey.getFieldType();
 
-        b$.config.removeMocks();
+        bookworm.config.removeMocks();
 
         deepEqual(paths, [
             "document>document>foo>baz>fieldType",
             "document>document>foo>baz"
         ], "should try attribute first, then field value");
 
-        b$.config.addMocks({
+        bookworm.config.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
                 return 'fieldType';
@@ -160,7 +160,7 @@
         paths = [];
         fieldKey.getFieldType();
 
-        b$.config.removeMocks();
+        bookworm.config.removeMocks();
 
         deepEqual(paths, [
             "document>document>foo>baz>fieldType"
@@ -196,8 +196,8 @@
     });
 
     test("Conversion to String", function () {
-        equal(b$.FieldKey.create('foo', 'bar', 'baz').toString(), 'foo/bar/baz');
-        equal(b$.FieldKey.create('foo', 'bar', 'b/az').toString(), 'foo/bar/b%2Faz');
+        equal(bookworm.FieldKey.create('foo', 'bar', 'baz').toString(), 'foo/bar/baz');
+        equal(bookworm.FieldKey.create('foo', 'bar', 'b/az').toString(), 'foo/bar/b%2Faz');
         equal('foo/bar/baz'.toFieldKey().toString(), 'foo/bar/baz');
     });
 }());

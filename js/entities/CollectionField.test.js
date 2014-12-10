@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, flock, b$ */
+/*global dessert, troop, sntls, flock, bookworm */
 /*global module, test, expect, ok, equal, strictEqual, notStrictEqual, deepEqual, notDeepEqual, raises */
 (function () {
     "use strict";
@@ -11,43 +11,43 @@
         var collection,
             testedField;
 
-        b$.FieldKey.addMocks({
+        bookworm.FieldKey.addMocks({
             getFieldType: function () {
                 testedField = this.toString();
                 return 'collection';
             }
         });
 
-        collection = b$.Field.create('foo/bar/baz'.toFieldKey());
+        collection = bookworm.Field.create('foo/bar/baz'.toFieldKey());
 
-        b$.FieldKey.removeMocks();
+        bookworm.FieldKey.removeMocks();
 
-        ok(collection.isA(b$.CollectionField), "should return CollectionField instance when field type is 'collection'");
+        ok(collection.isA(bookworm.CollectionField), "should return CollectionField instance when field type is 'collection'");
         equal(testedField, 'foo/bar/baz', "should test field type");
 
-        b$.FieldKey.addMocks({
+        bookworm.FieldKey.addMocks({
             getFieldType: function () {
                 return 'string';
             }
         });
 
-        collection = b$.Field.create('foo/bar/baz'.toFieldKey());
-        ok(collection.isA(b$.Field),
+        collection = bookworm.Field.create('foo/bar/baz'.toFieldKey());
+        ok(collection.isA(bookworm.Field),
             "should return Field instance when field type is not 'collection'");
-        ok(!collection.isA(b$.CollectionField),
+        ok(!collection.isA(bookworm.CollectionField),
             "should return plain Field instance when field type is not 'collection'");
 
-        b$.FieldKey.removeMocks();
+        bookworm.FieldKey.removeMocks();
     });
 
     test("Items getter", function () {
         expect(2);
 
-        var collection = b$.CollectionField.create('foo/bar/baz'.toFieldKey()),
+        var collection = bookworm.CollectionField.create('foo/bar/baz'.toFieldKey()),
             itemsNode = {},
             result;
 
-        b$.Field.addMocks({
+        bookworm.Field.addMocks({
             getValue: function () {
                 equal(this.entityKey.toString(), 'foo/bar/baz', "should get field value");
                 return itemsNode;
@@ -58,17 +58,17 @@
 
         strictEqual(result, itemsNode, "should return Collection instance with the field value in it");
 
-        b$.Field.removeMocks();
+        bookworm.Field.removeMocks();
     });
 
     test("Collection getter", function () {
         expect(3);
 
-        var collection = b$.CollectionField.create('foo/bar/baz'.toFieldKey()),
+        var collection = bookworm.CollectionField.create('foo/bar/baz'.toFieldKey()),
             itemsNode = {},
             result;
 
-        b$.Field.addMocks({
+        bookworm.Field.addMocks({
             getValue: function () {
                 equal(this.entityKey.toString(), 'foo/bar/baz', "should get field value");
                 return itemsNode;
@@ -80,16 +80,16 @@
         ok(result.isA(sntls.Collection), "should return Collection instance");
         strictEqual(result.items, itemsNode, "should return Collection instance with the field value in it");
 
-        b$.Field.removeMocks();
+        bookworm.Field.removeMocks();
     });
 
     test("Item getter", function () {
-        var collection = b$.CollectionField.create('foo/bar/baz'.toFieldKey()),
+        var collection = bookworm.CollectionField.create('foo/bar/baz'.toFieldKey()),
             result;
 
         result = collection.getItem('A');
 
-        ok(result.isA(b$.Item), "should return Item instance");
+        ok(result.isA(bookworm.Item), "should return Item instance");
         equal(result.entityKey.toString(), 'foo/bar/baz/A', "should set the correct item key on the returned Item");
     });
 }());
