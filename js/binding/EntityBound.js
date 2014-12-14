@@ -174,6 +174,30 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
+             * Binds instance to before-change events that reach the specified entity key.
+             * Any event originating from within the entity's node will be captured by the handler.
+             * @param {bookworm.EntityKey} entityKey Identifies entity to bind to.
+             * @param {string} methodName Identifies handler method on current class.
+             * @returns {bookworm.EntityBound}
+             */
+            bindToEntityBeforeChange: function (entityKey, methodName) {
+                this._bindToEntity(entityKey, flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE, methodName, false);
+                return this;
+            },
+
+            /**
+             * Binds instance to before-change events triggered on the specified entity key.
+             * Only events triggered on the entity's node will be captured by the handler.
+             * @param {bookworm.EntityKey} entityKey Identifies entity to bind to.
+             * @param {string} methodName Identifies handler method on current class.
+             * @returns {bookworm.EntityBound}
+             */
+            bindToEntityNodeBeforeChange: function (entityKey, methodName) {
+                this._bindToEntity(entityKey, flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE, methodName, true);
+                return this;
+            },
+
+            /**
              * Removes all change event bindings from current instance associated with the specified entity key.
              * @param {bookworm.EntityKey} entityKey Identifies entity to bind to.
              * @returns {bookworm.EntityBound}

@@ -220,6 +220,48 @@
         strictEqual(result, bound, "should be chainable");
     });
 
+    test("Binding to entity before-change", function () {
+        expect(5);
+
+        var bound = BoundClass.create(),
+            result;
+
+        bound.addMocks({
+            _bindToEntity: function (entityKey, eventName, methodName, discardBubbling) {
+                equal(entityKey.toString(), 'foo/bar', "should pass entity key to internal binding");
+                equal(eventName, flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE,
+                    "should pass event name to internal binding");
+                equal(methodName, 'onEntityEvent', "should pass method name to internal binding");
+                equal(discardBubbling, false, "should set to allow capturing bubbling events");
+            }
+        });
+
+        result = bound.bindToEntityBeforeChange('foo/bar'.toDocumentKey(), 'onEntityEvent');
+
+        strictEqual(result, bound, "should be chainable");
+    });
+
+    test("Binding to entity node before-change", function () {
+        expect(5);
+
+        var bound = BoundClass.create(),
+            result;
+
+        bound.addMocks({
+            _bindToEntity: function (entityKey, eventName, methodName, discardBubbling) {
+                equal(entityKey.toString(), 'foo/bar', "should pass entity key to internal binding");
+                equal(eventName, flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE,
+                    "should pass event name to internal binding");
+                equal(methodName, 'onEntityEvent', "should pass method name to internal binding");
+                equal(discardBubbling, true, "should not allow capturing bubbling events");
+            }
+        });
+
+        result = bound.bindToEntityNodeBeforeChange('foo/bar'.toDocumentKey(), 'onEntityEvent');
+
+        strictEqual(result, bound, "should be chainable");
+    });
+
     test("Unbinding from entity change", function () {
         expect(3);
 
