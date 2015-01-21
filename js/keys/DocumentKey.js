@@ -72,7 +72,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
              * @returns {sntls.Path}
              */
             getEntityPath: function () {
-                return ['document', this.documentType, this.documentId].toPath();
+                return ['document', String(this.documentType), String(this.documentId)].toPath();
             },
 
             /**
@@ -92,7 +92,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
              * @returns {sntls.Path}
              */
             getConfigPath: function () {
-                return ['document', this.documentType].toDocumentKey().getEntityPath();
+                return ['document', String(this.documentType)].toDocumentKey().getEntityPath();
             },
 
             /**

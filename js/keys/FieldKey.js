@@ -91,7 +91,7 @@ troop.postpone(bookworm, 'FieldKey', function () {
             getEntityPath: function () {
                 return this.documentKey
                     .getEntityPath()
-                    .appendKey(this.fieldName);
+                    .appendKey(String(this.fieldName));
             },
 
             /**

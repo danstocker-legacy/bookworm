@@ -1,6 +1,6 @@
 {
     "name"           : "bookworm",
-    "version"        : "0.2.3",
+    "version"        : "0.2.4",
     "description"    : "Document framework",
     "keywords"       : [
         "document",
@@ -16,7 +16,7 @@
     "dependencies"   : {
         "dessert": "~0.3.2",
         "troop"  : "~0.7.2 || ~0.8.0",
-        "sntls": "~0.17.3",
+        "sntls": "~0.18.0",
         "evan" : "~0.4.5",
         "flock": "~0.3.6"
     },

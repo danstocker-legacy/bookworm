@@ -72,7 +72,7 @@ troop.postpone(bookworm, 'ItemKey', function () {
              */
             getEntityPath: function () {
                 return base.getEntityPath.call(this)
-                    .appendKey(this.itemId);
+                    .appendKey(String(this.itemId));
             },
 
             /**
