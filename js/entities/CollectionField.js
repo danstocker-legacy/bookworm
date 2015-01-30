@@ -45,6 +45,33 @@ troop.postpone(bookworm, 'CollectionField', function () {
              */
             getItem: function (itemId) {
                 return this.entityKey.getItemKey(itemId).toItem();
+            },
+
+            /**
+             * Retrieves an item key for the item matching the specified value.
+             * Iterates ove all items. Avoid using it for large collections.
+             * TODO: Implement indexed version.
+             * @param {*} value
+             * @returns {bookworm.ItemKey}
+             */
+            getItemKeyByValue: function (value) {
+                var result,
+                    itemsNode = this.getItems(),
+                    itemIds,
+                    i, item;
+
+                if (itemsNode) {
+                    itemIds = Object.keys(itemsNode);
+                    for (i = 0; i < itemIds.length; i++) {
+                        item = this.getItem(itemIds[i]);
+                        if (item.getValue() === value) {
+                            result = item.entityKey;
+                            break;
+                        }
+                    }
+                }
+
+                return result;
             }
         });
 });
