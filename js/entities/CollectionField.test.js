@@ -121,6 +121,37 @@
         bookworm.Item.removeMocks();
 
         ok(result.isA(bookworm.ItemKey), "should return ItemKey instance");
-        equal(result.toString(), 'foo/bar/baz/b', "should return correct ");
+        equal(result.toString(), 'foo/bar/baz/b', "should return correct key");
+    });
+
+    test("Item by value getter", function () {
+        var collection = bookworm.CollectionField.create('foo/bar/baz'.toFieldKey()),
+            itemsNode = {
+                a: 'A',
+                b: 'B',
+                c: 'C'
+            },
+            result;
+
+        collection.addMocks({
+            getItems: function () {
+                return itemsNode;
+            }
+        });
+
+        bookworm.Item.addMocks({
+            getValue: function () {
+                return itemsNode[this.entityKey.itemId];
+            }
+        });
+
+        equal(typeof collection.getItemKeyByValue('D'), 'undefined', "should return undefined for absent value");
+
+        result = collection.getItemByValue('B');
+
+        bookworm.Item.removeMocks();
+
+        ok(result.isA(bookworm.Item), "should return Item instance");
+        equal(result.entityKey.toString(), 'foo/bar/baz/b', "should return correct entity");
     });
 }());
