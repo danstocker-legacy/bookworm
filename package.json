@@ -16,9 +16,9 @@
     "dependencies"   : {
         "dessert": "~0.3.2",
         "troop"  : "~0.7.2 || ~0.8.0",
-        "sntls": "~0.18.0",
-        "evan" : "~0.4.5",
-        "flock": "~0.3.6"
+        "sntls"  : "~0.18.0",
+        "evan"   : "~0.5.0",
+        "flock"  : "~0.3.6"
     },
     "repository"     : {
         "type": "git",
@@ -34,7 +34,7 @@
         "grunt-contrib-copy"  : "~0.4.1",
         "grunt-jsdoc"         : "~0.3.3",
         "grunt-regex-replace" : "~0.2.5",
-        "common-gruntfile": "git://github.com/danstocker/common-gruntfile.git#0.1.7",
+        "common-gruntfile"    : "git://github.com/danstocker/common-gruntfile.git#0.1.7",
         "QUnitAdapter"        : "https://dl.dropboxusercontent.com/u/9258903/packages/QUnitAdapter-0.1.0.tgz"
     },
     "files"          : [
