@@ -18,7 +18,6 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
     /**
      * The OrderedCollectionField class defines an API for collections the items of which are in a pre-defined order.
      * Provides methods for accessing information about item order, as well as retrieving items based on order.
-     * TODO: Add managed index for fetching items by order.
      * @class
      * @extends bookworm.CollectionField
      */
@@ -40,9 +39,21 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
             /**
              * Retrieves `ItemKey` from collection matching the specified order.
              * @param {number} order
-             * @returns {undefined}
+             * @returns {bookworm.ItemKey}
              */
             getItemKeyByOrder: function (order) {
+                var item = this.getItemByOrder(order);
+                return item && item.entityKey;
+            },
+
+            /**
+             * Retrieves `Item` entity from collection matching the specified order.
+             * Iterates ove all items. Avoid using it for large collections.
+             * TODO: Implement indexed version.
+             * @param {number} order
+             * @returns {bookworm.Item}
+             */
+            getItemByOrder: function (order) {
                 var result,
                     itemsNode = this.getItems(),
                     itemIds,
@@ -53,25 +64,13 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
                     for (i = 0; i < itemIds.length; i++) {
                         itemId = itemIds[i];
                         if (this.getItemOrder(itemId) === order) {
-                            result = this.entityKey.getItemKey(itemId);
+                            result = this.getItem(itemId);
                             break;
                         }
                     }
                 }
 
                 return result;
-            },
-
-            /**
-             * Retrieves `Item` entity from collection matching the specified order.
-             * @param {number} order
-             * @returns {bookworm.Item}
-             */
-            getItemByOrder: function (order) {
-                var itemKey = this.getItemKeyByOrder(order);
-                return itemKey ?
-                    itemKey.toItem() :
-                    undefined;
             },
 
             /**

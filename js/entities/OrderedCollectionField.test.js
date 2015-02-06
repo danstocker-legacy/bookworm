@@ -50,59 +50,66 @@
     });
 
     test("Item key getter by order", function () {
-        expect(6);
+        expect(5);
 
         var orderedCollection = bookworm.OrderedCollectionField.create('foo/bar/baz'.toFieldKey()),
-            traversedItemsIds = [],
-            result;
+            itemsNode = {
+                a: 3,
+                b: 1,
+                c: 0,
+                d: 2
+            },
+            itemKey;
 
-        bookworm.OrderedCollectionField.addMocks({
+        orderedCollection.addMocks({
             getItems: function () {
-                // called twice
-                equal(this.entityKey.toString(), 'foo/bar/baz', "should fetch collection items");
-                return {
-                    'foo': 1,
-                    'bar': 2,
-                    'baz': 3
-                };
+                ok(true, "should fetch collection items node");
+                return itemsNode;
             },
 
             getItemOrder: function (itemId) {
-                traversedItemsIds.push(itemId);
-                return 0;
+                return itemsNode[itemId];
             }
         });
 
-        equal(typeof orderedCollection.getItemKeyByOrder(3), 'undefined', "should return undefined for invalid order");
-        deepEqual(traversedItemsIds.sort(),
-            ['foo', 'bar', 'baz'].sort(),
-            "should get order until matching order found");
+        equal(typeof orderedCollection.getItemKeyByOrder(10), 'undefined', "should return undefined for absent order");
 
-        result = orderedCollection.getItemKeyByOrder(0);
-        ok(result.isA(bookworm.ItemKey), "should return ItemKey instance");
-        equal(result.itemId, 'foo', "should return ItemKey with matching item ID");
+        itemKey = orderedCollection.getItemKeyByOrder(2);
 
-        bookworm.OrderedCollectionField.removeMocks();
+        ok(itemKey.isA(bookworm.ItemKey), "should return ItemKey instance");
+        strictEqual(itemKey.toString(), 'foo/bar/baz/d',
+            "should return ItemKey matching the specified order");
     });
 
     test("Item getter by order", function () {
-        expect(3);
+        expect(5);
 
         var orderedCollection = bookworm.OrderedCollectionField.create('foo/bar/baz'.toFieldKey()),
-            itemKey = 'item>key'.toItemKey(),
+            itemsNode = {
+                a: 3,
+                b: 1,
+                c: 0,
+                d: 2
+            },
             item;
 
         orderedCollection.addMocks({
-            getItemKeyByOrder: function (order) {
-                equal(order, 2, "should fetch item key by order");
-                return itemKey;
+            getItems: function () {
+                ok(true, "should fetch collection items node");
+                return itemsNode;
+            },
+
+            getItemOrder: function (itemId) {
+                return itemsNode[itemId];
             }
         });
+
+        equal(typeof orderedCollection.getItemByOrder(10), 'undefined', "should return undefined for absent order");
 
         item = orderedCollection.getItemByOrder(2);
 
         ok(item.isA(bookworm.Item), "should return Item instance");
-        strictEqual(item.entityKey, itemKey,
+        strictEqual(item.entityKey.toString(), 'foo/bar/baz/d',
             "should return item with ItemKey matching the specified order");
     });
 
