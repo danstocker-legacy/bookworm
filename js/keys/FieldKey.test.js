@@ -136,23 +136,6 @@
         bookworm.config.addMocks({
             getNode: function (path) {
                 paths.push(path.toString());
-                return undefined;
-            }
-        });
-
-        paths = [];
-        fieldKey.getFieldType();
-
-        bookworm.config.removeMocks();
-
-        deepEqual(paths, [
-            "document>document>foo>baz>fieldType",
-            "document>document>foo>baz"
-        ], "should try attribute first, then field value");
-
-        bookworm.config.addMocks({
-            getNode: function (path) {
-                paths.push(path.toString());
                 return 'fieldType';
             }
         });
