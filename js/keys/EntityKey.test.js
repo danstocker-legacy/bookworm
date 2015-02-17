@@ -5,7 +5,7 @@
 
     module("Entity Key");
 
-    test("String conversion", function () {
+    test("Conversion from string", function () {
         expect(1);
 
         bookworm.EntityKey.addMocks({
@@ -21,7 +21,7 @@
 
     });
 
-    test("String conversion with URI decoding", function () {
+    test("Conversion from string with URI decoding", function () {
         expect(1);
 
         bookworm.EntityKey.addMocks({
@@ -36,7 +36,7 @@
         bookworm.EntityKey.removeMocks();
     });
 
-    test("Array conversion", function () {
+    test("Conversion from array", function () {
         expect(1);
 
         bookworm.EntityKey.addMocks({
@@ -47,6 +47,21 @@
         });
 
         ['foo', 'bar'].toEntityKey();
+
+        bookworm.EntityKey.removeMocks();
+    });
+
+    test("Conversion from Path", function () {
+        expect(1);
+
+        bookworm.EntityKey.addMocks({
+            create: function () {
+                deepEqual(arguments, {0: 'foo', 1: 'bar'},
+                    "should call EntityKey constructor with correct arguments");
+            }
+        });
+
+        ['foo', 'bar'].toPath().toEntityKey();
 
         bookworm.EntityKey.removeMocks();
     });
