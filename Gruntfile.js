@@ -20,7 +20,7 @@ module.exports = function (grunt) {
             'js/entities/OrderedCollectionField.js',
             'js/entities/Item.js',
             'js/binding/EntityBound.js',
-            'js/utils/BackReferenceLookup.js',
+            'js/utils/ReferenceLookup.js',
             'js/exports.js'
         ],
 

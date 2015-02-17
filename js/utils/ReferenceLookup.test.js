@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    module("BackReferenceLookup");
+    module("ReferenceLookup");
 
     test("Querying field back references", function () {
         bookworm.entities.addMocks({
@@ -15,7 +15,7 @@
             }
         });
 
-        var backReferences = bookworm.BackReferenceLookup._queryFieldBackReferences('foo', 'baz');
+        var backReferences = bookworm.ReferenceLookup._queryFieldReferences('foo', 'baz');
 
         bookworm.entities.removeMocks();
 
@@ -35,7 +35,7 @@
             }
         });
 
-        var backReferences = bookworm.BackReferenceLookup._queryItemBackReferences('foo', 'baz');
+        var backReferences = bookworm.ReferenceLookup._queryItemReferences('foo', 'baz');
 
         bookworm.entities.removeMocks();
 
@@ -55,7 +55,7 @@
             }
         });
 
-        var backReferences = bookworm.BackReferenceLookup._queryItemIdBackReferences('foo', 'baz');
+        var backReferences = bookworm.ReferenceLookup._queryItemIdReferences('foo', 'baz');
 
         bookworm.entities.removeMocks();
 
@@ -68,11 +68,11 @@
     test("Querying all back references", function () {
         expect(9);
 
-        var lookup = bookworm.BackReferenceLookup.create();
+        var lookup = bookworm.ReferenceLookup.create();
 
         bookworm.config.addMocks({
             queryPathsAsHash: function (query) {
-                strictEqual(query, bookworm.BackReferenceLookup.referenceFieldsQuery,
+                strictEqual(query, bookworm.ReferenceLookup.referenceFieldsQuery,
                     "should query reference fields");
                 return [
                     'document>document>foo>bar>fieldType'.toPath(),
@@ -83,7 +83,7 @@
         });
 
         lookup.addMocks({
-            _queryFieldBackReferences: function (documentType, fieldName) {
+            _queryFieldReferences: function (documentType, fieldName) {
                 equal(documentType, 'foo', "should pass correct document type to field back ref query");
                 equal(fieldName, 'bar', "should pass correct field name to field back ref query");
                 return sntls.Collection.create({
@@ -91,7 +91,7 @@
                 });
             },
 
-            _queryItemBackReferences: function (documentType, fieldName) {
+            _queryItemReferences: function (documentType, fieldName) {
                 equal(documentType, 'foo', "should pass correct document type to item back ref query");
                 equal(fieldName, 'baz', "should pass correct field name to item back ref query");
                 return sntls.Collection.create({
@@ -99,7 +99,7 @@
                 });
             },
 
-            _queryItemIdBackReferences: function (documentType, fieldName) {
+            _queryItemIdReferences: function (documentType, fieldName) {
                 equal(documentType, 'hello', "should pass correct document type to item back ref query");
                 equal(fieldName, 'world', "should pass correct field name to item back ref query");
                 return sntls.Collection.create({
@@ -108,7 +108,7 @@
             }
         });
 
-        var backReferences = lookup._queryBackReferences();
+        var backReferences = lookup._queryReferences();
 
         bookworm.config.removeMocks();
         lookup.removeMocks();
@@ -126,10 +126,10 @@
 
         var backReferences = [];
 
-        bookworm.BackReferenceLookup.clearInstanceRegistry();
+        bookworm.ReferenceLookup.clearInstanceRegistry();
 
-        bookworm.BackReferenceLookup.addMocks({
-            _queryBackReferences: function () {
+        bookworm.ReferenceLookup.addMocks({
+            _queryReferences: function () {
                 ok(true, "should query all back references from cache");
                 return sntls.Collection.create({
                     foo: 'hello',
@@ -137,37 +137,37 @@
                 });
             },
 
-            _addBackReference: function (referredRef, referrerRef) {
+            _addReference: function (referredRef, referrerRef) {
                 backReferences.push([referredRef, referrerRef]);
             }
         });
 
-        var lookup = bookworm.BackReferenceLookup.create();
+        var lookup = bookworm.ReferenceLookup.create();
 
-        bookworm.BackReferenceLookup.removeMocks();
+        bookworm.ReferenceLookup.removeMocks();
 
         deepEqual(backReferences, [
             ['hello', 'foo'],
             ['world', 'bar']
         ], "should pass collected back references to setter");
 
-        strictEqual(bookworm.BackReferenceLookup.create(), lookup, "should be singleton");
+        strictEqual(bookworm.ReferenceLookup.create(), lookup, "should be singleton");
     });
 
     test("Back reference addition", function () {
         expect(3);
 
-        var lookup = bookworm.BackReferenceLookup.create();
+        var lookup = bookworm.ReferenceLookup.create();
 
         lookup.addMocks({
-            _addBackReference: function (referredRef, referrerRef) {
+            _addReference: function (referredRef, referrerRef) {
                 equal(referredRef, 'hello/world', "should pass referred reference to addition");
                 equal(referrerRef, 'foo/bar/baz', "should pass referrer reference to addition");
             }
         });
 
         strictEqual(
-            lookup.addBackReference('hello/world'.toDocumentKey(), 'foo/bar/baz'.toFieldKey()),
+            lookup.addReference('hello/world'.toDocumentKey(), 'foo/bar/baz'.toFieldKey()),
             lookup,
             "should be chainable");
 
@@ -177,16 +177,16 @@
     test("Back reference removal", function () {
         expect(2);
 
-        var lookup = bookworm.BackReferenceLookup.create();
+        var lookup = bookworm.ReferenceLookup.create();
 
         lookup.addMocks({
-            _removeBackReference: function (referredRef) {
+            _removeReference: function (referredRef) {
                 equal(referredRef, 'hello/world', "should pass referred reference to removal");
             }
         });
 
         strictEqual(
-            lookup.removeBackReference('hello/world'.toDocumentKey()),
+            lookup.removeReference('hello/world'.toDocumentKey()),
             lookup,
             "should be chainable");
 
@@ -196,7 +196,7 @@
     test("Reference field change handler", function () {
         expect(5);
 
-        var lookup = bookworm.BackReferenceLookup.create();
+        var lookup = bookworm.ReferenceLookup.create();
 
         bookworm.FieldKey.addMocks({
             getFieldType: function () {
@@ -206,13 +206,13 @@
         });
 
         lookup.addMocks({
-            _removeBackReference: function (referredRef, referrerRef) {
-                equal(referredRef, 'hello/world', "should remove back reference from old document");
+            _removeReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hello/world', "should remove reference from old document");
                 equal(referrerRef, 'foo/bar/baz', "should pass referrer to removal");
             },
 
-            _addBackReference: function (referredRef, referrerRef) {
-                equal(referredRef, 'hi/all', "should add back reference to new document");
+            _addReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hi/all', "should add reference to new document");
                 equal(referrerRef, 'foo/bar/baz', "should pass referrer to addition");
             }
         });
@@ -229,7 +229,7 @@
     test("Reference item value change handler", function () {
         expect(5);
 
-        var lookup = bookworm.BackReferenceLookup.create();
+        var lookup = bookworm.ReferenceLookup.create();
 
         bookworm.ItemKey.addMocks({
             getItemType: function () {
@@ -239,13 +239,13 @@
         });
 
         lookup.addMocks({
-            _removeBackReference: function (referredRef, referrerRef) {
-                equal(referredRef, 'hello/world', "should remove back reference from old document");
+            _removeReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hello/world', "should remove reference from old document");
                 equal(referrerRef, 'foo/bar/baz/0', "should pass referrer to removal");
             },
 
-            _addBackReference: function (referredRef, referrerRef) {
-                equal(referredRef, 'hi/all', "should add back reference to new document");
+            _addReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hi/all', "should add reference to new document");
                 equal(referrerRef, 'foo/bar/baz/0', "should pass referrer to addition");
             }
         });
@@ -262,11 +262,11 @@
     test("Reference item addition handler", function () {
         expect(2);
 
-        var lookup = bookworm.BackReferenceLookup.create();
+        var lookup = bookworm.ReferenceLookup.create();
 
         lookup.addMocks({
-            _addBackReference: function (referredRef, referrerRef) {
-                equal(referredRef, 'hello/world', "should add back reference to new document");
+            _addReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hello/world', "should add reference to new document");
                 equal(referrerRef, 'foo/bar/baz/hello%2Fworld', "should pass referrer to addition");
             }
         });
@@ -281,11 +281,11 @@
     test("Reference item removal handler", function () {
         expect(2);
 
-        var lookup = bookworm.BackReferenceLookup.create();
+        var lookup = bookworm.ReferenceLookup.create();
 
         lookup.addMocks({
-            _removeBackReference: function (referredRef, referrerRef) {
-                equal(referredRef, 'hello/world', "should remove back reference from old document");
+            _removeReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hello/world', "should remove reference from old document");
                 equal(referrerRef, 'foo/bar/baz/hello%2Fworld', "should pass referrer to removal");
             }
         });

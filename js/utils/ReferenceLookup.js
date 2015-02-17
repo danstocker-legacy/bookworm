@@ -1,42 +1,43 @@
 /*global dessert, troop, sntls, evan, flock, bookworm, app */
-troop.postpone(bookworm, 'BackReferenceLookup', function () {
+troop.postpone(bookworm, 'ReferenceLookup', function () {
     "use strict";
 
     var base = troop.Base,
         self = base.extend();
 
     /**
-     * @name bookworm.BackReferenceLookup.create
+     * @name bookworm.ReferenceLookup.create
      * @function
-     * @returns {bookworm.BackReferenceLookup}
+     * @returns {bookworm.ReferenceLookup}
      */
 
     /**
+     * Maintains a lookup of references.
      * TODO: Move private functions to EntityStoreTree & EntityConfigTree.
      * @class
      * @extends troop.Base
      */
-    bookworm.BackReferenceLookup = self
+    bookworm.ReferenceLookup = self
         .setInstanceMapper(function () {
             return 'singleton';
         })
-        .addConstants(/** @lends bookworm.BackReferenceLookup */{
+        .addConstants(/** @lends bookworm.ReferenceLookup */{
             /**
              * @type {sntls.Query}
              * @constant
              */
             referenceFieldsQuery: 'document>document>|>|>fieldType<itemType<itemIdType^reference'.toQuery()
         })
-        .addPrivateMethods(/** @lends bookworm.BackReferenceLookup */{
+        .addPrivateMethods(/** @lends bookworm.ReferenceLookup */{
             /**
              * @param {string} referredRef Reference to referred document.
              * @param {string} referrerRef Reference to referrer field or item.
              * @private
              */
-            _addBackReference: function (referredRef, referrerRef) {
+            _addReference: function (referredRef, referrerRef) {
                 bookworm.index
-                    .setNode(['back-reference', 'by-referred', referredRef, referrerRef].toPath(), true)
-                    .setNode(['back-reference', 'by-referrer', referrerRef].toPath(), referredRef);
+                    .setNode(['reference', 'by-referred', referredRef, referrerRef].toPath(), true)
+                    .setNode(['reference', 'by-referrer', referrerRef].toPath(), referredRef);
             },
 
             /**
@@ -44,10 +45,10 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
              * @param {string} referrerRef Reference to referrer field or item.
              * @private
              */
-            _removeBackReference: function (referredRef, referrerRef) {
+            _removeReference: function (referredRef, referrerRef) {
                 bookworm.index
-                    .unsetKey(['back-reference', 'by-referred', referredRef, referrerRef].toPath())
-                    .unsetKey(['back-reference', 'by-referrer', referrerRef].toPath());
+                    .unsetKey(['reference', 'by-referred', referredRef, referrerRef].toPath())
+                    .unsetKey(['reference', 'by-referrer', referrerRef].toPath());
             },
 
             /**
@@ -56,7 +57,7 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
              * @returns {sntls.Collection}
              * @private
              */
-            _queryFieldBackReferences: function (documentType, fieldName) {
+            _queryFieldReferences: function (documentType, fieldName) {
                 var query = ['document', documentType, '|'.toKVP(), fieldName].toQuery();
 
                 return bookworm.entities.queryPathValuePairsAsHash(query)
@@ -72,7 +73,7 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
              * @returns {sntls.Collection}
              * @private
              */
-            _queryItemBackReferences: function (documentType, fieldName) {
+            _queryItemReferences: function (documentType, fieldName) {
                 var query = ['document', documentType, '|'.toKVP(), fieldName, '|'.toKVP()].toQuery();
 
                 return bookworm.entities.queryPathValuePairsAsHash(query)
@@ -88,7 +89,7 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
              * @returns {sntls.Collection}
              * @private
              */
-            _queryItemIdBackReferences: function (documentType, fieldName) {
+            _queryItemIdReferences: function (documentType, fieldName) {
                 var query = ['document', documentType, '|'.toKVP(), fieldName, '|'.toKVP()].toQuery();
 
                 return bookworm.entities.queryPathsAsHash(query)
@@ -106,7 +107,7 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
              * @returns {sntls.Collection}
              * @private
              */
-            _queryBackReferences: function () {
+            _queryReferences: function () {
                 var that = this;
 
                 return bookworm.config.queryPathsAsHash(this.referenceFieldsQuery)
@@ -119,11 +120,11 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
 
                         switch (reference) {
                         case 'fieldType':
-                            return that._queryFieldBackReferences(documentType, fieldName);
+                            return that._queryFieldReferences(documentType, fieldName);
                         case 'itemType':
-                            return that._queryItemBackReferences(documentType, fieldName);
+                            return that._queryItemReferences(documentType, fieldName);
                         case 'itemIdType':
-                            return that._queryItemIdBackReferences(documentType, fieldName);
+                            return that._queryItemIdReferences(documentType, fieldName);
                         }
 
                         return undefined;
@@ -133,30 +134,30 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
                     .toCollection();
             }
         })
-        .addMethods(/** @lends bookworm.BackReferenceLookup# */{
+        .addMethods(/** @lends bookworm.ReferenceLookup# */{
             /** @ignore */
             init: function () {
                 // initializing lookup
-                this._queryBackReferences()
-                    .forEachItem(this._addBackReference);
+                this._queryReferences()
+                    .forEachItem(this._addReference);
             },
 
             /**
              * @param {bookworm.DocumentKey} referredKey
              * @param {bookworm.FieldKey} referrerKey
-             * @returns {bookworm.BackReferenceLookup}
+             * @returns {bookworm.ReferenceLookup}
              */
-            addBackReference: function (referredKey, referrerKey) {
-                this._addBackReference(referredKey.toString(), referrerKey.toString());
+            addReference: function (referredKey, referrerKey) {
+                this._addReference(referredKey.toString(), referrerKey.toString());
                 return this;
             },
 
             /**
              * @param {bookworm.DocumentKey} referredKey
-             * @returns {bookworm.BackReferenceLookup}
+             * @returns {bookworm.ReferenceLookup}
              */
-            removeBackReference: function (referredKey) {
-                this._removeBackReference(referredKey.toString());
+            removeReference: function (referredKey) {
+                this._removeReference(referredKey.toString());
                 return this;
             },
 
@@ -165,7 +166,7 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
              * @returns {sntls.Collection}
              */
             getBackReferences: function (documentKey) {
-                var referrersPath = ['back-reference', 'by-referred', documentKey.toString()].toPath();
+                var referrersPath = ['reference', 'by-referred', documentKey.toString()].toPath();
                 return bookworm.index.getNodeAsHash(referrersPath)
                     .getKeysAsHash()
                     .toCollection();
@@ -176,7 +177,7 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
              * @returns {string}
              */
             getForwardReference: function (fieldKey) {
-                var referencePath = ['back-reference', 'by-referrer', fieldKey.toString()].toPath();
+                var referencePath = ['reference', 'by-referrer', fieldKey.toString()].toPath();
                 return bookworm.index.getNode(referencePath);
             },
 
@@ -195,20 +196,20 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
                     // entity _value_ holds a reference
                     if (!event.isInsert()) {
                         // reference was removed
-                        this._removeBackReference(event.beforeValue, affectedKey.toString());
+                        this._removeReference(event.beforeValue, affectedKey.toString());
                     }
                     if (!event.isDelete()) {
                         // reference was added
-                        this._addBackReference(event.afterValue, affectedKey.toString());
+                        this._addReference(event.afterValue, affectedKey.toString());
                     }
                 } else if (affectedKey.isA(bookworm.ReferenceItemKey)) {
                     // entity _key_ holds a reference
                     if (event.isInsert()) {
                         // reference was added
-                        this._addBackReference(affectedKey.referenceKey.toString(), affectedKey.toString());
+                        this._addReference(affectedKey.referenceKey.toString(), affectedKey.toString());
                     } else if (event.isDelete()) {
                         // reference was removed
-                        this._removeBackReference(affectedKey.referenceKey.toString(), affectedKey.toString());
+                        this._removeReference(affectedKey.referenceKey.toString(), affectedKey.toString());
                     }
                 }
             }
@@ -221,7 +222,7 @@ troop.amendPostponed(bookworm, 'entities', function () {
     if (bookworm.useBackReferences) {
         bookworm.entities
             .subscribeTo(flock.ChangeEvent.EVENT_CACHE_CHANGE, 'document'.toPath(), function (event) {
-                bookworm.BackReferenceLookup.create()
+                bookworm.ReferenceLookup.create()
                     .onCacheChange(event);
             });
     }
