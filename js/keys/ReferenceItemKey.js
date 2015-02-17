@@ -64,6 +64,21 @@ troop.amendPostponed(bookworm, 'EntityKey', function () {
         });
 });
 
+troop.amendPostponed(sntls, 'Path', function () {
+    "use strict";
+
+    sntls.Path
+        .addMethods(/** @lends sntls.Path# */{
+            /**
+             * Converts `Path` to `ReferenceItemKey` instance. Here the path is not a cache path.
+             * @returns {bookworm.ReferenceItemKey}
+             */
+            toReferenceItemKey: function () {
+                return this.asArray.toReferenceItemKey();
+            }
+        });
+});
+
 (function () {
     "use strict";
 

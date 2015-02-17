@@ -37,6 +37,16 @@
         equal(itemKey.itemId, 'bar', "should set item ID");
     });
 
+    test("Conversion from Path", function () {
+        var itemKey = ['hello', 'world', 'foo', 'bar'].toPath().toItemKey();
+
+        ok(itemKey.isA(bookworm.ItemKey), "should return ItemKey instance");
+        equal(itemKey.documentKey.documentType, 'hello', "should set document type");
+        equal(itemKey.documentKey.documentId, 'world', "should set document ID");
+        equal(itemKey.fieldName, 'foo', "should set field name");
+        equal(itemKey.itemId, 'bar', "should set item ID");
+    });
+
     test("Conversion from EntityKey", function () {
         var key = bookworm.EntityKey.create('foo', 'bar');
 

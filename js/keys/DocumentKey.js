@@ -121,7 +121,7 @@ troop.amendPostponed(sntls, 'Path', function () {
     "use strict";
 
     sntls.Path
-        .addMethods(/** @lends sntls.Path */{
+        .addMethods(/** @lends sntls.Path# */{
             /**
              * Converts `Path` to `DocumentKey` instance. Here the path is not a cache path.
              * @returns {bookworm.DocumentKey}

@@ -26,6 +26,13 @@
         ok(itemKey.referenceKey.equals('bar/baz'.toDocumentKey()), "should set reference key");
     });
 
+    test("Conversion from Path", function () {
+        var itemKey = ['hello', 'world', 'foo', 'bar/baz'].toPath().toReferenceItemKey();
+
+        equal(itemKey.itemId, 'bar/baz', "should set item ID");
+        ok(itemKey.referenceKey.equals('bar/baz'.toDocumentKey()), "should set reference key");
+    });
+
     test("Conversion from EntityKey", function () {
         var itemKey = bookworm.EntityKey.create('hello', 'world', 'foo', 'bar/baz');
 
