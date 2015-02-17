@@ -20,13 +20,15 @@ module.exports = function (grunt) {
             'js/entities/OrderedCollectionField.js',
             'js/entities/Item.js',
             'js/binding/EntityBound.js',
+            'js/utils/BackReferenceLookup.js',
             'js/exports.js'
         ],
 
         test: [
             'js/keys/jsTestDriver.conf',
             'js/binding/jsTestDriver.conf',
-            'js/entities/jsTestDriver.conf'
+            'js/entities/jsTestDriver.conf',
+            'js/utils/jsTestDriver.conf'
         ],
 
         globals: {
