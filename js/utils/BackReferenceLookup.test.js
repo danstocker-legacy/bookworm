@@ -75,9 +75,9 @@
                 strictEqual(query, bookworm.BackReferenceLookup.referenceFieldsQuery,
                     "should query reference fields");
                 return [
-                    'document>document>foo>bar>fieldType',
-                    'document>document>foo>baz>itemType',
-                    'document>document>hello>world>itemIdType'
+                    'document>document>foo>bar>fieldType'.toPath(),
+                    'document>document>foo>baz>itemType'.toPath(),
+                    'document>document>hello>world>itemIdType'.toPath()
                 ].toHash();
             }
         });
@@ -189,6 +189,110 @@
             lookup.removeBackReference('hello/world'.toDocumentKey()),
             lookup,
             "should be chainable");
+
+        lookup.removeMocks();
+    });
+
+    test("Reference field change handler", function () {
+        expect(5);
+
+        var lookup = bookworm.BackReferenceLookup.create();
+
+        bookworm.FieldKey.addMocks({
+            getFieldType: function () {
+                equal(this.toString(), 'foo/bar/baz', "should get field type");
+                return 'reference';
+            }
+        });
+
+        lookup.addMocks({
+            _removeBackReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hello/world', "should remove back reference from old document");
+                equal(referrerRef, 'foo/bar/baz', "should pass referrer to removal");
+            },
+
+            _addBackReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hi/all', "should add back reference to new document");
+                equal(referrerRef, 'foo/bar/baz', "should pass referrer to addition");
+            }
+        });
+
+        bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+            .setBefore('hello/world')
+            .setAfter('hi/all')
+            .triggerSync('foo/bar/baz'.toFieldKey().getEntityPath());
+
+        bookworm.FieldKey.removeMocks();
+        lookup.removeMocks();
+    });
+
+    test("Reference item value change handler", function () {
+        expect(5);
+
+        var lookup = bookworm.BackReferenceLookup.create();
+
+        bookworm.ItemKey.addMocks({
+            getItemType: function () {
+                equal(this.toString(), 'foo/bar/baz/0', "should get field type");
+                return 'reference';
+            }
+        });
+
+        lookup.addMocks({
+            _removeBackReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hello/world', "should remove back reference from old document");
+                equal(referrerRef, 'foo/bar/baz/0', "should pass referrer to removal");
+            },
+
+            _addBackReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hi/all', "should add back reference to new document");
+                equal(referrerRef, 'foo/bar/baz/0', "should pass referrer to addition");
+            }
+        });
+
+        bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+            .setBefore('hello/world')
+            .setAfter('hi/all')
+            .triggerSync('foo/bar/baz/0'.toItemKey().getEntityPath());
+
+        bookworm.ItemKey.removeMocks();
+        lookup.removeMocks();
+    });
+
+    test("Reference item addition handler", function () {
+        expect(2);
+
+        var lookup = bookworm.BackReferenceLookup.create();
+
+        lookup.addMocks({
+            _addBackReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hello/world', "should add back reference to new document");
+                equal(referrerRef, 'foo/bar/baz/hello%2Fworld', "should pass referrer to addition");
+            }
+        });
+
+        bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+            .setAfter('hello/world')
+            .triggerSync('foo/bar/baz/hello%2Fworld'.toItemKey().getEntityPath());
+
+        lookup.removeMocks();
+    });
+
+    test("Reference item removal handler", function () {
+        expect(2);
+
+        var lookup = bookworm.BackReferenceLookup.create();
+
+        lookup.addMocks({
+            _removeBackReference: function (referredRef, referrerRef) {
+                equal(referredRef, 'hello/world', "should remove back reference from old document");
+                equal(referrerRef, 'foo/bar/baz/hello%2Fworld', "should pass referrer to removal");
+            }
+        });
+
+        bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+            .setBefore('hello/world')
+            .triggerSync('foo/bar/baz/hello%2Fworld'.toItemKey().getEntityPath());
 
         lookup.removeMocks();
     });

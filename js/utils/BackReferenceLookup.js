@@ -34,15 +34,20 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
              * @private
              */
             _addBackReference: function (referredRef, referrerRef) {
-                bookworm.index.setNode(['back-reference', 'by-referred', referredRef, referrerRef].toPath(), true);
+                bookworm.index
+                    .setNode(['back-reference', 'by-referred', referredRef, referrerRef].toPath(), true)
+                    .setNode(['back-reference', 'by-referrer', referrerRef].toPath(), referredRef);
             },
 
             /**
              * @param {string} referredRef Reference to referred document.
+             * @param {string} referrerRef Reference to referrer field or item.
              * @private
              */
-            _removeBackReference: function (referredRef) {
-                bookworm.index.unsetKey(['back-reference', 'by-referred', referredRef].toPath());
+            _removeBackReference: function (referredRef, referrerRef) {
+                bookworm.index
+                    .unsetKey(['back-reference', 'by-referred', referredRef, referrerRef].toPath())
+                    .unsetKey(['back-reference', 'by-referrer', referrerRef].toPath());
             },
 
             /**
@@ -106,8 +111,8 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
 
                 return bookworm.config.queryPathsAsHash(this.referenceFieldsQuery)
                     .toCollection()
-                    .mapValues(function (pathStr) {
-                        var asArray = pathStr.toPath().asArray,
+                    .mapValues(function (path) {
+                        var asArray = path.asArray,
                             documentType = asArray[2],
                             fieldName = asArray[3],
                             reference = asArray[4];
@@ -156,11 +161,56 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
             },
 
             /**
+             * @param {bookworm.DocumentKey} documentKey
+             * @returns {sntls.Collection}
+             */
+            getBackReferences: function (documentKey) {
+                var referrersPath = ['back-reference', 'by-referred', documentKey.toString()].toPath();
+                return bookworm.index.getNodeAsHash(referrersPath)
+                    .getKeysAsHash()
+                    .toCollection();
+            },
+
+            /**
+             * @param {bookworm.DocumentKey} fieldKey
+             * @returns {string}
+             */
+            getForwardReference: function (fieldKey) {
+                var referencePath = ['back-reference', 'by-referrer', fieldKey.toString()].toPath();
+                return bookworm.index.getNode(referencePath);
+            },
+
+            /**
              * @param {flock.ChangeEvent} event
              * @ignore
              */
             onCacheChange: function (event) {
-                // was it addition, change, or removal?
+                var affectedPath = event.originalPath.clone(),
+                    affectedKey = affectedPath.trimLeft().toEntityKey();
+
+                // checking whether affected entity is a reference field or item
+                if (affectedKey.isA(bookworm.ItemKey) && affectedKey.getItemType() === 'reference' ||
+                    affectedKey.isA(bookworm.FieldKey) && affectedKey.getFieldType() === 'reference'
+                    ) {
+                    // entity _value_ holds a reference
+                    if (!event.isInsert()) {
+                        // reference was removed
+                        this._removeBackReference(event.beforeValue, affectedKey.toString());
+                    }
+                    if (!event.isDelete()) {
+                        // reference was added
+                        this._addBackReference(event.afterValue, affectedKey.toString());
+                    }
+                } else if (affectedKey.isA(bookworm.ReferenceItemKey)) {
+                    // entity _key_ holds a reference
+                    if (event.isInsert()) {
+                        // reference was added
+                        this._addBackReference(affectedKey.referenceKey.toString(), affectedKey.toString());
+                    } else if (event.isDelete()) {
+                        // reference was removed
+                        this._removeBackReference(affectedKey.referenceKey.toString(), affectedKey.toString());
+                    }
+                }
             }
         });
 });
@@ -168,9 +218,11 @@ troop.postpone(bookworm, 'BackReferenceLookup', function () {
 troop.amendPostponed(bookworm, 'entities', function () {
     "use strict";
 
-    bookworm.entities
-        .subscribeTo(flock.ChangeEvent.EVENT_CACHE_CHANGE, 'document'.toPath(), function (event) {
-            bookworm.BackReferenceLookup.create()
-                .onCacheChange(event);
-        });
+    if (bookworm.useBackReferences) {
+        bookworm.entities
+            .subscribeTo(flock.ChangeEvent.EVENT_CACHE_CHANGE, 'document'.toPath(), function (event) {
+                bookworm.BackReferenceLookup.create()
+                    .onCacheChange(event);
+            });
+    }
 });

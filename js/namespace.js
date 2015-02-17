@@ -3,7 +3,9 @@
  */
 /*global require */
 /** @namespace */
-var bookworm = {};
+var bookworm = {
+    useBackReferences: true
+};
 var b$ = bookworm;
 
 /**
