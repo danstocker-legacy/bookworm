@@ -37,6 +37,13 @@
         strictEqual(document.entityKey, documentKey, "should set document key");
     });
 
+    test("Entity surrogate", function () {
+        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey());
+
+        ok(entity.isA(bookworm.Document), "should return Document instance");
+        equal(entity.entityKey.toString(), 'foo/bar', "should set correct key");
+    });
+
     test("Attribute node getter", function () {
         expect(3);
 
