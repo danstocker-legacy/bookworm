@@ -29,12 +29,23 @@
         equal(item.entityKey.toString(), 'foo/bar/baz/hello', "should set item key");
     });
 
-    test("Conversion from FieldKey", function () {
+    test("Conversion from ItemKey", function () {
         var itemKey = ['foo', 'bar', 'baz', 'hello'].toItemKey(),
             item = itemKey.toItem();
 
         ok(item.isA(bookworm.Item), "should return Item instance");
         equal(item.entityKey.toString(), 'foo/bar/baz/hello', "should set item key");
+    });
+
+    test("Entity surrogate", function () {
+        var entity;
+
+        entity = bookworm.Entity.create('foo/bar/baz/0'.toItemKey());
+        ok(entity.isA(bookworm.Item), "should return Item instance for ItemKey");
+        equal(entity.entityKey.toString(), 'foo/bar/baz/0', "should set correct key");
+
+        entity = bookworm.Entity.create('foo/bar/baz/hello%2Fworld'.toReferenceItemKey());
+        ok(entity.isA(bookworm.Item), "should return Item instance for ReferenceItemKey");
     });
 
     test("Item attribute getter", function () {

@@ -37,6 +37,13 @@
         strictEqual(field.entityKey, fieldKey, "should set field key");
     });
 
+    test("Entity surrogate", function () {
+        var entity = bookworm.Entity.create('foo/bar/baz'.toFieldKey());
+
+        ok(entity.isA(bookworm.Field), "should return Field instance");
+        equal(entity.entityKey.toString(), 'foo/bar/baz', "should set correct key");
+    });
+
     test("Field attribute getter", function () {
         expect(3);
 

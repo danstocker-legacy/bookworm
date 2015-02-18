@@ -58,6 +58,15 @@ troop.postpone(bookworm, 'Document', function () {
         });
 });
 
+troop.amendPostponed(bookworm, 'Entity', function () {
+    "use strict";
+
+    bookworm.Entity
+        .addSurrogate(bookworm, 'Document', function (entityKey) {
+            return entityKey.instanceOf(bookworm.DocumentKey);
+        });
+});
+
 troop.amendPostponed(bookworm, 'DocumentKey', function () {
     "use strict";
 
