@@ -135,3 +135,18 @@ troop.postpone(bookworm, 'Entity', function () {
             }
         });
 });
+
+troop.amendPostponed(bookworm, 'EntityKey', function () {
+    "use strict";
+
+    bookworm.EntityKey
+        .addMethods(/** @lends bookworm.FieldKey */{
+            /**
+             * Converts `EntityKey` to `Entity`.
+             * @returns {bookworm.Entity}
+             */
+            toEntity: function () {
+                return bookworm.Entity.create(this);
+            }
+        });
+});
