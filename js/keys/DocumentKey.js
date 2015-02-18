@@ -196,8 +196,8 @@ troop.amendPostponed(sntls, 'Hash', function () {
             toDocumentKey: function () {
                 var parts = this.split('/');
                 return bookworm.DocumentKey.create(
-                    decodeURIComponent(parts[0]),
-                    decodeURIComponent(parts[1])
+                    parts[0] && decodeURIComponent(parts[0]),
+                    parts[1] && decodeURIComponent(parts[1])
                 );
             }
         },

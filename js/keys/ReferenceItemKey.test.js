@@ -33,19 +33,29 @@
         ok(itemKey.referenceKey.equals('bar/baz'.toDocumentKey()), "should set reference key");
     });
 
-    test("Conversion from EntityKey", function () {
-        var itemKey = bookworm.EntityKey.create('hello', 'world', 'foo', 'bar/baz');
+    test("EntityKey surrogate", function () {
+        var itemKey;
 
-        ok(itemKey.isA(bookworm.ReferenceItemKey), "should return ReferenceKey instance");
+        itemKey = bookworm.EntityKey.create('hello', 'world', 'foo', 'bar/baz');
+        ok(itemKey.isA(bookworm.ReferenceItemKey), "should return ReferenceItemKey instance");
         equal(itemKey.itemId, 'bar/baz', "should set item ID");
         ok(itemKey.referenceKey.equals('bar/baz'.toDocumentKey()), "should set reference key");
+
+        itemKey = bookworm.EntityKey.create('hello', 'world', 'foo', 'bar');
+        ok(!itemKey.isA(bookworm.ReferenceItemKey),
+            "should not return a ReferenceItemKey instance for non-reference item ID");
     });
 
-    test("Conversion from ItemKey", function () {
-        var itemKey = bookworm.ItemKey.create('hello', 'world', 'foo', 'bar/baz');
+    test("ItemKey surrogate", function () {
+        var itemKey;
 
+        itemKey = bookworm.ItemKey.create('hello', 'world', 'foo', 'bar/baz');
         ok(itemKey.isA(bookworm.ReferenceItemKey), "should return ReferenceKey instance");
         equal(itemKey.itemId, 'bar/baz', "should set item ID");
         ok(itemKey.referenceKey.equals('bar/baz'.toDocumentKey()), "should set reference key");
+
+        itemKey = bookworm.EntityKey.create('hello', 'world', 'foo', 'bar');
+        ok(!itemKey.isA(bookworm.ReferenceItemKey),
+            "should not return a ReferenceItemKey instance for non-reference item ID");
     });
 }());

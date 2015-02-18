@@ -22,6 +22,9 @@
 
         key = 'foo/b%2Far'.toDocumentKey();
         equal(key.documentId, 'b/ar', "should decode encoded chars in document ID");
+
+        key = 'foo'.toDocumentKey();
+        equal(typeof key.documentId, 'undefined', "should set undefined document type for invalid key string");
     });
 
     test("Conversion from Array", function () {
