@@ -63,7 +63,7 @@
     });
 
     test("Entity surrogate", function () {
-        var table = bookworm.Entity.create('foo'.toEntityKey());
+        var table = bookworm.Entity.create('foo'.toTableKey());
 
         ok(table.isA(bookworm.Table), "should return Table instance");
         equal(table.entityKey.toString(), 'foo', "should set entity key");

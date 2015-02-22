@@ -28,11 +28,11 @@ troop.postpone(bookworm, 'Table', function () {
              * @ignore
              */
             init: function (tableKey) {
-                dessert.isTableKey(tableKey, "Invalid document key");
+                dessert.isTableKey(tableKey, "Invalid table key");
                 base.init.call(this, tableKey);
 
                 /**
-                 * Fields that uniquely identify a row.
+                 * Index that uniquely identifies a row.
                  * @type {jorder.Index}
                  */
                 this.uniqueIndex = this.spawnUniqueIndex();
