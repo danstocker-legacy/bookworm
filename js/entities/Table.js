@@ -86,6 +86,14 @@ troop.postpone(bookworm, 'Table', function () {
             },
 
             /**
+             * @param {string|number} rowId
+             * @returns {bookworm.Row}
+             */
+            getRow: function (rowId) {
+                return bookworm.Row.create(this.entityKey.getRowKey(rowId));
+            },
+
+            /**
              * Updates rows if they're present in the table, inserts them otherwise.
              * Assumes that each row is unique. Otherwise might behave unpredictably.
              * TODO: Find alternative for updateRowsByRow.

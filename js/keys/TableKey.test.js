@@ -62,4 +62,12 @@
 
         equal(key.toString(), 'foo', "should return tableName property");
     });
+
+    test("Row key getter", function () {
+        var tableKey = 'foo'.toTableKey(),
+            rowKey = tableKey.getRowKey('bar');
+
+        ok(rowKey.isA(bookworm.RowKey), "should return a RowKey instance");
+        equal(rowKey.toString(), 'foo/bar', "should set row key contents");
+    });
 }());

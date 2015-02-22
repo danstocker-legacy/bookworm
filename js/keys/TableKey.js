@@ -68,6 +68,14 @@ troop.postpone(bookworm, 'TableKey', function () {
              */
             toString: function () {
                 return this.tableName;
+            },
+
+            /**
+             * @param {string} rowId
+             * @returns {bookworm.RowKey}
+             */
+            getRowKey: function (rowId) {
+                return bookworm.RowKey.create(this.tableName, rowId);
             }
         });
 });

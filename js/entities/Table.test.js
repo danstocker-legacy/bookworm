@@ -72,7 +72,7 @@
     test("Node setter", function () {
         expect(6);
 
-        var table = bookworm.Entity.create('foo'.toEntityKey()),
+        var table = 'foo'.toTable(),
             rows = [
                 {id: 1, a: 'hello'},
                 {id: 2, a: 'world'},
@@ -114,7 +114,7 @@
     test("Node unsetter", function () {
         expect(3);
 
-        var table = bookworm.Entity.create('foo'.toEntityKey()),
+        var table = 'foo'.toTable(),
             rows = [
                 {id: 1, a: 'hello'},
                 {id: 2, a: 'world'},
@@ -140,8 +140,16 @@
         bookworm.Entity.removeMocks();
     });
 
+    test("Row entity getter", function () {
+        var table = 'foo'.toTable(),
+            row = table.getRow('bar');
+
+        ok(row.isA(bookworm.Row), "should return Row instance");
+        equal(row.entityKey.toString(), 'foo/bar', "should set correct entity key");
+    });
+
     test("Content update", function () {
-        var table = bookworm.Entity.create('foo'.toEntityKey());
+        var table = 'foo'.toTable();
 
         table.setNode([
             {id: 1, a: 'hello'},
