@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, jorder, bookworm */
+/*global dessert, troop, sntls, flock, jorder, bookworm */
 troop.postpone(bookworm, 'Table', function () {
     "use strict";
 
@@ -14,20 +14,13 @@ troop.postpone(bookworm, 'Table', function () {
 
     /**
      * Override unique index spawner, define surrogate between Table and your class.
+     * TODO: Trigger before-change, too?
      * @class
      * @extends bookworm.Entity
      */
     bookworm.Table = self
         .setInstanceMapper(function (tableName) {
             return tableName;
-        })
-        .addPrivateMethods(/** @lends bookworm.Table# */{
-            /** @private */
-            _initCache: function () {
-                if (!this.getSilentNode()) {
-                    this.setNode([]);
-                }
-            }
         })
         .addMethods(/** @lends bookworm.Table# */{
             /**
@@ -38,22 +31,47 @@ troop.postpone(bookworm, 'Table', function () {
                 dessert.isTableKey(tableKey, "Invalid document key");
                 base.init.call(this, tableKey);
 
-                this._initCache();
-
-                /** @type {jorder.Table} */
-                this.sourceTable = jorder.Table.create(this.getSilentNode());
-
                 /**
                  * Fields that uniquely identify a row.
                  * @type {jorder.Index}
                  */
                 this.uniqueIndex = this.spawnUniqueIndex();
 
+                /** @type {jorder.Table} */
+                this.jorderTable = jorder.Table.create(this.getNode())
+                    .addIndex(this.uniqueIndex);
+
                 /**
                  * Table key associated with current entity.
                  * @name bookworm.Table#entityKey
                  * @type {bookworm.TableKey}
                  */
+            },
+
+            /**
+             * @param {object[]} tableNode
+             * @returns {bookworm.Table}
+             */
+            setNode: function (tableNode) {
+                dessert.isArray(tableNode, "Invalid table node");
+
+                var jorderTable = this.jorderTable
+                    .clear()
+                    .insertRows(tableNode);
+
+                base.setNode.call(this, jorderTable.items);
+
+                return this;
+            },
+
+            /** @returns {bookworm.Table} */
+            unsetKey: function () {
+                var jorderTable = this.jorderTable
+                    .clear();
+
+                base.setNode.call(this, jorderTable.items);
+
+                return this;
             },
 
             /**
@@ -65,6 +83,35 @@ troop.postpone(bookworm, 'Table', function () {
              */
             spawnUniqueIndex: function () {
                 return jorder.Index.create(['id']);
+            },
+
+            /**
+             * Updates rows if they're present in the table, inserts them otherwise.
+             * Assumes that each row is unique. Otherwise might behave unpredictably.
+             * TODO: Find alternative for updateRowsByRow.
+             * @param {object[]} rowsAfter
+             * @returns {bookworm.Table}
+             */
+            updateRows: function (rowsAfter) {
+                var uniqueIndex = this.uniqueIndex,
+                    jorderTable = this.jorderTable,
+                    rowSignature = uniqueIndex.rowSignature;
+
+                rowsAfter.toCollection()
+                    .forEachItem(function (row) {
+                        var keys = rowSignature.getKeysForRow(row),
+                            matchingRows = uniqueIndex.getRowIdsForKeys(keys);
+
+                        if (matchingRows.length) {
+                            jorderTable.updateRowsByRow(row, row, uniqueIndex);
+                        } else {
+                            jorderTable.insertRow(row);
+                        }
+                    });
+
+                base.setNode.call(this, jorderTable.items);
+
+                return this;
             }
         });
 });
