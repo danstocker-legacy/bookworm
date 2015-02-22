@@ -13,6 +13,7 @@ troop.postpone(bookworm, 'Table', function () {
      */
 
     /**
+     * Override unique index spawner, define surrogate between Table and your class.
      * @class
      * @extends bookworm.Entity
      */
@@ -26,21 +27,6 @@ troop.postpone(bookworm, 'Table', function () {
                 if (!this.getSilentNode()) {
                     this.setNode([]);
                 }
-            },
-
-            /**
-             * @param {string[]} oldFieldNames
-             * @param {string[]} newFieldNames
-             * @private
-             */
-            _updateUniqueIndex: function (oldFieldNames, newFieldNames) {
-                var indexCollection = this.sourceTable.indexCollection,
-                    beforeIndex = indexCollection.getBestIndexForFields(oldFieldNames),
-                    afterIndex = jorder.Index.create(newFieldNames);
-
-                indexCollection
-                    .deleteItem(beforeIndex)
-                    .setItem(afterIndex);
             }
         })
         .addMethods(/** @lends bookworm.Table# */{
@@ -52,38 +38,33 @@ troop.postpone(bookworm, 'Table', function () {
                 dessert.isTableKey(tableKey, "Invalid document key");
                 base.init.call(this, tableKey);
 
+                this._initCache();
+
+                /** @type {jorder.Table} */
+                this.sourceTable = jorder.Table.create(this.getSilentNode());
+
+                /**
+                 * Fields that uniquely identify a row.
+                 * @type {jorder.Index}
+                 */
+                this.uniqueIndex = this.spawnUniqueIndex();
+
                 /**
                  * Table key associated with current entity.
                  * @name bookworm.Table#entityKey
                  * @type {bookworm.TableKey}
                  */
-
-                /**
-                 * Fields that uniquely identify a row.
-                 * @type {string[]}
-                 */
-                this.uniqueFieldNames = undefined;
-
-                this._initCache();
-
-                /** @type {jorder.Table} */
-                this.sourceTable = jorder.Table.create(this.getSilentNode());
             },
 
             /**
-             * @param {string[]} uniqueFieldNames
-             * @returns {bookworm.Table}
+             * Default index spawner. In case your row ID field(s) differ from this,
+             * 1) subclass Table,
+             * 2) override .spawnUniqueIndex(),
+             * 3) and provide a surrogate to your subclass.
+             * @returns {jorder.Index}
              */
-            setUniqueFieldNames: function (uniqueFieldNames) {
-                dessert.isArray(uniqueFieldNames, "Invalid unique field names");
-
-                var oldFieldNames = this.uniqueFieldNames;
-
-                this.uniqueFieldNames = uniqueFieldNames;
-
-                this._updateUniqueIndex(oldFieldNames, uniqueFieldNames);
-
-                return this;
+            spawnUniqueIndex: function () {
+                return jorder.Index.create(['id']);
             }
         });
 });

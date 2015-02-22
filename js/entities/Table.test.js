@@ -34,8 +34,8 @@
 
         bookworm.Table.removeMocks();
 
-        equal(typeof table.uniqueFieldNames, 'undefined', "should set uniqueFieldNames property to undefined");
-        ok(table.sourceTable.isA(jorder.Table), "should set sourceTable property to a Table instance");
+        ok(table.uniqueIndex.isA(jorder.Index), "should set uniqueIndex property");
+        ok(table.sourceTable.isA(jorder.Table), "should set sourceTable property");
 
         strictEqual(bookworm.Table.create('foo'.toTableKey()), table, "should be memoized");
     });
@@ -59,27 +59,5 @@
 
         ok(table.isA(bookworm.Table), "should return Table instance");
         equal(table.entityKey.toString(), 'foo', "should set entity key");
-    });
-
-    test("Unique field names setter", function () {
-        var table = bookworm.Entity.create('foo'.toEntityKey());
-
-        raises(function () {
-            table.setUniqueFieldNames();
-        }, "should raise exception on missing arguments");
-
-        raises(function () {
-            table.setUniqueFieldNames('foo');
-        }, "should raise exception on invalid argument type");
-
-        table.addMocks({
-            _updateUniqueIndex: function (oldFieldNames, newFieldNames) {
-                equal(typeof oldFieldNames, 'undefined', "should update unique index");
-                equal(newFieldNames, ['foo', 'bar'], "should pass new field names to index updater");
-            }
-        });
-
-        strictEqual(table.setUniqueFieldNames(['foo', 'bar']), table, "should be chainable");
-        deepEqual(table.uniqueFieldNames, ['foo', 'bar'], "should set uniqueFieldNames property");
     });
 }());
