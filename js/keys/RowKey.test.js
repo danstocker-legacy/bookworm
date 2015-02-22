@@ -10,7 +10,7 @@
 
         ok(key.tableKey.isA(bookworm.TableKey), "should set tableKey property");
         equal(key.tableKey.toString(), 'hello', "should set tableKey contents");
-        equal(key.rowId, 'world', "should set row ID");
+        equal(key.rowSignature, 'world', "should set row ID");
     });
 
     test("Conversion from String", function () {
@@ -19,13 +19,13 @@
         key = 'foo/bar'.toRowKey();
         ok(key.isA(bookworm.RowKey), "should return RowKey instance");
         equal(key.tableKey.toString(), 'foo', "should set tableKey contents");
-        equal(key.rowId, 'bar', "should set row ID");
+        equal(key.rowSignature, 'bar', "should set row ID");
 
         key = 'foo/b%2Far'.toRowKey();
-        equal(key.rowId, 'b/ar', "should decode encoded chars in document ID");
+        equal(key.rowSignature, 'b/ar', "should decode encoded chars in document ID");
 
         key = 'foo'.toRowKey();
-        equal(typeof key.rowId, 'undefined', "should set undefined row ID for invalid key string");
+        equal(typeof key.rowSignature, 'undefined', "should set undefined row ID for invalid key string");
     });
 
     test("Conversion from Array", function () {
@@ -34,7 +34,7 @@
         key = ['foo', 'bar'].toRowKey();
         ok(key.isA(bookworm.RowKey), "should return RowKey instance");
         equal(key.tableKey.toString(), 'foo', "should set tableKey contents");
-        equal(key.rowId, 'bar', "should set row ID");
+        equal(key.rowSignature, 'bar', "should set row ID");
     });
 
     test("Conversion from cache Path", function () {
@@ -43,7 +43,7 @@
 
         ok(key.isA(bookworm.RowKey), "should return RowKey instance");
         equal(key.tableKey.toString(), 'foo', "should set tableKey contents");
-        equal(key.rowId, 'bar', "should set row ID");
+        equal(key.rowSignature, 'bar', "should set row ID");
     });
 
     test("Equivalence tester", function () {
@@ -53,12 +53,46 @@
         ok(!'foo/bar'.toRowKey().equals('fuu/bar'.toRowKey()), "should fail for different types");
     });
 
-    test("Entity path getter", function () {
+    test("Entity path getter for existing row", function () {
+        expect(3);
+
+        bookworm.RowKey.addMocks({
+            _getRowId: function () {
+                equal(this.toString(), 'foo/bar', "should fetch current row ID");
+                return 5;
+            }
+        });
+
         var key = 'foo/bar'.toRowKey(),
             path = key.getEntityPath();
 
+        bookworm.RowKey.removeMocks();
+
         ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['table', 'foo', 'bar'], "should set path contents correctly");
+        deepEqual(path.asArray, ['table', 'foo', '5'], "should set path contents correctly");
+    });
+
+    test("Entity path getter for new row", function () {
+        expect(4);
+
+        bookworm.RowKey.addMocks({
+            _getRowId: function () {
+                equal(this.toString(), 'foo/bar', "should attempt to fetch current row ID");
+            },
+
+            _getNextRowId: function () {
+                equal(this.toString(), 'foo/bar', "should fetch next row ID");
+                return 7;
+            }
+        });
+
+        var key = 'foo/bar'.toRowKey(),
+            path = key.getEntityPath();
+
+        bookworm.RowKey.removeMocks();
+
+        ok(path.isA(sntls.Path), "should return Path instance");
+        deepEqual(path.asArray, ['table', 'foo', '7'], "should set path contents correctly");
     });
 
     test("Attribute path getter", function () {

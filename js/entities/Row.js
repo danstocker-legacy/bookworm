@@ -34,7 +34,7 @@ troop.postpone(bookworm, 'Row', function () {
             },
 
             /**
-             * @param {object[]} rowNode
+             * @param {object} rowNode
              * @returns {bookworm.Row}
              */
             setNode: function (rowNode) {

@@ -9,7 +9,7 @@ troop.postpone(bookworm, 'RowKey', function () {
      * @name bookworm.RowKey.create
      * @function
      * @params {string} tableName,
-     * @params {number|string} rowId
+     * @params {number|string} rowSignature Row signature relative to the specified table's unique index.
      * @returns {bookworm.RowKey}
      */
 
@@ -18,13 +18,37 @@ troop.postpone(bookworm, 'RowKey', function () {
      * @extends bookworm.EntityKey
      */
     bookworm.RowKey = self
+        .addPrivateMethods(/** @lends bookworm.RowKey# */{
+            /**
+             * Retrieves the row ID currently associated with the row.
+             * @returns {string|number}
+             * @private
+             */
+            _getRowId: function () {
+                return this.tableKey.toTable()
+                    .uniqueIndex
+                    .getRowIdsForKeys([this.rowSignature])[0];
+            },
+
+            /**
+             * Retrieves the next row's row ID.
+             * @returns {number}
+             * @private
+             */
+            _getNextRowId: function () {
+                return this.tableKey.toTable()
+                    .jorderTable
+                    .items
+                    .length;
+            }
+        })
         .addMethods(/** @lends bookworm.RowKey# */{
             /**
              * @params {string} tableName
-             * @params {number|string} rowId
+             * @params {number|string} rowSignature
              * @ignore
              */
-            init: function (tableName, rowId) {
+            init: function (tableName, rowSignature) {
                 /**
                  * Identifies the table.
                  * @type {bookworm.TableKey}
@@ -35,7 +59,13 @@ troop.postpone(bookworm, 'RowKey', function () {
                  * Identifies the row within the table.
                  * @type {number|string}
                  */
-                this.rowId = rowId;
+                this.rowSignature = rowSignature;
+
+                /**
+                 * Position of row within the table.
+                 * @type {string|number}
+                 */
+                this.rowId = rowSignature ? this._getRowId() : undefined;
             },
 
             /**
@@ -45,14 +75,18 @@ troop.postpone(bookworm, 'RowKey', function () {
             equals: function (rowKey) {
                 return rowKey &&
                        this.tableKey.equals(rowKey.tableKey) &&
-                       this.rowId === rowKey.rowId;
+                       this.rowSignature === rowKey.rowSignature;
             },
 
             /**
              * @returns {sntls.Path}
              */
             getEntityPath: function () {
-                return this.tableKey.getEntityPath().appendKey(String(this.rowId));
+                var rowId = typeof this.rowId !== 'undefined' ?
+                    this.rowId :
+                    this._getNextRowId();
+
+                return this.tableKey.getEntityPath().appendKey(String(rowId));
             },
 
             /**
@@ -69,7 +103,7 @@ troop.postpone(bookworm, 'RowKey', function () {
              */
             toString: function () {
                 return encodeURIComponent(this.tableKey.toString()) + '/' +
-                       encodeURIComponent(this.rowId);
+                       encodeURIComponent(this.rowSignature);
             }
         });
 });
