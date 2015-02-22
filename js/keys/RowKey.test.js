@@ -57,8 +57,8 @@
         expect(3);
 
         bookworm.RowKey.addMocks({
-            _getRowId: function () {
-                equal(this.toString(), 'foo/bar', "should fetch current row ID");
+            getRowId: function () {
+                equal(this.toString(), 'foo/bar', "should fetch row ID");
                 return 5;
             }
         });
@@ -70,29 +70,6 @@
 
         ok(path.isA(sntls.Path), "should return Path instance");
         deepEqual(path.asArray, ['table', 'foo', '5'], "should set path contents correctly");
-    });
-
-    test("Entity path getter for new row", function () {
-        expect(4);
-
-        bookworm.RowKey.addMocks({
-            _getRowId: function () {
-                equal(this.toString(), 'foo/bar', "should attempt to fetch current row ID");
-            },
-
-            _getNextRowId: function () {
-                equal(this.toString(), 'foo/bar', "should fetch next row ID");
-                return 7;
-            }
-        });
-
-        var key = 'foo/bar'.toRowKey(),
-            path = key.getEntityPath();
-
-        bookworm.RowKey.removeMocks();
-
-        ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['table', 'foo', '7'], "should set path contents correctly");
     });
 
     test("Attribute path getter", function () {
@@ -125,5 +102,43 @@
     test("Conversion to String", function () {
         equal(bookworm.RowKey.create('foo', 'bar').toString(), 'foo/bar', 'should concatenate type / ID with slash');
         equal(bookworm.RowKey.create('f/oo', 'b/ar').toString(), 'f%2Foo/b%2Far', 'should URI encode type / ID');
+    });
+
+    test("Row ID getter for existing row", function () {
+        expect(2);
+
+        bookworm.RowKey.addMocks({
+            _getRowId: function () {
+                equal(this.toString(), 'foo/bar', "should fetch current row ID");
+                return 5;
+            }
+        });
+
+        var key = 'foo/bar'.toRowKey();
+
+        equal(key.getRowId(), 5, "should return row ID");
+
+        bookworm.RowKey.removeMocks();
+    });
+
+    test("Row ID getter for new row", function () {
+        expect(3);
+
+        bookworm.RowKey.addMocks({
+            _getRowId: function () {
+                equal(this.toString(), 'foo/bar', "should attempt to fetch current row ID");
+            },
+
+            _getNextRowId: function () {
+                equal(this.toString(), 'foo/bar', "should fetch next row ID");
+                return 7;
+            }
+        });
+
+        var key = 'foo/bar'.toRowKey();
+
+        equal(key.getRowId(), 7, "should return row ID");
+
+        bookworm.RowKey.removeMocks();
     });
 }());

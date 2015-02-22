@@ -82,11 +82,7 @@ troop.postpone(bookworm, 'RowKey', function () {
              * @returns {sntls.Path}
              */
             getEntityPath: function () {
-                var rowId = typeof this.rowId !== 'undefined' ?
-                    this.rowId :
-                    this._getNextRowId();
-
-                return this.tableKey.getEntityPath().appendKey(String(rowId));
+                return this.tableKey.getEntityPath().appendKey(String(this.getRowId()));
             },
 
             /**
@@ -104,6 +100,16 @@ troop.postpone(bookworm, 'RowKey', function () {
             toString: function () {
                 return encodeURIComponent(this.tableKey.toString()) + '/' +
                        encodeURIComponent(this.rowSignature);
+            },
+
+            /**
+             * @returns {string|number}
+             */
+            getRowId: function () {
+                var rowId = this.rowId;
+                return typeof rowId !== 'undefined' ?
+                    rowId :
+                    this._getNextRowId();
             }
         });
 });
