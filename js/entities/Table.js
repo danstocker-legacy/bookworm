@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, bookworm */
+/*global dessert, troop, sntls, jorder, bookworm */
 troop.postpone(bookworm, 'Table', function () {
     "use strict";
 
@@ -17,6 +17,32 @@ troop.postpone(bookworm, 'Table', function () {
      * @extends bookworm.Entity
      */
     bookworm.Table = self
+        .setInstanceMapper(function (tableName) {
+            return tableName;
+        })
+        .addPrivateMethods(/** @lends bookworm.Table# */{
+            /** @private */
+            _initCache: function () {
+                if (!this.getSilentNode()) {
+                    this.setNode([]);
+                }
+            },
+
+            /**
+             * @param {string[]} oldFieldNames
+             * @param {string[]} newFieldNames
+             * @private
+             */
+            _updateUniqueIndex: function (oldFieldNames, newFieldNames) {
+                var indexCollection = this.sourceTable.indexCollection,
+                    beforeIndex = indexCollection.getBestIndexForFields(oldFieldNames),
+                    afterIndex = jorder.Index.create(newFieldNames);
+
+                indexCollection
+                    .deleteItem(beforeIndex)
+                    .setItem(afterIndex);
+            }
+        })
         .addMethods(/** @lends bookworm.Table# */{
             /**
              * @param {bookworm.TableKey} tableKey
@@ -31,6 +57,33 @@ troop.postpone(bookworm, 'Table', function () {
                  * @name bookworm.Table#entityKey
                  * @type {bookworm.TableKey}
                  */
+
+                /**
+                 * Fields that uniquely identify a row.
+                 * @type {string[]}
+                 */
+                this.uniqueFieldNames = undefined;
+
+                this._initCache();
+
+                /** @type {jorder.Table} */
+                this.sourceTable = jorder.Table.create(this.getSilentNode());
+            },
+
+            /**
+             * @param {string[]} uniqueFieldNames
+             * @returns {bookworm.Table}
+             */
+            setUniqueFieldNames: function (uniqueFieldNames) {
+                dessert.isArray(uniqueFieldNames, "Invalid unique field names");
+
+                var oldFieldNames = this.uniqueFieldNames;
+
+                this.uniqueFieldNames = uniqueFieldNames;
+
+                this._updateUniqueIndex(oldFieldNames, uniqueFieldNames);
+
+                return this;
             }
         });
 });
