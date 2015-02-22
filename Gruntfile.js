@@ -13,6 +13,7 @@ module.exports = function (grunt) {
             'js/keys/FieldKey.js',
             'js/keys/ItemKey.js',
             'js/keys/ReferenceItemKey.js',
+            'js/keys/TableKey.js',
             'js/entities/Entity.js',
             'js/entities/Document.js',
             'js/entities/Field.js',
