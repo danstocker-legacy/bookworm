@@ -14,7 +14,6 @@ troop.postpone(bookworm, 'Table', function () {
 
     /**
      * Override unique index spawner, define surrogate between Table and your class.
-     * TODO: Trigger before-change, too?
      * @class
      * @extends bookworm.Entity
      */
@@ -49,6 +48,8 @@ troop.postpone(bookworm, 'Table', function () {
             },
 
             /**
+             * Sets table contents to the specified node.
+             * Updates indexes, triggers appropriate events.
              * @param {object[]} tableNode
              * @returns {bookworm.Table}
              */
@@ -64,7 +65,11 @@ troop.postpone(bookworm, 'Table', function () {
                 return this;
             },
 
-            /** @returns {bookworm.Table} */
+            /**
+             * Clears table contents. Updates indexes, triggers appropriate events.
+             * FIXME: Doesn't actually unset the key.
+             * @returns {bookworm.Table}
+             */
             unsetKey: function () {
                 var jorderTable = this.jorderTable
                     .clear();
@@ -86,38 +91,38 @@ troop.postpone(bookworm, 'Table', function () {
             },
 
             /**
-             * @param {string|number} rowId
+             * Fetches a row instance for the specified row signature.
+             * To be used internally only.
+             * @param {string|number} rowSignature
              * @returns {bookworm.Row}
+             * @ignore
              */
-            getRow: function (rowId) {
-                return bookworm.Row.create(this.entityKey.getRowKey(rowId));
+            getRow: function (rowSignature) {
+                return bookworm.Row.create(this.entityKey.getRowKey(rowSignature));
             },
 
             /**
              * Updates rows if they're present in the table, inserts them otherwise.
              * Assumes that each row is unique. Otherwise might behave unpredictably.
-             * TODO: Find alternative for updateRowsByRow.
              * @param {object[]} rowsAfter
              * @returns {bookworm.Table}
              */
-            updateRows: function (rowsAfter) {
-                var uniqueIndex = this.uniqueIndex,
-                    jorderTable = this.jorderTable,
-                    rowSignature = uniqueIndex.rowSignature;
+            appendNode: function (rowsAfter) {
+                var that = this,
+                    rowSignature = this.uniqueIndex.rowSignature,
+                    tableNode = this.jorderTable.items;
 
                 rowsAfter.toCollection()
-                    .forEachItem(function (row) {
-                        var keys = rowSignature.getKeysForRow(row),
-                            matchingRows = uniqueIndex.getRowIdsForKeys(keys);
-
-                        if (matchingRows.length) {
-                            jorderTable.updateRowsByRow(row, row, uniqueIndex);
-                        } else {
-                            jorderTable.insertRow(row);
-                        }
+                    .mapKeys(rowSignature.getKeyForRow, rowSignature)
+                    .forEachItem(function (rowNode, rowSignature) {
+                        that.getRow(rowSignature)
+                            .setNode(rowNode);
                     });
 
-                base.setNode.call(this, jorderTable.items);
+                bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+                    .setBefore(tableNode)
+                    .setAfter(tableNode)
+                    .triggerSync(this.entityKey.getEntityPath());
 
                 return this;
             }

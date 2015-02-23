@@ -37,7 +37,7 @@
     });
 
     test("Node setter", function () {
-        expect(5);
+        expect(4);
 
         var row = 'foo/bar'.toRow(),
             rowNode = {id: 1, name: 'hello'};
@@ -63,10 +63,9 @@
     });
 
     test("Key unsetter", function () {
-        expect(4);
+        expect(3);
 
-        var row = 'foo/bar'.toRow(),
-            rowNode = {id: 1, name: 'hello'};
+        var row = 'foo/bar'.toRow();
 
         row.entityKey.addMocks({
             getRowId: function () {

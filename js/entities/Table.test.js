@@ -148,24 +148,36 @@
         equal(row.entityKey.toString(), 'foo/bar', "should set correct entity key");
     });
 
-    test("Content update", function () {
-        var table = 'foo'.toTable();
+    test("Appending node", function () {
+        expect(5);
 
-        table.setNode([
-            {id: 1, a: 'hello'},
-            {id: 2, a: 'world'},
-            {id: 3, a: 'foo'},
-            {id: 4, a: 'bar'}
-        ]);
+        var table = 'foo'.toTable()
+                .setNode([
+                    {id: 1, a: 'hello'},
+                    {id: 2, a: 'world'},
+                    {id: 3, a: 'foo'},
+                    {id: 4, a: 'bar'}
+                ]),
+            tableNode = table.getNode();
+
+        function onChange(event) {
+            equal(event.originalPath.toString(), 'table>foo', "should trigger change event on table entity path");
+            strictEqual(event.beforeValue, tableNode, "should pass table node as before value");
+            strictEqual(event.afterValue, tableNode, "should pass table node as after value");
+        }
+
+        bookworm.entities.subscribeTo(flock.ChangeEvent.EVENT_CACHE_CHANGE, 'table'.toPath(), onChange);
 
         strictEqual(
-            table.updateRows([
+            table.appendNode([
                 {id: 3, a: 'baz'},
                 {id: 1, a: 'hi'},
                 {id: 5, a: 'foo'}
             ]),
             table,
             "should be chainable");
+
+        bookworm.entities.unsubscribeFrom(flock.ChangeEvent.EVENT_CACHE_CHANGE, 'table'.toPath(), onChange);
 
         deepEqual(table.getNode(), [
             {id: 1, a: 'hi'},

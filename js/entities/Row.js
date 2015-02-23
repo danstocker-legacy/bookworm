@@ -6,6 +6,9 @@ troop.postpone(bookworm, 'Row', function () {
         self = base.extend();
 
     /**
+     * Creates a Row instance.
+     * Row is used internally by Table. Do not instantiate.
+     * TODO: Remove conversion methods?
      * @name bookworm.Row.create
      * @function
      * @param {bookworm.RowKey} rowKey
@@ -13,8 +16,11 @@ troop.postpone(bookworm, 'Row', function () {
      */
 
     /**
+     * Implements table row manipulation.
+     * Used internally by Table. Not to be used directly.
      * @class
      * @extends bookworm.Entity
+     * @ignore
      */
     bookworm.Row = self
         .addMethods(/** @lends bookworm.Row# */{
@@ -40,23 +46,24 @@ troop.postpone(bookworm, 'Row', function () {
             },
 
             /**
-             * TODO: setNode might not trigger event, since buffers for entity and jorder table are the same.
+             * Sets the specified row node, updating indexes.
+             * If row node is in conflict with the current row signature, could lead to inconsistent state.
+             * Does not trigger event in the cache.
              * @param {object} rowNode
              * @returns {bookworm.Row}
              */
             setNode: function (rowNode) {
                 this.jorderTable.setItem(this.entityKey.getRowId(), rowNode);
-                base.setNode.call(this, rowNode);
                 return this;
             },
 
             /**
-             * TODO: setNode might not trigger event, since buffers for entity and jorder table are the same.
+             * Clears the current row, updating indexes.
+             * Does not trigger event in the cache.
              * @returns {bookworm.Row}
              */
             unsetKey: function () {
                 this.jorderTable.deleteItem(this.entityKey.getRowId());
-                base.unsetKey.call(this);
                 return this;
             }
         });
