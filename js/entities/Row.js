@@ -27,6 +27,12 @@ troop.postpone(bookworm, 'Row', function () {
                 base.init.call(this, rowKey);
 
                 /**
+                 * Local shortcut to the jorder table in which the row is.
+                 * @type {jorder.Table}
+                 */
+                this.jorderTable = rowKey.tableKey.toTable().jorderTable;
+
+                /**
                  * Row key associated with current entity.
                  * @name bookworm.Row#entityKey
                  * @type {bookworm.RowKey}
@@ -34,15 +40,23 @@ troop.postpone(bookworm, 'Row', function () {
             },
 
             /**
+             * TODO: setNode might not trigger event, since buffers for entity and jorder table are the same.
              * @param {object} rowNode
              * @returns {bookworm.Row}
              */
             setNode: function (rowNode) {
+                this.jorderTable.setItem(this.entityKey.getRowId(), rowNode);
+                base.setNode.call(this, rowNode);
                 return this;
             },
 
-            /** @returns {bookworm.Row} */
+            /**
+             * TODO: setNode might not trigger event, since buffers for entity and jorder table are the same.
+             * @returns {bookworm.Row}
+             */
             unsetKey: function () {
+                this.jorderTable.deleteItem(this.entityKey.getRowId());
+                base.unsetKey.call(this);
                 return this;
             }
         });

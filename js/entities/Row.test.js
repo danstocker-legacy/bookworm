@@ -16,29 +16,74 @@
     });
 
     test("Conversion from String", function () {
-        var table = 'foo/bar'.toRow();
+        var row = 'foo/bar'.toRow();
 
-        ok(table.isA(bookworm.Row), "should return Row instance");
-        equal(table.entityKey.toString(), 'foo/bar', "should set entityKey property");
+        ok(row.isA(bookworm.Row), "should return Row instance");
+        equal(row.entityKey.toString(), 'foo/bar', "should set entityKey property");
     });
 
     test("Conversion from RowKey", function () {
-        var table = 'foo/bar'.toRowKey().toRow();
+        var row = 'foo/bar'.toRowKey().toRow();
 
-        ok(table.isA(bookworm.Row), "should return Row instance");
-        equal(table.entityKey.toString(), 'foo/bar', "should set entityKey property");
+        ok(row.isA(bookworm.Row), "should return Row instance");
+        equal(row.entityKey.toString(), 'foo/bar', "should set entityKey property");
     });
 
     test("Entity surrogate", function () {
-        var table = bookworm.Entity.create('foo/bar'.toRowKey());
+        var row = bookworm.Entity.create('foo/bar'.toRowKey());
 
-        ok(table.isA(bookworm.Row), "should return Row instance");
-        equal(table.entityKey.toString(), 'foo/bar', "should set entityKey property");
+        ok(row.isA(bookworm.Row), "should return Row instance");
+        equal(row.entityKey.toString(), 'foo/bar', "should set entityKey property");
     });
 
     test("Node setter", function () {
+        expect(5);
+
+        var row = 'foo/bar'.toRow(),
+            rowNode = {id: 1, name: 'hello'};
+
+        row.entityKey.addMocks({
+            getRowId: function () {
+                ok(true, "should fetch row ID");
+                return 1;
+            }
+        });
+
+        row.jorderTable.addMocks({
+            setItem: function (key, value) {
+                equal(key, 1, "should set row in jorder table");
+                strictEqual(value, rowNode, "should pass row node to jorder table item setter");
+            }
+        });
+
+        strictEqual(row.setNode(rowNode), row, "should be chainable");
+
+        row.entityKey.removeMocks();
+        row.jorderTable.removeMocks();
     });
 
-    test("Node unsetter", function () {
+    test("Key unsetter", function () {
+        expect(4);
+
+        var row = 'foo/bar'.toRow(),
+            rowNode = {id: 1, name: 'hello'};
+
+        row.entityKey.addMocks({
+            getRowId: function () {
+                ok(true, "should fetch row ID");
+                return 1;
+            }
+        });
+
+        row.jorderTable.addMocks({
+            deleteItem: function (key) {
+                equal(key, 1, "should set row in jorder table");
+            }
+        });
+
+        strictEqual(row.unsetKey(), row, "should be chainable");
+
+        row.entityKey.removeMocks();
+        row.jorderTable.removeMocks();
     });
 }());
