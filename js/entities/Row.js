@@ -48,22 +48,48 @@ troop.postpone(bookworm, 'Row', function () {
             /**
              * Sets the specified row node, updating indexes.
              * If row node is in conflict with the current row signature, could lead to inconsistent state.
-             * Does not trigger event in the cache.
              * @param {object} rowNode
              * @returns {bookworm.Row}
              */
             setNode: function (rowNode) {
+                var beforeNode = this.getSilentNode(),
+                    entityPath = this.entityKey.getEntityPath(),
+                    entities = bookworm.entities;
+
+                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
+                    .setBefore(beforeNode)
+                    .setAfter(rowNode)
+                    .triggerSync(entityPath);
+
                 this.jorderTable.setItem(this.entityKey.getRowId(), rowNode);
+
+                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+                    .setBefore(beforeNode)
+                    .setAfter(rowNode)
+                    .triggerSync(entityPath);
+
                 return this;
             },
 
             /**
              * Clears the current row, updating indexes.
-             * Does not trigger event in the cache.
              * @returns {bookworm.Row}
              */
             unsetKey: function () {
+                var beforeNode = this.getSilentNode(),
+                    entities = bookworm.entities,
+                    entityPath = this.entityKey.getEntityPath();
+
+                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
+                    .setBefore(beforeNode)
+                    .triggerSync(entityPath);
+
                 this.jorderTable.deleteItem(this.entityKey.getRowId());
+
+                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+                    .setBefore(beforeNode)
+                    .triggerSync(entityPath);
+
                 return this;
             }
         });
