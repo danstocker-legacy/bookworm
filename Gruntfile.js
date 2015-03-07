@@ -24,6 +24,7 @@ module.exports = function (grunt) {
             'js/entities/Table.js',
             'js/entities/Row.js',
             'js/binding/EntityBound.js',
+            'js/utils/Range.js',
             'js/utils/ReferenceLookup.js',
             'js/utils/ReferenceManager.js',
             'js/exports.js'
