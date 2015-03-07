@@ -1,13 +1,10 @@
 {
     "name"           : "bookworm",
     "version"        : "0.4.0",
-    "description"    : "Document entity framework",
+    "description"    : "Entity framework",
     "keywords"       : [
-        "document",
-        "cache",
-        "key",
-        "in-memory",
-        "nosql",
+        "document", "field", "collection", "collections", "table", "indexed",
+        "cache", "in-memory", "nosql",
         "evented"
     ],
     "author"         : "Dan Stocker <dan@kwaia.com>",
