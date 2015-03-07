@@ -56,26 +56,37 @@ troop.postpone(bookworm, 'Table', function () {
             setNode: function (tableNode) {
                 dessert.isArray(tableNode, "Invalid table node");
 
-                var jorderTable = this.jorderTable
+                var beforeNode = this.getSilentNode(),
+                    entities = bookworm.entities,
+                    entityPath = this.entityKey.getEntityPath(),
+                    jorderTable = this.jorderTable;
+
+                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
+                    .setBefore(beforeNode)
+                    .setAfter(tableNode)
+                    .triggerSync(entityPath);
+
+                jorderTable
                     .clear()
                     .insertRows(tableNode);
 
-                base.setNode.call(this, jorderTable.items);
+                sntls.Tree.setNode.call(entities, entityPath, jorderTable.items);
+
+                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+                    .setBefore(beforeNode)
+                    .setAfter(tableNode)
+                    .triggerSync(entityPath);
 
                 return this;
             },
 
             /**
              * Clears table contents. Updates indexes, triggers appropriate events.
-             * FIXME: Doesn't actually unset the key.
              * @returns {bookworm.Table}
              */
             unsetKey: function () {
-                var jorderTable = this.jorderTable
-                    .clear();
-
-                base.setNode.call(this, jorderTable.items);
-
+                this.jorderTable.clear();
+                base.unsetKey.call(this);
                 return this;
             },
 
@@ -111,12 +122,14 @@ troop.postpone(bookworm, 'Table', function () {
                 var that = this,
                     rowSignature = this.uniqueIndex.rowSignature,
                     jorderTable = this.jorderTable,
-                    tableNode = jorderTable.items;
+                    tableNode = jorderTable.items,
+                    entities = bookworm.entities,
+                    entityPath = this.entityKey.getEntityPath();
 
-                bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
+                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
                     .setBefore(tableNode)
                     .setAfter(tableNode)
-                    .triggerSync(this.entityKey.getEntityPath());
+                    .triggerSync(entityPath);
 
                 rowsAfter.toCollection()
                     .mapKeys(rowSignature.getKeyForRow, rowSignature)
@@ -126,10 +139,10 @@ troop.postpone(bookworm, 'Table', function () {
                         jorderTable.setItem(row.entityKey.getRowId(), rowNode);
                     });
 
-                bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
                     .setBefore(tableNode)
                     .setAfter(tableNode)
-                    .triggerSync(this.entityKey.getEntityPath());
+                    .triggerSync(entityPath);
 
                 return this;
             }

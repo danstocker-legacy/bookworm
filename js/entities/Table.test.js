@@ -70,15 +70,9 @@
     });
 
     test("Node setter", function () {
-        expect(6);
+        expect(13);
 
-        var table = 'foo'.toTable(),
-            rows = [
-                {id: 1, a: 'hello'},
-                {id: 2, a: 'world'},
-                {id: 3, a: 'foo'},
-                {id: 4, a: 'bar'}
-            ];
+        var table = 'foo'.toTable();
 
         raises(function () {
             table.setNode();
@@ -88,30 +82,78 @@
             table.setNode({});
         }, "should raise exception on invalid arguments");
 
-        table.jorderTable.addMocks({
-            clear: function () {
-                ok(true, "should clear jorder table");
-                return this;
-            },
-
-            insertRows: function (tableNode) {
-                strictEqual(tableNode, rows, "should insert rows array into jorder table");
-                return this;
+        table.addMocks({
+            getSilentNode: function () {
+                ok(true, "should fetch before node silently");
+                return [
+                    {id: 1, a: 'hello'},
+                    {id: 2, a: 'world'},
+                    {id: 3, a: 'foo'},
+                    {id: 4, a: 'bar'}
+                ];
             }
         });
 
-        bookworm.Entity.addMocks({
-            setNode: function (node) {
-                strictEqual(node, this.jorderTable.items, "should set node");
+        sntls.Tree.addMocks({
+            setNode: function (path, tableNode) {
+                strictEqual(this, bookworm.entities, "should set table node");
+                equal(path.toString(), 'table>foo', "should pass table entity path");
+                deepEqual(tableNode, [
+                    {id: 3, a: 'baz'},
+                    {id: 1, a: 'hi'},
+                    {id: 5, a: 'foo'}
+                ], "should pass new table node");
             }
         });
 
-        strictEqual(table.setNode(rows), table, "should be chainable");
+        function onBeforeChange(event) {
+            equal(event.originalPath.toString(), 'table>foo', "should trigger before change event on table entity path");
+            deepEqual(event.beforeValue, [
+                {id: 1, a: 'hello'},
+                {id: 2, a: 'world'},
+                {id: 3, a: 'foo'},
+                {id: 4, a: 'bar'}
+            ], "should pass table node as before value");
+            deepEqual(event.afterValue, [
+                {id: 3, a: 'baz'},
+                {id: 1, a: 'hi'},
+                {id: 5, a: 'foo'}
+            ], "should pass table node as after value");
+        }
 
-        bookworm.Entity.removeMocks();
+        function onChange(event) {
+            equal(event.originalPath.toString(), 'table>foo', "should trigger change event on table entity path");
+            deepEqual(event.beforeValue, [
+                {id: 1, a: 'hello'},
+                {id: 2, a: 'world'},
+                {id: 3, a: 'foo'},
+                {id: 4, a: 'bar'}
+            ], "should pass table node as before value");
+            deepEqual(event.afterValue, [
+                {id: 3, a: 'baz'},
+                {id: 1, a: 'hi'},
+                {id: 5, a: 'foo'}
+            ], "should pass table node as after value");
+        }
+
+        bookworm.entities
+            .subscribeTo(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE, 'table'.toPath(), onBeforeChange)
+            .subscribeTo(flock.ChangeEvent.EVENT_CACHE_CHANGE, 'table'.toPath(), onChange);
+
+        strictEqual(table.setNode([
+            {id: 3, a: 'baz'},
+            {id: 1, a: 'hi'},
+            {id: 5, a: 'foo'}
+        ]), table, "should be chainable");
+
+        bookworm.entities
+            .unsubscribeFrom(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE, 'table'.toPath(), onBeforeChange)
+            .unsubscribeFrom(flock.ChangeEvent.EVENT_CACHE_CHANGE, 'table'.toPath(), onChange);
+
+        sntls.Tree.removeMocks();
     });
 
-    test("Node unsetter", function () {
+    test("Key unsetter", function () {
         expect(3);
 
         var table = 'foo'.toTable(),
@@ -130,12 +172,12 @@
         });
 
         bookworm.Entity.addMocks({
-            setNode: function (node) {
-                strictEqual(node, this.jorderTable.items, "should set node");
+            unsetKey: function () {
+                ok(true, "should unset key");
             }
         });
 
-        strictEqual(table.setNode(rows), table, "should be chainable");
+        strictEqual(table.unsetKey(rows), table, "should be chainable");
 
         bookworm.Entity.removeMocks();
     });
