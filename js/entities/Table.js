@@ -110,13 +110,20 @@ troop.postpone(bookworm, 'Table', function () {
             appendNode: function (rowsAfter) {
                 var that = this,
                     rowSignature = this.uniqueIndex.rowSignature,
-                    tableNode = this.jorderTable.items;
+                    jorderTable = this.jorderTable,
+                    tableNode = jorderTable.items;
+
+                bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
+                    .setBefore(tableNode)
+                    .setAfter(tableNode)
+                    .triggerSync(this.entityKey.getEntityPath());
 
                 rowsAfter.toCollection()
                     .mapKeys(rowSignature.getKeyForRow, rowSignature)
                     .forEachItem(function (rowNode, rowSignature) {
-                        that.getRow(rowSignature)
-                            .setNode(rowNode);
+                        // adding / changing each row silently
+                        var row = that.getRow(rowSignature);
+                        jorderTable.setItem(row.entityKey.getRowId(), rowNode);
                     });
 
                 bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)

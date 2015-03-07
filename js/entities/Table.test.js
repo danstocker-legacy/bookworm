@@ -149,24 +149,40 @@
     });
 
     test("Appending node", function () {
-        expect(5);
+        expect(6);
 
         var table = 'foo'.toTable()
-                .setNode([
-                    {id: 1, a: 'hello'},
-                    {id: 2, a: 'world'},
-                    {id: 3, a: 'foo'},
-                    {id: 4, a: 'bar'}
-                ]),
-            tableNode = table.getNode();
+            .setNode([
+                {id: 1, a: 'hello'},
+                {id: 2, a: 'world'},
+                {id: 3, a: 'foo'},
+                {id: 4, a: 'bar'}
+            ]);
+
+        function onBeforeChange(event) {
+            equal(event.originalPath.toString(), 'table>foo', "should trigger before change event on table entity path");
+            deepEqual(event.beforeValue, [
+                {id: 1, a: 'hello'},
+                {id: 2, a: 'world'},
+                {id: 3, a: 'foo'},
+                {id: 4, a: 'bar'}
+            ], "should pass table node as before value");
+        }
 
         function onChange(event) {
             equal(event.originalPath.toString(), 'table>foo', "should trigger change event on table entity path");
-            strictEqual(event.beforeValue, tableNode, "should pass table node as before value");
-            strictEqual(event.afterValue, tableNode, "should pass table node as after value");
+            deepEqual(event.afterValue, [
+                {id: 1, a: 'hi'},
+                {id: 2, a: 'world'},
+                {id: 3, a: 'baz'},
+                {id: 4, a: 'bar'},
+                {id: 5, a: 'foo'}
+            ], "should pass table node as after value");
         }
 
-        bookworm.entities.subscribeTo(flock.ChangeEvent.EVENT_CACHE_CHANGE, 'table'.toPath(), onChange);
+        bookworm.entities
+            .subscribeTo(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE, 'table'.toPath(), onBeforeChange)
+            .subscribeTo(flock.ChangeEvent.EVENT_CACHE_CHANGE, 'table'.toPath(), onChange);
 
         strictEqual(
             table.appendNode([
@@ -177,7 +193,9 @@
             table,
             "should be chainable");
 
-        bookworm.entities.unsubscribeFrom(flock.ChangeEvent.EVENT_CACHE_CHANGE, 'table'.toPath(), onChange);
+        bookworm.entities
+            .unsubscribeFrom(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE, 'table'.toPath(), onBeforeChange)
+            .unsubscribeFrom(flock.ChangeEvent.EVENT_CACHE_CHANGE, 'table'.toPath(), onChange);
 
         deepEqual(table.getNode(), [
             {id: 1, a: 'hi'},
