@@ -3,7 +3,8 @@ troop.postpone(bookworm, 'Table', function () {
     "use strict";
 
     var base = bookworm.Entity,
-        self = base.extend();
+        self = base.extend()
+            .addTrait(bookworm.EntityBound);
 
     /**
      * @name bookworm.Table.create
@@ -13,13 +14,81 @@ troop.postpone(bookworm, 'Table', function () {
      */
 
     /**
-     * Override unique index spawner, define surrogate between Table and your class.
+     * Represents an indexed table in the cache.
+     * Tables may optionally have a source collection field, from which they get their data.
+     * To specify a unique index other than the default, override .spawnUniqueIndex(),
+     * and define surrogate between Table and your class.
      * @class
      * @extends bookworm.Entity
+     * @extends bookworm.EntityBound
      */
     bookworm.Table = self
         .setInstanceMapper(function (tableName) {
             return tableName;
+        })
+        .addPrivateMethods(/** @lends bookworm.Table */{
+            /**
+             * Just fetches the collection values.
+             * @param {bookworm.FieldKey} fieldKey
+             * @returns {object[]}
+             * @private
+             */
+            _getTableNodeForPlainCollection: function (fieldKey) {
+                return fieldKey.toField()
+                    .getItemsAsCollection()
+                    .getValues();
+            },
+
+            /**
+             * Resolves document references stored in item values.
+             * @param {bookworm.FieldKey} fieldKey
+             * @returns {object[]}
+             * @private
+             */
+            _getTableNodeForValueReferences: function (fieldKey) {
+                return fieldKey.toField()
+                    .getItemsAsCollection()
+                    .getValuesAsHash()
+                    .toCollection()
+                    .callOnEachItem('toDocument')
+                    .callOnEachItem('getNode')
+                    .items;
+            },
+
+            /**
+             * Resolves document references stored in item values.
+             * @param {bookworm.FieldKey} fieldKey
+             * @returns {object[]}
+             * @private
+             */
+            _getTableNodeForKeyReferences: function (fieldKey) {
+                return fieldKey.toField()
+                    .getItemsAsCollection()
+                    .getKeysAsHash()
+                    .toCollection()
+                    .callOnEachItem('toDocument')
+                    .callOnEachItem('getNode')
+                    .items;
+            },
+
+            /**
+             * @param {bookworm.FieldKey} fieldKey
+             * @returns {Object[]}
+             * @private
+             */
+            _getTableNode: function (fieldKey) {
+                var itemKey = fieldKey.getItemKey('');
+                if (itemKey.getItemType() === 'reference') {
+                    // reference is stored in item value
+                    return this._getTableNodeForValueReferences(fieldKey);
+                } else if (itemKey.getItemIdType() === 'reference') {
+                    // reference is stored in item key
+                    return this._getTableNodeForKeyReferences(fieldKey);
+                } else {
+                    // item contains no reference
+                    return this._getTableNodeForPlainCollection(fieldKey);
+                }
+            }
         })
         .addMethods(/** @lends bookworm.Table# */{
             /**
@@ -29,12 +98,19 @@ troop.postpone(bookworm, 'Table', function () {
             init: function (tableKey) {
                 dessert.isTableKey(tableKey, "Invalid table key");
                 base.init.call(this, tableKey);
+                bookworm.EntityBound.init.call(this);
 
                 /**
                  * Index that uniquely identifies a row.
                  * @type {jorder.Index}
                  */
                 this.uniqueIndex = this.spawnUniqueIndex();
+
+                /**
+                 * Identifies field where the table gets its data from.
+                 * @type {bookworm.FieldKey}
+                 */
+                this.sourceFieldKey = undefined;
 
                 /** @type {jorder.Table} */
                 this.jorderTable = jorder.Table.create(this.getNode())
@@ -45,6 +121,22 @@ troop.postpone(bookworm, 'Table', function () {
                  * @name bookworm.Table#entityKey
                  * @type {bookworm.TableKey}
                  */
+            },
+
+            /**
+             * @returns {bookworm.Table}
+             */
+            clearInstanceRegistry: function () {
+                var instanceId = 'singleton',
+                    singleton = this.instanceRegistry[instanceId];
+
+                if (singleton) {
+                    singleton.clearSourceFieldKey();
+                }
+
+                base.clearInstanceRegistry.call(this);
+
+                return this;
             },
 
             /**
@@ -87,6 +179,47 @@ troop.postpone(bookworm, 'Table', function () {
             unsetKey: function () {
                 this.jorderTable.clear();
                 base.unsetKey.call(this);
+                return this;
+            },
+
+            /**
+             * Sets reference to source collection.
+             * @param {bookworm.FieldKey} sourceFieldKey
+             * @returns {bookworm.Table}
+             */
+            setSourceFieldKey: function (sourceFieldKey) {
+                dessert.isFieldKey(sourceFieldKey, "Innvalid field key");
+
+                var sourceFieldKeyBefore = this.sourceFieldKey,
+                    collectionField = sourceFieldKey.toField();
+
+                dessert.assert(collectionField.isA(bookworm.CollectionField),
+                    "Not a collection field");
+
+                if (!sourceFieldKey.equals(sourceFieldKeyBefore)) {
+                    // setting contents
+                    this.setNode(this._getTableNode(sourceFieldKey));
+
+                    // re-binding to new field
+                    if (sourceFieldKeyBefore) {
+                        this.unbindFromEntityChange(sourceFieldKeyBefore);
+                    }
+                    this.bindToEntityChange(sourceFieldKey, 'onSourceFieldChange');
+
+                    this.sourceFieldKey = sourceFieldKey;
+                }
+
+                return this;
+            },
+
+            /**
+             * Clears reference to source collection, unbinds events.
+             * @returns {bookworm.Table}
+             */
+            clearSourceFieldKey: function () {
+                this.unsetKey();
+                this.unbindFromEntityChange(this.sourceFieldKey);
+                this.sourceFieldKey = undefined;
                 return this;
             },
 
@@ -145,6 +278,14 @@ troop.postpone(bookworm, 'Table', function () {
                     .triggerSync(entityPath);
 
                 return this;
+            },
+
+            /**
+             * @param {flock.ChangeEvent} event
+             * @ignore
+             */
+            onSourceFieldChange: function (event) {
+                console.log("source collection changed", event.originalPath.toString());
             }
         });
 });

@@ -14,7 +14,7 @@
     });
 
     test("Instantiation", function () {
-        expect(7);
+        expect(8);
 
         raises(function () {
             bookworm.Table.create();
@@ -36,6 +36,7 @@
         bookworm.Table.removeMocks();
 
         ok(table.uniqueIndex.isA(jorder.Index), "should set uniqueIndex property");
+        ok(typeof table.sourceFieldKey, 'undefined', "should add sourceFieldKey property");
         ok(table.jorderTable.isA(jorder.Table), "should set jorderTable property");
 
         var uniqueIndex = table.jorderTable.indexCollection.getFirstValue();
@@ -180,6 +181,182 @@
         strictEqual(table.unsetKey(rows), table, "should be chainable");
 
         bookworm.Entity.removeMocks();
+    });
+
+    test("Setting plain collection as source", function () {
+        expect(6);
+
+        var table = 'moo'.toTable();
+
+        bookworm.FieldKey.addMocks({
+            getFieldType: function () {
+                return 'collection';
+            }
+        });
+
+        bookworm.Field.addMocks({
+            getValue: function () {
+                equal(this.entityKey.toString(), 'foo/bar/baz', "should fetch collection node");
+                return {
+                    a: {name: 'A', id: 1},
+                    b: {name: 'B', id: 2},
+                    c: {name: 'C', id: 3},
+                    d: {name: 'D', id: 4}
+                };
+            }
+        });
+
+        table.addMocks({
+            setNode: function (tableNode) {
+                deepEqual(tableNode, [
+                    {name: 'A', id: 1},
+                    {name: 'B', id: 2},
+                    {name: 'C', id: 3},
+                    {name: 'D', id: 4}
+                ], "should store extracted table node in cache");
+            },
+
+            bindToEntityChange: function (entityKey, methodName) {
+                equal(entityKey.toString(), 'foo/bar/baz', "should bind to field key");
+                equal(methodName, 'onSourceFieldChange', "should bind correct handler method");
+            }
+        });
+
+        strictEqual(table.setSourceFieldKey('foo/bar/baz'.toFieldKey()), table,
+            "should be chainable");
+
+        bookworm.FieldKey.removeMocks();
+        bookworm.Field.removeMocks();
+
+        equal(table.sourceFieldKey.toString(), 'foo/bar/baz', "should set sourceFieldKey");
+    });
+
+    test("Setting reference collection as source (value)", function () {
+        expect(3);
+
+        var table = 'moo'.toTable();
+
+        bookworm.FieldKey.addMocks({
+            getFieldType: function () {
+                return 'collection';
+            }
+        });
+
+        bookworm.ItemKey.addMocks({
+            getItemType: function () {
+                return 'reference';
+            }
+        });
+
+        bookworm.Field.addMocks({
+            getValue: function () {
+                equal(this.entityKey.toString(), 'foo/bar/baz', "should fetch collection node");
+                return {
+                    a: 'hello/world',
+                    b: 'hi/all'
+                };
+            }
+        });
+
+        table.addMocks({
+            setNode: function (tableNode) {
+                deepEqual(tableNode, [
+                    {name: 'A', id: 1},
+                    {name: 'B', id: 2}
+                ], "should store extracted table node in cache");
+            }
+        });
+
+        'hello/world'.toDocument()
+            .setNode({name: 'A', id: 1});
+        'hi/all'.toDocument()
+            .setNode({name: 'B', id: 2});
+
+        strictEqual(table.setSourceFieldKey('foo/bar/baz'.toFieldKey()), table,
+            "should be chainable");
+
+        bookworm.FieldKey.removeMocks();
+        bookworm.ItemKey.removeMocks();
+        bookworm.Field.removeMocks();
+    });
+
+    test("Setting reference collection as source (key)", function () {
+        expect(3);
+
+        var table = 'moo'.toTable();
+
+        bookworm.FieldKey.addMocks({
+            getFieldType: function () {
+                return 'collection';
+            }
+        });
+
+        bookworm.ItemKey.addMocks({
+            getItemIdType: function () {
+                return 'reference';
+            }
+        });
+
+        bookworm.Field.addMocks({
+            getValue: function () {
+                equal(this.entityKey.toString(), 'foo/bar/baz', "should fetch collection node");
+                return {
+                    'hello/world': 0,
+                    'hi/all'     : 1
+                };
+            }
+        });
+
+        table.addMocks({
+            setNode: function (tableNode) {
+                deepEqual(tableNode, [
+                    {name: 'A', id: 1},
+                    {name: 'B', id: 2}
+                ], "should store extracted table node in cache");
+            }
+        });
+
+        'hello/world'.toDocument()
+            .setNode({name: 'A', id: 1});
+        'hi/all'.toDocument()
+            .setNode({name: 'B', id: 2});
+
+        strictEqual(table.setSourceFieldKey('foo/bar/baz'.toFieldKey()), table,
+            "should be chainable");
+
+        bookworm.FieldKey.removeMocks();
+        bookworm.ItemKey.removeMocks();
+        bookworm.Field.removeMocks();
+    });
+
+    test("Clearing source field key", function () {
+        expect(4);
+
+        bookworm.FieldKey.addMocks({
+            getFieldType: function () {
+                return 'collection';
+            }
+        });
+
+        var table = 'moo'.toTable()
+            .setSourceFieldKey('foo/bar/baz'.toFieldKey());
+
+        bookworm.FieldKey.removeMocks();
+
+        table.addMocks({
+            unsetKey: function () {
+                ok(true, "should clear table node");
+                return this;
+            },
+
+            unbindFromEntityChange: function (fieldKey) {
+                equal(fieldKey.toString(), 'foo/bar/baz');
+            }
+        });
+
+        strictEqual(table.clearSourceFieldKey(), table, "should be chainable");
+
+        equal(typeof table.sourceFieldKey, 'undefined', "should clear sourceFieldKey property");
     });
 
     test("Row entity getter", function () {
