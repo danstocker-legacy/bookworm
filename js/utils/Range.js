@@ -47,6 +47,17 @@ troop.postpone(bookworm, 'Range', function () {
                  * @type {number|string}
                  */
                 this.upperBound = upperBound;
+            },
+
+            /**
+             * Tells whether the specified range describes the same bounds as the current one.
+             * @param {bookworm.Range} range
+             * @returns {boolean}
+             */
+            equals: function (range) {
+                return range &&
+                       this.lowerBound === range.lowerBound &&
+                       this.upperBound === range.upperBound;
             }
         });
 });

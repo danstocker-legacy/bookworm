@@ -61,4 +61,13 @@
         equal(range.lowerBound, 1, "should set lower bound");
         equal(range.upperBound, 2, "should set upper bound");
     });
+
+    test("Equality tester", function () {
+        ok(![0, 1].toRange().equals(undefined), "should return false for undefined argument");
+        ok(![0, 1].toRange().equals([0, 3].toRange()), "should return false for different ranges");
+        ok([0, undefined].toRange().equals([0, undefined].toRange()),
+            "should return true for matching open ranges");
+        ok([0, 1].toRange().equals([0, 1].toRange()),
+            "should return true for matching closed ranges");
+    });
 }());
