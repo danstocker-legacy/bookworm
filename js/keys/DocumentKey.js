@@ -44,7 +44,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
 
             /**
              * Tells whether the specified `DocumentKey` instance is equivalent to the current one.
-             * @param {bookworm.DocumentKey} documentKey
+             * @param {bookworm.DocumentKey} [documentKey]
              * @returns {boolean}
              */
             equals: function (documentKey) {

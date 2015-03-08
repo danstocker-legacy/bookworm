@@ -62,6 +62,7 @@
         ok('foo/bar/baz'.toFieldKey().equals('foo/bar/baz'.toFieldKey()), "should pass on identical content");
         ok(!'foo/bar/baz'.toFieldKey().equals('foo/baz/baz'.toFieldKey()), "should fail on different document IDs");
         ok(!'foo/bar/baz'.toFieldKey().equals('foo/bar/hello'.toFieldKey()), "should fail on different field name");
+        ok(!'foo/bar/baz'.toFieldKey().equals(undefined), "should fail on undefined argument");
     });
 
     test("Item key getter", function () {

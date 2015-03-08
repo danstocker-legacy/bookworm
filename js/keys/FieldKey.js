@@ -57,11 +57,12 @@ troop.postpone(bookworm, 'FieldKey', function () {
 
             /**
              * Tells whether current field key is equivalent to the specified one.
-             * @param {bookworm.FieldKey} fieldKey
+             * @param {bookworm.FieldKey} [fieldKey]
              * @returns {boolean}
              */
             equals: function (fieldKey) {
-                return this.documentKey.equals(fieldKey.documentKey) &&
+                return fieldKey &&
+                       this.documentKey.equals(fieldKey.documentKey) &&
                        this.fieldName === fieldKey.fieldName;
             },
 
