@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, evan, jorder, bookworm, app */
+/*global dessert, troop, sntls, evan, flock, jorder, bookworm, app */
 troop.postpone(bookworm, 'TableView', function () {
     "use strict";
 
@@ -21,6 +21,9 @@ troop.postpone(bookworm, 'TableView', function () {
      * @extends bookworm.OrderedCollectionField
      */
     bookworm.TableView = self
+        .setInstanceMapper(function (fieldKey) {
+            return fieldKey && fieldKey.toString();
+        })
         .addPrivateMethods(/** @lends bookworm.TableView# */{
             /**
              * @param {jorder.Table} table
@@ -53,6 +56,14 @@ troop.postpone(bookworm, 'TableView', function () {
                     // adding sorting index to source table
                     sourceTable.jorderTable.addIndex(sortingIndex);
                 }
+            },
+
+            /**
+             * Silently removes the field node.
+             * @private
+             */
+            _invalidateView: function () {
+                sntls.Tree.unsetKey.call(bookworm.entities, this.entityKey.getEntityPath());
             }
         })
         .addMethods(/** @lends bookworm.TableView# */{
@@ -88,9 +99,11 @@ troop.postpone(bookworm, 'TableView', function () {
             setTableKey: function (tableKey) {
                 dessert.isTableKey(tableKey, "Invalid table key");
 
-                this.tableKey = tableKey;
-
-                this._updateIndexOnTable();
+                if (!tableKey.equals(this.tableKey)) {
+                    this.tableKey = tableKey;
+                    this._updateIndexOnTable();
+                    this._invalidateView();
+                }
 
                 return this;
             },
@@ -101,7 +114,12 @@ troop.postpone(bookworm, 'TableView', function () {
              */
             setOffsetRange: function (offsetRange) {
                 dessert.isRange(offsetRange, "Invalid offset range");
-                this.offsetRange = offsetRange;
+
+                if (!offsetRange.equals(this.offsetRange)) {
+                    this.offsetRange = offsetRange;
+                    this._invalidateView();
+                }
+
                 return this;
             },
 
@@ -112,9 +130,11 @@ troop.postpone(bookworm, 'TableView', function () {
             setSortingIndex: function (sortingIndex) {
                 dessert.isIndex(sortingIndex, "Invalid end offset");
 
-                this.sortingIndex = sortingIndex;
-
-                this._updateIndexOnTable();
+                if (this.sortingIndex !== sortingIndex) {
+                    this.sortingIndex = sortingIndex;
+                    this._updateIndexOnTable();
+                    this._invalidateView();
+                }
 
                 return this;
             },
@@ -128,11 +148,6 @@ troop.postpone(bookworm, 'TableView', function () {
              * @returns {bookworm.TableView}
              */
             updateView: function () {
-                dessert.assert(
-                    this.tableKey &&
-                    this.sortingIndex,
-                    "Attempting to update an uninitialized TableView");
-
                 var tableKey = this.tableKey,
                     offsetRange = this.offsetRange,
                     sourceTable = tableKey.toTable(),
@@ -169,6 +184,21 @@ troop.postpone(bookworm, 'TableView', function () {
                 }
 
                 return this;
+            },
+
+            /**
+             * @ignore
+             * @param {flock.AccessEvent} event
+             */
+            onAccess: function (event) {
+                evan.eventPropertyStack.pushOriginalEvent(event);
+
+                if (this.tableKey && this.sortingIndex) {
+                    // table view is initialized
+                    this.updateView();
+                }
+
+                evan.eventPropertyStack.popOriginalEvent();
             }
         });
 });
@@ -181,3 +211,23 @@ troop.amendPostponed(bookworm, 'Field', function (ns, className, /**bookworm*/mo
             return fieldKey.getFieldType() === 'table-view';
         });
 }, bookworm);
+
+troop.amendPostponed(bookworm, 'entities', function () {
+    "use strict";
+
+    bookworm.entities
+        .subscribeTo(flock.AccessEvent.EVENT_CACHE_ACCESS, 'document'.toPath(), function (event) {
+            var originalPath = event.originalPath,
+                fieldKey = originalPath.clone().trimLeft().toEntityKey(),
+                field;
+
+            if (fieldKey.isA(bookworm.FieldKey)) {
+                // access attempt happened on field
+                field = fieldKey.toField();
+                if (field.isA(bookworm.TableView)) {
+                    // accessed field is a table view
+                    field.onAccess(event);
+                }
+            }
+        });
+});

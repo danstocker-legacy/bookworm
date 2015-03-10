@@ -6,10 +6,12 @@
     module("TableView", {
         setup: function () {
             bookworm.Table.clearInstanceRegistry();
+            bookworm.TableView.clearInstanceRegistry();
         },
 
         teardown: function () {
             bookworm.Table.clearInstanceRegistry();
+            bookworm.TableView.clearInstanceRegistry();
         }
     });
 
@@ -38,7 +40,7 @@
     });
 
     test("Table key setter", function () {
-        expect(3);
+        expect(5);
 
         var tableKey = 'moo'.toTableKey(),
             view = bookworm.TableView.create('foo/bar/baz'.toFieldKey());
@@ -46,14 +48,22 @@
         view.addMocks({
             _updateIndexOnTable: function () {
                 ok(true, "should update index in new table");
+            },
+            _invalidateView: function () {
+                ok(true, "should invalidate view");
             }
         });
 
         strictEqual(view.setTableKey(tableKey), view, "should be chainable");
         strictEqual(view.tableKey, tableKey, "should set tableKey property");
+
+        view.setTableKey('moo'.toTableKey());
+        ok(true, "should do nothing on setting the same table");
     });
 
     test("Offset range setter", function () {
+        expect(6);
+
         var view = bookworm.TableView.create('foo/bar/baz'.toFieldKey()),
             range = [5, 10].toRange();
 
@@ -65,12 +75,21 @@
             view.setOffsetRange('foo');
         }, "should raise exception on invalid argument");
 
+        view.addMocks({
+            _invalidateView: function () {
+                ok(true, "should invalidate view");
+            }
+        });
+
         strictEqual(view.setOffsetRange(range), view, "should be chainable");
         strictEqual(view.offsetRange, range, "should set offset range");
+
+        view.setOffsetRange([5, 10].toRange());
+        ok(true, "should do nothing on setting the same range");
     });
 
     test("Sorting index setter", function () {
-        expect(3);
+        expect(5);
 
         var sortingIndex = ['moo'].toIndex(),
             view = bookworm.TableView.create('foo/bar/baz'.toFieldKey());
@@ -78,13 +97,17 @@
         view.addMocks({
             _updateIndexOnTable: function () {
                 ok(true, "should update index in new table");
+            },
+            _invalidateView: function () {
+                ok(true, "should invalidate view");
             }
         });
 
         strictEqual(view.setSortingIndex(sortingIndex), view, "should be chainable");
         strictEqual(view.sortingIndex, sortingIndex, "should set tableKey property");
 
-        view.removeMocks();
+        view.setSortingIndex(sortingIndex);
+        ok(true, "should do nothing on setting the same sorting index (by reference)");
     });
 
     test("Updating invalid table view", function () {
@@ -145,5 +168,32 @@
 
         bookworm.Table.removeMocks();
         view.removeMocks();
+    });
+
+    test("Access handler", function () {
+        expect(1);
+
+        bookworm.FieldKey.addMocks({
+            getFieldType: function () {
+                return 'table-view';
+            }
+        });
+
+        var fieldKey = 'foo/bar/baz'.toFieldKey();
+
+        bookworm.TableView.addMocks({
+            updateView: function () {
+                equal(this.entityKey.toString(), 'foo/bar/baz', "should update table view");
+            }
+        });
+        
+        fieldKey.toField()
+            .setSortingIndex(['name'].toIndex())
+            .setTableKey('moo'.toTableKey())
+            .unsetKey()
+            .getNode();
+
+        bookworm.FieldKey.removeMocks();
+        bookworm.TableView.removeMocks();
     });
 }());
