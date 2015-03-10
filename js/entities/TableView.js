@@ -6,6 +6,13 @@ troop.postpone(bookworm, 'TableView', function () {
         self = base.extend();
 
     /**
+     * Creates a TableView instance.
+     * In most cases, all Field subclasses are instantiated via Field,
+     * having provided a suitable field type in bookworm.config.
+     * The following example will yield a TableView instance, as long as
+     * the fieldType attribute of the field 'baz' in documents 'foo', is 'table-view'.
+     * @example
+     * 'foo/bar/baz'.toField()
      * @name bookworm.TableView.create
      * @function
      * @param {bookworm.FieldKey} fieldKey
@@ -75,6 +82,7 @@ troop.postpone(bookworm, 'TableView', function () {
                 base.init.call(this, fieldKey);
 
                 /**
+                 * Identifies the view's source table.
                  * @type {bookworm.TableKey}
                  */
                 this.tableKey = undefined;
@@ -86,13 +94,15 @@ troop.postpone(bookworm, 'TableView', function () {
                 this.offsetRange = [0, 0].toRange();
 
                 /**
-                 * Name of fields to order by (in order of significance).
+                 * Jorder index to be used for sorting.
                  * @type {jorder.Index}
                  */
                 this.sortingIndex = undefined;
             },
 
             /**
+             * Sets the source table reference. May create / update indexes on the source table.
+             * Invalidates the view.
              * @param {bookworm.TableKey} tableKey
              * @returns {bookworm.TableView}
              */
@@ -109,6 +119,7 @@ troop.postpone(bookworm, 'TableView', function () {
             },
 
             /**
+             * Sets the range that the view displays. Invalidates the view.
              * @param {bookworm.Range} offsetRange
              * @returns {bookworm.TableView}
              */
@@ -124,6 +135,8 @@ troop.postpone(bookworm, 'TableView', function () {
             },
 
             /**
+             * Sets the sorting index. May create / update index(es) on the current source table.
+             * Invalidates the view.
              * @param {jorder.Index} sortingIndex
              * @returns {bookworm.TableView}
              */
