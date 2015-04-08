@@ -151,9 +151,10 @@ troop.postpone(bookworm, 'Table', function () {
                 var beforeNode = this.getSilentNode(),
                     entities = bookworm.entities,
                     entityPath = this.entityKey.getEntityPath(),
-                    jorderTable = this.jorderTable;
+                    jorderTable = this.jorderTable,
+                    entitiesEventSpace = entities.eventSpace;
 
-                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
+                entitiesEventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
                     .setBefore(beforeNode)
                     .setAfter(tableNode)
                     .triggerSync(entityPath);
@@ -164,7 +165,7 @@ troop.postpone(bookworm, 'Table', function () {
 
                 sntls.Tree.setNode.call(entities, entityPath, jorderTable.items);
 
-                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+                entitiesEventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
                     .setBefore(beforeNode)
                     .setAfter(tableNode)
                     .triggerSync(entityPath);
@@ -256,10 +257,10 @@ troop.postpone(bookworm, 'Table', function () {
                     rowSignature = this.uniqueIndex.rowSignature,
                     jorderTable = this.jorderTable,
                     tableNode = jorderTable.items,
-                    entities = bookworm.entities,
+                    entitiesEventSpace = bookworm.entities.eventSpace,
                     entityPath = this.entityKey.getEntityPath();
 
-                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
+                entitiesEventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
                     .setBefore(tableNode)
                     .setAfter(tableNode)
                     .triggerSync(entityPath);
@@ -272,7 +273,7 @@ troop.postpone(bookworm, 'Table', function () {
                         jorderTable.setItem(row.entityKey.getRowId(), rowNode);
                     });
 
-                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+                entitiesEventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
                     .setBefore(tableNode)
                     .setAfter(tableNode)
                     .triggerSync(entityPath);

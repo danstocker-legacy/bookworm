@@ -217,7 +217,7 @@
             }
         });
 
-        bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+        bookworm.entities.eventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
             .setBefore('hello/world')
             .setAfter('hi/all')
             .triggerSync('foo/bar/baz'.toFieldKey().getEntityPath());
@@ -250,7 +250,7 @@
             }
         });
 
-        bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+        bookworm.entities.eventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
             .setBefore('hello/world')
             .setAfter('hi/all')
             .triggerSync('foo/bar/baz/0'.toItemKey().getEntityPath());
@@ -271,7 +271,7 @@
             }
         });
 
-        bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+        bookworm.entities.eventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
             .setAfter('hello/world')
             .triggerSync('foo/bar/baz/hello%2Fworld'.toItemKey().getEntityPath());
 
@@ -290,7 +290,7 @@
             }
         });
 
-        bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+        bookworm.entities.eventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
             .setBefore('hello/world')
             .triggerSync('foo/bar/baz/hello%2Fworld'.toItemKey().getEntityPath());
 

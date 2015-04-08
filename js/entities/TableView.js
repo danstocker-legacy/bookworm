@@ -204,14 +204,14 @@ troop.postpone(bookworm, 'TableView', function () {
              * @param {flock.AccessEvent} event
              */
             onAccess: function (event) {
-                evan.eventPropertyStack.pushOriginalEvent(event);
+                var link = evan.pushOriginalEvent(event);
 
                 if (this.tableKey && this.sortingIndex) {
                     // table view is initialized
                     this.updateView();
                 }
 
-                evan.eventPropertyStack.popOriginalEvent();
+                link.unLink();
             }
         });
 });

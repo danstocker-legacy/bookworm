@@ -96,15 +96,15 @@
             }
         });
 
-        bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+        bookworm.entities.eventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
             .setBefore({})
             .triggerSync('hello/world'.toDocumentKey().getEntityPath());
 
-        bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+        bookworm.entities.eventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
             .setAfter({})
             .triggerSync('foo/bar'.toDocumentKey().getEntityPath());
 
-        bookworm.entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+        bookworm.entities.eventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
             .setBefore({})
             .triggerSync('foo/bar/baz'.toFieldKey().getEntityPath());
 

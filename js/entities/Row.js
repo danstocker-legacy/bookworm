@@ -54,16 +54,16 @@ troop.postpone(bookworm, 'Row', function () {
             setNode: function (rowNode) {
                 var beforeNode = this.getSilentNode(),
                     entityPath = this.entityKey.getEntityPath(),
-                    entities = bookworm.entities;
+                    entitiesEventSpace = bookworm.entities.eventSpace;
 
-                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
+                entitiesEventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
                     .setBefore(beforeNode)
                     .setAfter(rowNode)
                     .triggerSync(entityPath);
 
                 this.jorderTable.setItem(this.entityKey.getRowId(), rowNode);
 
-                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+                entitiesEventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
                     .setBefore(beforeNode)
                     .setAfter(rowNode)
                     .triggerSync(entityPath);
@@ -77,16 +77,16 @@ troop.postpone(bookworm, 'Row', function () {
              */
             unsetKey: function () {
                 var beforeNode = this.getSilentNode(),
-                    entities = bookworm.entities,
+                    entitiesEventSpace = bookworm.entities.eventSpace,
                     entityPath = this.entityKey.getEntityPath();
 
-                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
+                entitiesEventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_BEFORE_CHANGE)
                     .setBefore(beforeNode)
                     .triggerSync(entityPath);
 
                 this.jorderTable.deleteItem(this.entityKey.getRowId());
 
-                entities.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
+                entitiesEventSpace.spawnEvent(flock.ChangeEvent.EVENT_CACHE_CHANGE)
                     .setBefore(beforeNode)
                     .triggerSync(entityPath);
 
