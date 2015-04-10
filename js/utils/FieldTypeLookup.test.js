@@ -14,7 +14,9 @@
     });
 
     test("Instantiation", function () {
-        expect(4);
+        expect(3);
+
+        var storedPaths = [];
 
         bookworm.FieldTypeLookup.addMocks({
             _queryFieldTypes: function () {
@@ -26,16 +28,21 @@
         });
 
         bookworm.index.addMocks({
-            setNode: function (indexPath, value) {
-                equal(value, true, "should store true in index as leaf node");
-                equal(indexPath.toString(), 'field>by-field-type>reference>fieldType>user>name',
-                    "should add correct path to index");
+            setNode: function (indexPath) {
+                storedPaths.push(indexPath.toString());
+                return this;
             }
         });
 
         var lookup = bookworm.FieldTypeLookup.create();
 
         bookworm.index.removeMocks();
+
+        deepEqual(storedPaths, [
+            'field>by-attribute>reference>fieldType>user>name',
+            'attribute>by-field>reference>user>name>fieldType'
+        ],
+            "should add correct paths to index");
 
         bookworm.FieldTypeLookup
             .removeMocks()
@@ -50,6 +57,28 @@
         bookworm.FieldTypeLookup.removeMocks();
     });
 
+    test("Attributes getter", function () {
+        expect(2);
+
+        var lookup = bookworm.FieldTypeLookup.create();
+
+        bookworm.index.addMocks({
+            getNode: function (indexPath) {
+                equal(indexPath.toString(), 'attribute>by-field>reference>user>name',
+                    "should get correct node from index");
+                return {
+                    fieldType: true
+                };
+            }
+        });
+
+        deepEqual(lookup.getAttributesForFieldType('reference', 'user', 'name'), {
+            fieldType: true
+        }, "should return correct attributes as object keys");
+
+        bookworm.index.removeMocks();
+    });
+
     test("Querying fields matching field type", function () {
         expect(2);
 
@@ -57,7 +86,7 @@
 
         bookworm.index.addMocks({
             getNodeAsHash: function (indexPath) {
-                equal(indexPath.toString(), 'field>by-field-type>reference>fieldType>user',
+                equal(indexPath.toString(), 'field>by-attribute>reference>fieldType>user',
                     "should get correct node from index");
                 return sntls.Hash.create({
                     mother: true,
@@ -79,7 +108,7 @@
 
         bookworm.index.addMocks({
             getNodeAsHash: function (indexPath) {
-                equal(indexPath.toString(), 'field>by-field-type>reference>itemType>user',
+                equal(indexPath.toString(), 'field>by-attribute>reference>itemType>user',
                     "should get correct node from index");
                 return sntls.Hash.create({
                     siblings: true
@@ -100,7 +129,7 @@
 
         bookworm.index.addMocks({
             getNodeAsHash: function (indexPath) {
-                equal(indexPath.toString(), 'field>by-field-type>reference>itemIdType>user',
+                equal(indexPath.toString(), 'field>by-attribute>reference>itemIdType>user',
                     "should get correct node from index");
                 return sntls.Hash.create({
                     children: true

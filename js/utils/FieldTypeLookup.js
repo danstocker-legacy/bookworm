@@ -24,7 +24,13 @@ troop.postpone(bookworm, 'FieldTypeLookup', function () {
              * @type {sntls.Path}
              * @constant
              */
-            BY_FIELD_TYPE_ROOT: ['field', 'by-field-type'].toPath()
+            BY_ATTRIBUTE_ROOT: ['field', 'by-attribute'].toPath(),
+
+            /**
+             * @type {sntls.Path}
+             * @constant
+             */
+            BY_FIELD_ROOT: ['attribute', 'by-field'].toPath()
         })
         .addPrivateMethods(/** @lends bookworm.FieldTypeLookup# */{
             /**
@@ -48,11 +54,27 @@ troop.postpone(bookworm, 'FieldTypeLookup', function () {
                             documentType = asArray[2],
                             fieldName = asArray[3],
                             attribute = asArray[4],
-                            indexPath = [fieldType, attribute, documentType, fieldName].toPath()
-                                .prepend(that.BY_FIELD_TYPE_ROOT);
+                            byAttributePath = [fieldType, attribute, documentType, fieldName].toPath()
+                                .prepend(that.BY_ATTRIBUTE_ROOT),
+                            byFieldPath = [fieldType, documentType, fieldName, attribute].toPath()
+                                .prepend(that.BY_FIELD_ROOT);
 
-                        bookworm.index.setNode(indexPath, true);
+                        bookworm.index
+                            .setNode(byAttributePath, true)
+                            .setNode(byFieldPath, true);
                     });
+            },
+
+            /**
+             * Retrieves an array of field names for the specified document type matching the specified field type.
+             * @param {string} fieldType
+             * @param {string} documentType
+             * @param {string} fieldName
+             * @returns {string[]}
+             */
+            getAttributesForFieldType: function (fieldType, documentType, fieldName) {
+                var indexPath = [fieldType, documentType, fieldName].toPath().prepend(this.BY_FIELD_ROOT);
+                return bookworm.index.getNode(indexPath);
             },
 
             /**
@@ -62,7 +84,7 @@ troop.postpone(bookworm, 'FieldTypeLookup', function () {
              * @returns {string[]}
              */
             getFieldNamesForFieldType: function (fieldType, documentType) {
-                var indexPath = [fieldType, 'fieldType', documentType].toPath().prepend(this.BY_FIELD_TYPE_ROOT);
+                var indexPath = [fieldType, 'fieldType', documentType].toPath().prepend(this.BY_ATTRIBUTE_ROOT);
                 return bookworm.index.getNodeAsHash(indexPath)
                     .getKeys();
             },
@@ -74,7 +96,7 @@ troop.postpone(bookworm, 'FieldTypeLookup', function () {
              * @returns {string[]}
              */
             getFieldNamesForItemType: function (itemType, documentType) {
-                var indexPath = [itemType, 'itemType', documentType].toPath().prepend(this.BY_FIELD_TYPE_ROOT);
+                var indexPath = [itemType, 'itemType', documentType].toPath().prepend(this.BY_ATTRIBUTE_ROOT);
                 return bookworm.index.getNodeAsHash(indexPath)
                     .getKeys();
             },
@@ -86,7 +108,7 @@ troop.postpone(bookworm, 'FieldTypeLookup', function () {
              * @returns {string[]}
              */
             getFieldNamesForItemIdType: function (itemIdType, documentType) {
-                var indexPath = [itemIdType, 'itemIdType', documentType].toPath().prepend(this.BY_FIELD_TYPE_ROOT);
+                var indexPath = [itemIdType, 'itemIdType', documentType].toPath().prepend(this.BY_ATTRIBUTE_ROOT);
                 return bookworm.index.getNodeAsHash(indexPath)
                     .getKeys();
             }
