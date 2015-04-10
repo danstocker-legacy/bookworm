@@ -79,6 +79,29 @@
         bookworm.index.removeMocks();
     });
 
+    test("Querying fields matching any type", function () {
+        expect(2);
+
+        var lookup = bookworm.FieldTypeLookup.create();
+
+        bookworm.index.addMocks({
+            getNodeAsHash: function (indexPath) {
+                equal(indexPath.toString(), 'attribute>by-field>reference>user',
+                    "should get correct node from index");
+                return sntls.Hash.create({
+                    name  : true,
+                    mother: true,
+                    father: true
+                });
+            }
+        });
+
+        deepEqual(lookup.getFieldNamesForType('reference', 'user'), ['name', 'mother', 'father'],
+            "should return correct field names in an array");
+
+        bookworm.index.removeMocks();
+    });
+
     test("Querying fields matching field type", function () {
         expect(2);
 

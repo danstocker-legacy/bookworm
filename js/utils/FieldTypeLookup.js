@@ -78,6 +78,18 @@ troop.postpone(bookworm, 'FieldTypeLookup', function () {
             },
 
             /**
+             * Retrieves an array of field names for the specified document type matching the specified field, item, or item ID type.
+             * @param {string} type
+             * @param {string} documentType
+             * @returns {string[]}
+             */
+            getFieldNamesForType: function (type, documentType) {
+                var indexPath = [type, documentType].toPath().prepend(this.BY_FIELD_ROOT);
+                return bookworm.index.getNodeAsHash(indexPath)
+                    .getKeys();
+            },
+
+            /**
              * Retrieves an array of field names for the specified document type matching the specified field type.
              * @param {string} fieldType
              * @param {string} documentType
