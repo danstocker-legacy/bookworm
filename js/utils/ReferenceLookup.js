@@ -162,6 +162,46 @@ troop.postpone(bookworm, 'ReferenceLookup', function () {
             },
 
             /**
+             * Fetches all references from a field.
+             * @param {bookworm.FieldKey} fieldKey
+             * @returns {string[]}
+             */
+            getReferencesFromField: function (fieldKey) {
+                var attributes = bookworm.FieldTypeLookup.create()
+                        .getAttributesForFieldType('reference', fieldKey.documentKey.documentType, fieldKey.fieldName),
+                    field = fieldKey.toField();
+
+                if (attributes.fieldType) {
+                    return [field.getValue()];
+                } else if (attributes.itemType) {
+                    return field.getItemsAsCollection()
+                        .getValues();
+                } else if (attributes.itemIdType) {
+                    return field.getItemsAsCollection()
+                        .getKeys();
+                } else {
+                    return undefined;
+                }
+            },
+
+            /**
+             * Fetches all references from a document.
+             * @param {bookworm.DocumentKey} documentKey
+             * @returns {string[]}
+             */
+            getReferencesFromDocument: function (documentKey) {
+                return bookworm.FieldTypeLookup.create()
+                    .getFieldNamesForType('reference', documentKey.documentType)
+                    .toCollection()
+                    .mapValues(function (fieldName) {
+                        return documentKey.getFieldKey(fieldName);
+                    })
+                    .passEachItemTo(this.getReferencesFromField.bind(this))
+                    .toTree()
+                    .queryValues('|>|'.toQuery());
+            },
+
+            /**
              * @param {bookworm.DocumentKey} documentKey
              * @returns {sntls.Collection}
              */

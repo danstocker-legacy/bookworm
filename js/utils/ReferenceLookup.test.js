@@ -154,7 +154,7 @@
         strictEqual(bookworm.ReferenceLookup.create(), lookup, "should be singleton");
     });
 
-    test("Back reference addition", function () {
+    test("Reference addition", function () {
         expect(3);
 
         var lookup = bookworm.ReferenceLookup.create();
@@ -174,7 +174,7 @@
         lookup.removeMocks();
     });
 
-    test("Back reference removal", function () {
+    test("Reference removal", function () {
         expect(2);
 
         var lookup = bookworm.ReferenceLookup.create();
@@ -191,6 +191,90 @@
             "should be chainable");
 
         lookup.removeMocks();
+    });
+
+    // TODO: Add tests for item values & item keys version.
+    test("Querying references on single field", function () {
+        expect(3);
+
+        'foo/bar/baz'.toField()
+            .setNode('hello/world');
+
+        var lookup = bookworm.ReferenceLookup.create();
+
+        bookworm.FieldTypeLookup.addMocks({
+            getAttributesForFieldType: function (fieldType, documentType, fieldName) {
+                equal(documentType, 'foo', "should pass document type to FieldTypeLookup");
+                equal(fieldName, 'baz', "should pass field name to FieldTypeLookup");
+                return {
+                    fieldType: true
+                };
+            }
+        });
+
+        deepEqual(
+            lookup.getReferencesFromField('foo/bar/baz'.toFieldKey()),
+            ['hello/world'],
+            "should return array with references");
+
+        bookworm.FieldTypeLookup.removeMocks();
+    });
+
+    test("Querying references on document", function () {
+        expect(3);
+
+        'foo/bar'.toDocument()
+            .setNode({
+                baz   : 'hello/world',
+                name  : 'anon',
+                valueC: ['foo/1', 'foo/2'],
+                keyC  : {
+                    'foo/3': true,
+                    'foo/4': true
+                },
+                otherC: [1, 2, 3, 4]
+            });
+
+        var lookup = bookworm.ReferenceLookup.create();
+
+        bookworm.FieldKey.addMocks({
+            getFieldType: function () {
+                if (this.fieldName === 'valueC' || this.fieldName === 'keyC') {
+                    return 'collection';
+                } else {
+                    return 'string';
+                }
+            }
+        });
+
+        bookworm.FieldTypeLookup.addMocks({
+            getFieldNamesForType     : function (fieldType, documentType) {
+                equal(fieldType, 'reference', "should get reference field list for document type");
+                equal(documentType, 'foo', "should pass correct document type to FieldTypeLookup");
+                return ['baz', 'valueC', 'keyC'];
+            },
+            getAttributesForFieldType: function (fieldType, documentType, fieldName) {
+                return {
+                    baz   : {
+                        fieldType: true
+                    },
+                    valueC: {
+                        itemType: true
+                    },
+                    keyC  : {
+                        itemIdType: true
+                    }
+                }[fieldName];
+            }
+        });
+
+        deepEqual(
+            lookup.getReferencesFromDocument('foo/bar'.toDocumentKey()).sort(),
+            ['hello/world', 'foo/1', 'foo/2', 'foo/3', 'foo/4'].sort(),
+            "should return array with references");
+
+        bookworm.FieldKey.removeMocks();
+        bookworm.FieldTypeLookup.removeMocks();
     });
 
     test("Reference field change handler", function () {
