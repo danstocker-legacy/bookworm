@@ -5,6 +5,7 @@ module.exports = function (grunt) {
     var params = {
         files: [
             'js/namespace.js',
+            'js/globals/entityEventSpace.js',
             'js/cache/config.js',
             'js/cache/entities.js',
             'js/cache/index.js',
