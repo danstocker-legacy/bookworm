@@ -3,7 +3,7 @@ troop.postpone(bookworm, 'index', function () {
     "use strict";
 
     /**
-     * Non-evented cache for application-domain indexes.
+     * Contains indexes and lookups.
      * @type {sntls.Tree}
      */
     bookworm.index = sntls.Tree.create();

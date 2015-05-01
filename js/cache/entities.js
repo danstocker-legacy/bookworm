@@ -3,8 +3,8 @@ troop.postpone(bookworm, 'entities', function () {
     "use strict";
 
     /**
-     * Evented cache for application-domain entities.
-     * @type {flock.EventedTree}
+     * Contains entities.
+     * @type {sntls.Tree}
      */
-    bookworm.entities = flock.EventedTree.create();
+    bookworm.entities = sntls.Tree.create();
 });

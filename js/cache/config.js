@@ -3,7 +3,7 @@ troop.postpone(bookworm, 'config', function () {
     "use strict";
 
     /**
-     * Non-evented cache for entities describing document types and their fields.
+     * Contains meta-entities describing document types and their fields.
      * @type {sntls.Tree}
      */
     bookworm.config = sntls.Tree.create({
