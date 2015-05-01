@@ -1,6 +1,6 @@
 {
     "name"           : "bookworm",
-    "version"        : "0.2.7",
+    "version"        : "0.3.0",
     "description"    : "Document entity framework",
     "keywords"       : [
         "document",
@@ -14,11 +14,11 @@
     "copyright"      : "Copyright (c) 2014-2015 Dan Stocker",
     "license"        : "MIT",
     "dependencies"   : {
-        "dessert": "~0.3.2",
-        "troop"  : "~0.8.0",
-        "sntls"  : "~0.18.0 || ~0.19.0",
-        "evan"   : "~0.5.0 || ~0.6.0 || ~0.7.0",
-        "flock"  : "~0.3.9"
+        "dessert"   : "~0.3.2",
+        "troop"     : "~0.8.0",
+        "sntls"     : "~0.19.0",
+        "evan"      : "~0.7.2",
+        "rubberband": "~0.1.2"
     },
     "repository"     : {
         "type": "git",

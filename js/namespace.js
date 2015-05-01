@@ -26,9 +26,9 @@ var sntls = sntls || require('sntls');
 
 /**
  * @namespace
- * @see https://github.com/danstocker/flock
+ * @see https://github.com/danstocker/rubberband
  */
-var flock = flock || require('flock');
+var rubberband = rubberband || require('rubberband');
 
 /**
  * Native string class.
