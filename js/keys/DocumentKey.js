@@ -21,7 +21,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
      * @extends bookworm.EntityKey
      */
     bookworm.DocumentKey = self
-        .setEventPath('entity>document'.toPath())
+        .setEventPath(['document'].toPath().prepend(base.eventPath))
         .addMethods(/** @lends bookworm.DocumentKey# */{
             /**
              * @param {string} documentType
@@ -41,7 +41,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
                  */
                 this.documentId = documentId;
 
-                base.init.call(this);
+                this.setEventPath([documentType, documentId].toPath().prepend(this.eventPath));
             },
 
             /**

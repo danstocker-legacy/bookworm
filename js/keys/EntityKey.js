@@ -24,13 +24,7 @@ troop.postpone(bookworm, 'EntityKey', function () {
      */
     bookworm.EntityKey = self
         .setEventSpace(bookworm.entityEventSpace)
-        .setEventPath('entity'.toPath())
-        .addMethods(/** @lends bookworm.EntityKey# */{
-            /** @ignore */
-            init: function () {
-                this.setEventPath('entity'.toPath().append(this.getEntityPath()));
-            }
-        });
+        .setEventPath('entity'.toPath());
 
     /**
      * Tells whether specified entity key is identical to the current one.

@@ -5,23 +5,6 @@
 
     module("Entity Key");
 
-    test("Instantiation", function () {
-        var entityPath = 'foo>bar'.toPath();
-
-        bookworm.EntityKey.addMocks({
-            getEntityPath: function () {
-                return entityPath;
-            }
-        });
-
-        var entityKey = bookworm.EntityKey.create();
-
-        bookworm.EntityKey.removeMocks();
-
-        equal(entityKey.eventPath.toString(), 'entity>foo>bar',
-            "should set event path");
-    });
-
     test("String conversion", function () {
         expect(1);
 
