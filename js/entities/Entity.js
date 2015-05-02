@@ -14,7 +14,6 @@ troop.postpone(bookworm, 'Entity', function () {
     /**
      * The Entity class serves as the base class for all entities. It provides an API to access and modify the cache
      * node represented by the entity.
-     * TODO: Add .appendNode()
      * @class
      * @extends troop.Base
      */
@@ -160,4 +159,12 @@ troop.postpone(bookworm, 'Entity', function () {
                 return this;
             }
         });
+
+    /**
+     * Appends the specified node to the entity's current node's contents.
+     * @name bookworm.Entity#appendNode
+     * @function
+     * @param {*} node
+     * @returns {bookworm.Entity}
+     */
 });
