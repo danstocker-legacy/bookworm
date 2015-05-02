@@ -7,8 +7,8 @@ troop.postpone(bookworm, 'ReferenceItemKey', function () {
 
     /**
      * Creates ReferenceItemKey instance.
-     * ReferenceItemKey instances may also be created via conversion from string, array,
-     * as well as instantiating `ItemKey` or `EntityKey` with suitable arguments.
+     * ReferenceItemKey instances may also be created via conversion from string or array,
+     * as well as instantiating `ItemKey` with suitable arguments.
      * @name bookworm.ReferenceItemKey.create
      * @function
      * @param {string} documentType Identifies type of document the current item belongs to.
@@ -51,16 +51,6 @@ troop.amendPostponed(bookworm, 'ItemKey', function () {
     bookworm.ItemKey
         .addSurrogate(bookworm, 'ReferenceItemKey', function (documentType, documentId, fieldName, itemId) {
             return itemId.toDocumentKey().documentId;
-        });
-});
-
-troop.amendPostponed(bookworm, 'EntityKey', function () {
-    "use strict";
-
-    bookworm.EntityKey
-        .addSurrogate(bookworm, 'ReferenceItemKey', function () {
-            return arguments.length === 4 &&
-                   arguments[3].toDocumentKey().documentId;
         });
 });
 
