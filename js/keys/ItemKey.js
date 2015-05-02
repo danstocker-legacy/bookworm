@@ -131,10 +131,10 @@ troop.postpone(bookworm, 'ItemKey', function () {
                 var parts = this.split('/');
 
                 return bookworm.ItemKey.create(
-                    decodeURIComponent(parts[0]),
-                    decodeURIComponent(parts[1]),
-                    decodeURIComponent(parts[2]),
-                    decodeURIComponent(parts[3])
+                    parts[0] && decodeURIComponent(parts[0]),
+                    parts[1] && decodeURIComponent(parts[1]),
+                    parts[2] && decodeURIComponent(parts[2]),
+                    parts[3] && decodeURIComponent(parts[3])
                 );
             }
         },

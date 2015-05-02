@@ -27,6 +27,9 @@
 
         fieldKey = 'foo/bar/b%2Faz'.toFieldKey();
         equal(fieldKey.fieldName, 'b/az', "should URI decode field name");
+
+        fieldKey = 'foo/bar'.toFieldKey();
+        equal(typeof fieldKey.fieldName, 'undefined', "should set undefined field name for invalid key string");
     });
 
     test("Conversion from Array", function () {

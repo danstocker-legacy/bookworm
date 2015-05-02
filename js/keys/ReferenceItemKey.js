@@ -50,7 +50,7 @@ troop.amendPostponed(bookworm, 'ItemKey', function () {
 
     bookworm.ItemKey
         .addSurrogate(bookworm, 'ReferenceItemKey', function (documentType, documentId, fieldName, itemId) {
-            return itemId.toDocumentKey().documentId;
+            return itemId && itemId.toDocumentKey().documentId;
         });
 });
 
@@ -80,10 +80,10 @@ troop.amendPostponed(bookworm, 'ItemKey', function () {
             toReferenceItemKey: function () {
                 var parts = this.split('/');
                 return bookworm.ReferenceItemKey.create(
-                    decodeURIComponent(parts[0]),
-                    decodeURIComponent(parts[1]),
-                    decodeURIComponent(parts[2]),
-                    decodeURIComponent(parts[3])
+                    parts[0] && decodeURIComponent(parts[0]),
+                    parts[1] && decodeURIComponent(parts[1]),
+                    parts[2] && decodeURIComponent(parts[2]),
+                    parts[3] && decodeURIComponent(parts[3])
                 );
 
             }

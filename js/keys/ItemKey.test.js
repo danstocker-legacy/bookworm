@@ -27,6 +27,9 @@
 
         itemKey = 'hello/world/foo/b%2Far'.toItemKey();
         equal(itemKey.itemId, 'b/ar', "should URI decode item ID");
+
+        itemKey = 'hello/world/foo'.toItemKey();
+        equal(typeof itemKey.itemId, 'undefined', "should set undefined item ID for invalid key string");
     });
 
     test("Conversion from Array", function () {

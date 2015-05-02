@@ -188,9 +188,9 @@ troop.postpone(bookworm, 'FieldKey', function () {
                 var parts = this.split('/');
 
                 return bookworm.FieldKey.create(
-                    decodeURIComponent(parts[0]),
-                    decodeURIComponent(parts[1]),
-                    decodeURIComponent(parts[2])
+                    parts[0] && decodeURIComponent(parts[0]),
+                    parts[1] && decodeURIComponent(parts[1]),
+                    parts[2] && decodeURIComponent(parts[2])
                 );
             }
         },
