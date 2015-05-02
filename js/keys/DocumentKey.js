@@ -7,8 +7,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
 
     /**
      * Creates a DocumentKey instance.
-     * DocumentKey instances may also be created via conversion from string, array, and `sntls.Path`,
-     * as well as instantiating `EntityKey` with suitable arguments.
+     * DocumentKey instances may also be created via conversion from string or array.
      * @name bookworm.DocumentKey.create
      * @function
      * @param {string} documentType Identifies document type.
@@ -22,6 +21,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
      * @extends bookworm.EntityKey
      */
     bookworm.DocumentKey = self
+        .setEventPath('entity>document'.toPath())
         .addMethods(/** @lends bookworm.DocumentKey# */{
             /**
              * @param {string} documentType
@@ -40,6 +40,8 @@ troop.postpone(bookworm, 'DocumentKey', function () {
                  * @type {string}
                  */
                 this.documentId = documentId;
+
+                base.init.call(this);
             },
 
             /**
@@ -108,68 +110,6 @@ troop.postpone(bookworm, 'DocumentKey', function () {
         });
 });
 
-troop.amendPostponed(bookworm, 'EntityKey', function () {
-    "use strict";
-
-    bookworm.EntityKey
-        .addSurrogate(bookworm, 'DocumentKey', function () {
-            return arguments.length === 2;
-        });
-});
-
-troop.amendPostponed(sntls, 'Path', function () {
-    "use strict";
-
-    sntls.Path
-        .addMethods(/** @lends sntls.Path */{
-            /**
-             * Converts `Path` to `DocumentKey` instance. Here the path is not a cache path.
-             * @returns {bookworm.DocumentKey}
-             */
-            toDocumentKey: function () {
-                return this.asArray.toDocumentKey();
-            }
-        });
-});
-
-troop.postpone(bookworm, 'DocumentKeyCollection', function () {
-    "use strict";
-
-    /**
-     * Creates a DocumentKeyCollection instance.
-     * @name bookworm.DocumentKeyCollection.create
-     * @function
-     * @param {object} [items]
-     * @returns {bookworm.DocumentKeyCollection}
-     */
-
-    /**
-     * The DocumentKeyCollection offers a simplified way of dealing with multiple document keys.
-     * @example
-     * // retrieves a collection of `Document` instances based on the specified document keys
-     * ['user/1234', 'user/4321'].toDocumentKeyCollection().toDocument();
-     * @class
-     * @extends {sntls.Collection}
-     * @extends {bookworm.DocumentKey}
-     */
-    bookworm.DocumentKeyCollection = sntls.Collection.of(bookworm.DocumentKey);
-});
-
-troop.amendPostponed(sntls, 'Hash', function () {
-    "use strict";
-
-    sntls.Hash
-        .addMethods(/** @lends sntls.Hash */{
-            /**
-             * Converts `Hash` instance to `DocumentKeyCollection` instance.
-             * @returns {bookworm.DocumentKeyCollection}
-             */
-            toDocumentKeyCollection: function () {
-                return bookworm.DocumentKeyCollection.create(this.items);
-            }
-        });
-});
-
 (function () {
     "use strict";
 
@@ -201,8 +141,7 @@ troop.amendPostponed(sntls, 'Hash', function () {
                 );
             }
         },
-        false, false, false
-    );
+        false, false, false);
 
     troop.Properties.addProperties.call(
         Array.prototype,
@@ -216,21 +155,7 @@ troop.amendPostponed(sntls, 'Hash', function () {
              */
             toDocumentKey: function () {
                 return bookworm.DocumentKey.create(this[0], this[1]);
-            },
-
-            /**
-             * Converts `Array` (of `DocumentKey` instances) to a `DocumentKeyCollection` instance.
-             * @returns {bookworm.DocumentKeyCollection}
-             * @example
-             * ['foo/bar', 'foo/baz'].toDocumentKeyCollection() // collection of document keys
-             */
-            toDocumentKeyCollection: function () {
-                return this
-                    .toCollection()
-                    .callOnEachItem('toDocumentKey')
-                    .toDocumentKeyCollection();
             }
         },
-        false, false, false
-    );
+        false, false, false);
 }());

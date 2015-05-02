@@ -6,48 +6,33 @@
     module("Document Key");
 
     test("Instantiation", function () {
-        var key = bookworm.DocumentKey.create('hello', 'world');
+        var documentKey = bookworm.DocumentKey.create('hello', 'world');
 
-        equal(key.documentType, 'hello', "should set document type");
-        equal(key.documentId, 'world', "should set document ID");
+        equal(documentKey.documentType, 'hello', "should set document type");
+        equal(documentKey.documentId, 'world', "should set document ID");
+        equal(documentKey.eventPath.toString(), 'entity>document>hello>world',
+            "should set event path");
     });
 
     test("Conversion from String", function () {
-        var key;
+        var documentKey;
 
-        key = 'foo/bar'.toDocumentKey();
-        ok(key.isA(bookworm.DocumentKey), "should return DocumentKey instance");
-        equal(key.documentType, 'foo', "should set document type");
-        equal(key.documentId, 'bar', "should set document ID");
+        documentKey = 'foo/bar'.toDocumentKey();
+        ok(documentKey.isA(bookworm.DocumentKey), "should return DocumentKey instance");
+        equal(documentKey.documentType, 'foo', "should set document type");
+        equal(documentKey.documentId, 'bar', "should set document ID");
 
-        key = 'foo/b%2Far'.toDocumentKey();
-        equal(key.documentId, 'b/ar', "should decode encoded chars in document ID");
+        documentKey = 'foo/b%2Far'.toDocumentKey();
+        equal(documentKey.documentId, 'b/ar', "should decode encoded chars in document ID");
     });
 
     test("Conversion from Array", function () {
-        var key;
+        var documentKey;
 
-        key = ['foo', 'bar'].toDocumentKey();
-        ok(key.isA(bookworm.DocumentKey), "should return DocumentKey instance");
-        equal(key.documentType, 'foo', "should set document type");
-        equal(key.documentId, 'bar', "should set document ID");
-    });
-
-    test("Conversion from cache Path", function () {
-        var path = ['foo', 'bar', 'baz'].toPath(),
-            key = path.toDocumentKey();
-
-        ok(key.isA(bookworm.DocumentKey), "should return DocumentKey instance");
-        equal(key.documentType, 'foo', "should set document type");
-        equal(key.documentId, 'bar', "should set document ID");
-    });
-
-    test("Conversion from EntityKey", function () {
-        var key = bookworm.EntityKey.create('foo', 'bar');
-
-        ok(key.isA(bookworm.DocumentKey), "should return DocumentKey instance");
-        equal(key.documentType, 'foo', "should set document type");
-        equal(key.documentId, 'bar', "should set document ID");
+        documentKey = ['foo', 'bar'].toDocumentKey();
+        ok(documentKey.isA(bookworm.DocumentKey), "should return DocumentKey instance");
+        equal(documentKey.documentType, 'foo', "should set document type");
+        equal(documentKey.documentId, 'bar', "should set document ID");
     });
 
     test("Equivalence tester", function () {
@@ -69,11 +54,11 @@
     });
 
     test("Entity path getter", function () {
-        var key = 'foo/bar'.toDocumentKey(),
-            path = key.getEntityPath();
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            documentEntityPath = documentKey.getEntityPath();
 
-        ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['document', 'foo', 'bar'], "should set path contents correctly");
+        ok(documentEntityPath.isA(sntls.Path), "should return Path instance");
+        deepEqual(documentEntityPath.asArray, ['document', 'foo', 'bar'], "should set path contents correctly");
     });
 
     test("Attribute path getter", function () {
@@ -81,8 +66,7 @@
 
         var documentKey = 'foo/bar'.toFieldKey(),
             entityPath = 'entity>path'.toPath(),
-            attributePath = {},
-            path;
+            attributePath = {};
 
         documentKey.addMocks({
             getEntityPath: function () {
@@ -98,17 +82,16 @@
             }
         });
 
-        path = documentKey.getAttributePath('hello');
 
-        strictEqual(path, attributePath, "should return attribute path");
+        strictEqual(documentKey.getAttributePath('hello'), attributePath, "should return attribute path");
     });
 
     test("Config path getter", function () {
-        var key = 'foo/bar'.toDocumentKey(),
-            path = key.getConfigPath();
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entityPath = documentKey.getConfigPath();
 
-        ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['document', 'document', 'foo'], "should set path contents correctly");
+        ok(entityPath.isA(sntls.Path), "should return Path instance");
+        deepEqual(entityPath.asArray, ['document', 'document', 'foo'], "should set path contents correctly");
     });
 
     test("Conversion to String", function () {

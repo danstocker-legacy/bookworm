@@ -24,6 +24,7 @@ troop.postpone(bookworm, 'EntityKey', function () {
      */
     bookworm.EntityKey = self
         .setEventSpace(bookworm.entityEventSpace)
+        .setEventPath('entity'.toPath())
         .addMethods(/** @lends bookworm.EntityKey# */{
             /** @ignore */
             init: function () {
