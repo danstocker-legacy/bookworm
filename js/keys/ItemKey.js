@@ -7,8 +7,7 @@ troop.postpone(bookworm, 'ItemKey', function () {
 
     /**
      * Creates an ItemKey instance.
-     * ItemKey instances may also be created via conversion from string, array, and `sntls.Path`,
-     * as well as instantiating `EntityKey` with suitable arguments.
+     * ItemKey instances may also be created via conversion from string or array.
      * @name bookworm.ItemKey.create
      * @function
      * @param {string} documentType Identifies type of document the current item belongs to.
@@ -42,6 +41,8 @@ troop.postpone(bookworm, 'ItemKey', function () {
                  * @type {string}
                  */
                 this.itemId = itemId;
+
+                this.eventPath.appendKey(itemId);
             },
 
             /**
@@ -92,16 +93,6 @@ troop.postpone(bookworm, 'ItemKey', function () {
             toString: function () {
                 return bookworm.FieldKey.toString.call(this) + '/' + encodeURIComponent(this.itemId);
             }
-        });
-});
-
-troop.amendPostponed(bookworm, 'EntityKey', function () {
-    "use strict";
-
-    bookworm.EntityKey
-        .addSurrogate(bookworm, 'ItemKey', function () {
-            return arguments.length === 4 &&
-                   !arguments[3].toDocumentKey().documentId;
         });
 });
 

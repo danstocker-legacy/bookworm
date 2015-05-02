@@ -12,6 +12,8 @@
         equal(itemKey.documentKey.documentId, 'world', "should set document ID");
         equal(itemKey.fieldName, 'foo', "should set field name");
         equal(itemKey.itemId, 'bar', "should set item ID");
+        equal(itemKey.eventPath.toString(), 'entity>document>hello>world>foo>bar',
+            "should set event path");
     });
 
     test("Conversion from String", function () {
@@ -35,14 +37,6 @@
         equal(itemKey.documentKey.documentId, 'world', "should set document ID");
         equal(itemKey.fieldName, 'foo', "should set field name");
         equal(itemKey.itemId, 'bar', "should set item ID");
-    });
-
-    test("Conversion from EntityKey", function () {
-        var key = bookworm.EntityKey.create('foo', 'bar');
-
-        ok(key.isA(bookworm.DocumentKey), "should return DocumentKey instance");
-        equal(key.documentType, 'foo', "should set document type");
-        equal(key.documentId, 'bar', "should set document ID");
     });
 
     test("Equivalence tester", function () {
@@ -85,11 +79,9 @@
             }
         });
 
-        path = itemKey.getEntityPath();
+        strictEqual(itemKey.getEntityPath(), entityPath, "should return correct item entity path");
 
         bookworm.FieldKey.removeMocks();
-
-        strictEqual(path, entityPath, "should return correct item entity path");
     });
 
     test("Attribute path getter", function () {
@@ -97,8 +89,7 @@
 
         var itemKey = 'foo/bar/baz/A'.toItemKey(),
             entityPath = 'entity>path'.toPath(),
-            attributePath = {},
-            path;
+            attributePath = {};
 
         itemKey.addMocks({
             getEntityPath: function () {
@@ -114,15 +105,13 @@
             }
         });
 
-        path = itemKey.getAttributePath('hello');
-
-        strictEqual(path, attributePath, "should return attribute path");
+        strictEqual(itemKey.getAttributePath('hello'), attributePath, "should return attribute path");
     });
 
     test("Item type getter", function () {
         expect(1);
 
-        var key = 'foo/bar/baz/hello'.toItemKey();
+        var itemKey = 'foo/bar/baz/hello'.toItemKey();
 
         bookworm.FieldKey.addMocks({
             getConfigPath: function () {
@@ -136,7 +125,7 @@
             }
         });
 
-        key.getItemType();
+        itemKey.getItemType();
 
         bookworm.FieldKey.removeMocks();
         bookworm.config.removeMocks();
@@ -146,8 +135,7 @@
         expect(2);
 
         var itemKey = 'foo/bar/baz/A'.toItemKey(),
-            entityPath = {},
-            path;
+            entityPath = {};
 
         itemKey.addMocks({
             getEntityPath: function () {
@@ -156,17 +144,15 @@
             }
         });
 
-        path = itemKey.getValuePath();
-
-        strictEqual(path, entityPath, "should return entity path");
+        strictEqual(itemKey.getValuePath(), entityPath, "should return entity path");
     });
 
     test("Config path getter", function () {
         var itemKey = 'foo/bar/baz/A'.toItemKey(),
-            path = itemKey.getConfigPath();
+            configPath = itemKey.getConfigPath();
 
-        ok(path.isA(sntls.Path), "should return Path instance");
-        ok(path.equals(itemKey.getFieldKey().getConfigPath()), "should return same config path as FieldKey");
+        ok(configPath.isA(sntls.Path), "should return Path instance");
+        ok(configPath.equals(itemKey.getFieldKey().getConfigPath()), "should return same config path as FieldKey");
     });
 
     test("Conversion to String", function () {
