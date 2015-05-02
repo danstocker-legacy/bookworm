@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, flock, bookworm */
+/*global dessert, troop, sntls, bookworm */
 troop.postpone(bookworm, 'config', function () {
     "use strict";
 

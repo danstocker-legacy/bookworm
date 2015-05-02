@@ -32,11 +32,11 @@ module.exports = function (grunt) {
         ],
 
         globals: {
-            dessert: true,
-            troop  : true,
-            sntls  : true,
-            evan   : true,
-            flock  : true
+            dessert   : true,
+            troop     : true,
+            sntls     : true,
+            evan      : true,
+            rubberband: true
         }
     };
 

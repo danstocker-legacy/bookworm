@@ -7,7 +7,7 @@ Bookworm
 
 [Reference](http://danstocker.github.io/bookworm)
 
-Bookworm is an isomorphic library that helps organizing the application's model layer into a document oriented structure. Through entity classes the Bookworm API allows for access and modification of [flock](https://github.com/danstocker/flock)-based cache nodes. Instead of using absolute paths, Bookworm entities may be accessed relying only on their identifiers (keys).
+Bookworm is an isomorphic library that helps organizing the application's model layer into a document oriented structure. Through entity classes the Bookworm API allows for access and modification of [sntls.Tree](https://github.com/danstocker/sntls)-based cache nodes. Instead of using absolute paths, Bookworm entities may be accessed relying only on their identifiers (keys).
 
 The *document oriented structure* means that the model layer is organized into these units:
 
@@ -27,13 +27,13 @@ Fields and collection items can have the 'reference' type, pointing to other ent
 Cache
 -----
 
-The Bookworm cache is an in-memory datastore based on [flock](https://github.com/danstocker/flock), and [sntls.Tree](http://danstocker.github.io/sntls/sntls.Tree.html).
+The Bookworm cache is an in-memory datastore based on [sntls.Tree](http://danstocker.github.io/sntls/sntls.Tree.html).
 
 The cache is composed of three containers:
 
-- `bookworm.entities`: Evented datastore that contains *all* entities of the application. Entity classes provide access to the contents of this container.
-- `bookworm.config`: Non-evented datastore containing configuration information, most importantly field and collection item types. Look in *js/cache/config.js* or the non-minified distribution for the structure. The contents of this container are expected to be initialized before those parts of the application that use the Bookworm API.
-- `bookworm.index`: Non-evented datastore that holds user-defined indexes for lookups, search, etc. There is no imposed structure for this container, the content is completely up to the application implementation.
+- `bookworm.entities`: Contains *all* entities of the application. Entity classes provide access to the contents of this container.
+- `bookworm.config`: Contains configuration information, most importantly field and collection item types. Look in *js/cache/config.js* or the non-minified distribution for the structure. The contents of this container are expected to be initialized before those parts of the application that use the Bookworm API.
+- `bookworm.index`: Holds user-defined indexes for lookups, search, etc. There is no imposed structure for this container, the content is completely up to the application implementation.
 
 Examples
 --------
@@ -42,7 +42,7 @@ Examples
 
     'user/1234/name'.toField().setValue("John Smith");
 
-Will set the value "John Smith" on the node in `bookworm.entities` (instance of `flock.EventedTree`) on the path that corresponds to the field 'user/1234/name'. By default, this is mapped to the path `'document>documentType>documentId>fieldName'.toPath()`, but the mapping may be changed by subclassing `FieldKey` and providing a suitable surrogate.
+Will set the value "John Smith" on the node in `bookworm.entities` (instance of `sntls.Tree`) on the path that corresponds to the field 'user/1234/name'. By default, this is mapped to the path `'document>documentType>documentId>fieldName'.toPath()`, but the mapping may be changed by subclassing `FieldKey` and providing a suitable surrogate.
 
 ### Checking a document's presence
 
