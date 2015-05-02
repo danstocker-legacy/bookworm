@@ -119,8 +119,7 @@ troop.postpone(bookworm, 'FieldKey', function () {
                 var config = bookworm.config,
                     configFieldKey = this._getConfigFieldKey();
 
-                return config.getNode(configFieldKey.getAttributePath('fieldType')) ||
-                       config.getNode(configFieldKey.getEntityPath());
+                return config.getNode(configFieldKey.getAttributePath('fieldType'));
             },
 
             /**
