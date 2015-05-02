@@ -85,6 +85,14 @@ troop.postpone(bookworm, 'ItemKey', function () {
             },
 
             /**
+             * Retrieves item type string for the item entity identified by the current key.
+             * @returns {string}
+             */
+            getItemIdType: function () {
+                return bookworm.config.getNode(this.getConfigPath().appendKey('itemIdType'));
+            },
+
+            /**
              * Serializes current item key.
              * @example
              * bookworm.ItemKey.create('user', '1234', 'phones', 'work').toString() // "user/1234/phones/work"
