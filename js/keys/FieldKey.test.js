@@ -78,9 +78,9 @@
             }
         });
 
-        bookworm.DocumentKey.removeMocks();
-
         strictEqual(fieldKey.getEntityPath(), entityPath, "should return correct field path");
+
+        bookworm.DocumentKey.removeMocks();
     });
 
     test("Attribute path getter", function () {
