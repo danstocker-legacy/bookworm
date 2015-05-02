@@ -44,6 +44,14 @@
         equal(entity.entityKey.toString(), 'foo/bar', "should set correct key");
     });
 
+    test("Conversion from EntityKey", function () {
+        var documentKey = ['foo', 'bar'].toDocumentKey(),
+            document = documentKey.toEntity();
+
+        ok(document.isA(bookworm.Document), "should return Document instance");
+        strictEqual(document.entityKey, documentKey, "should set document key");
+    });
+
     test("Attribute node getter", function () {
         expect(3);
 

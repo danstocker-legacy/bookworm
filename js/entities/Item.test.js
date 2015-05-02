@@ -48,6 +48,14 @@
         ok(entity.isA(bookworm.Item), "should return Item instance for ReferenceItemKey");
     });
 
+    test("Conversion from EntityKey", function () {
+        var itemKey = ['foo', 'bar', 'baz', 'hello'].toItemKey(),
+            item = itemKey.toEntity();
+
+        ok(item.isA(bookworm.Item), "should return Item instance");
+        equal(item.entityKey.toString(), 'foo/bar/baz/hello', "should set item key");
+    });
+
     test("Item attribute getter", function () {
         expect(3);
 

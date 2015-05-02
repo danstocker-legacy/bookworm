@@ -12,6 +12,14 @@
         strictEqual(entity.entityKey, entityKey, "should set entity key");
     });
 
+    test("Entity key conversion", function () {
+        var entityKey = 'foo/bar'.toDocumentKey(),
+            entity = entityKey.toEntity();
+
+        ok(entity.isA(bookworm.Entity), "should return Entity instance");
+        strictEqual(entity.entityKey, entityKey, "should set entity key");
+    });
+
     test("Node getter", function () {
         expect(2);
 

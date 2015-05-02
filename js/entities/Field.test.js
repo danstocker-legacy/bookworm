@@ -44,6 +44,14 @@
         equal(entity.entityKey.toString(), 'foo/bar/baz', "should set correct key");
     });
 
+    test("Conversion from EntityKey", function () {
+        var fieldKey = ['foo', 'bar', 'baz'].toFieldKey(),
+            field = fieldKey.toEntity();
+
+        ok(field.isA(bookworm.Field), "should return Field instance");
+        strictEqual(field.entityKey, fieldKey, "should set field key");
+    });
+
     test("Field attribute getter", function () {
         expect(3);
 
