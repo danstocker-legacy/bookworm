@@ -1,31 +1,33 @@
-/*global dessert, troop, sntls, bookworm */
+/*global dessert, troop, sntls, evan, bookworm */
 troop.postpone(bookworm, 'EntityKey', function () {
     "use strict";
 
+    var base = troop.Base,
+        self = base.extend()
+            .addTrait(evan.Evented);
+
     /**
      * Creates an EntityKey instance.
-     * Do not create EntityKey instances directly, only through its subclasses,
-     * unless suitable surrogates have been set up.
+     * Do not create EntityKey instances directly, only through its subclasses.
      * @name bookworm.EntityKey.create
      * @function
      * @returns {bookworm.EntityKey}
      */
 
     /**
-     * Abstract class for identifying Entities.
-     * A EntityKey may be resolved to an entity path.
+     * Base class for entity keys.
+     * Entity keys identify entities without relying on their actual content.
      * @class
      * @extends troop.Base
+     * @extends evan.Evented
+     * @extends rubberband.Stringifiable
      */
-    bookworm.EntityKey = troop.Base.extend()
+    bookworm.EntityKey = self
+        .setEventSpace(bookworm.entityEventSpace)
         .addMethods(/** @lends bookworm.EntityKey# */{
             /** @ignore */
             init: function () {
-            },
-
-            /** @returns {string} */
-            toString: function () {
-                return '';
+                this.setEventPath('entity'.toPath().append(this.getEntityPath()));
             }
         });
 
