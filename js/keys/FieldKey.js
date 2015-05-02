@@ -7,8 +7,7 @@ troop.postpone(bookworm, 'FieldKey', function () {
 
     /**
      * Creates FieldKey instance.
-     * FieldKey instances may also be created via conversion from string, array, and `sntls.Path`,
-     * as well as instantiating `EntityKey` with suitable arguments.
+     * FieldKey instances may also be created via conversion from string or array.
      * @name bookworm.FieldKey.create
      * @function
      * @param {string} documentType Identifies type of document the field belongs to.
@@ -23,6 +22,7 @@ troop.postpone(bookworm, 'FieldKey', function () {
      * @extends bookworm.EntityKey
      */
     bookworm.FieldKey = self
+        .setEventPath(['document'].toPath().prepend(base.eventPath))
         .addPrivateMethods(/** @lends bookworm.FieldKey# */{
             /**
              * Retrieves `FieldKey` pointing to the config node associated with the current
@@ -53,6 +53,8 @@ troop.postpone(bookworm, 'FieldKey', function () {
                  * @type {string}
                  */
                 this.fieldName = fieldName;
+
+                this.setEventPath([fieldName].toPath().prepend(this.documentKey.eventPath));
             },
 
             /**
@@ -150,30 +152,6 @@ troop.postpone(bookworm, 'FieldKey', function () {
              */
             toString: function () {
                 return this.documentKey.toString() + '/' + encodeURIComponent(this.fieldName);
-            }
-        });
-});
-
-troop.amendPostponed(bookworm, 'EntityKey', function () {
-    "use strict";
-
-    bookworm.EntityKey
-        .addSurrogate(bookworm, 'FieldKey', function () {
-            return arguments.length === 3;
-        });
-});
-
-troop.amendPostponed(sntls, 'Path', function () {
-    "use strict";
-
-    sntls.Path
-        .addMethods(/** @lends sntls.Path */{
-            /**
-             * Converts `Path` to `FieldKey` instance. Here the path is not a cache path.
-             * @returns {bookworm.FieldKey}
-             */
-            toFieldKey: function () {
-                return this.asArray.toFieldKey();
             }
         });
 });

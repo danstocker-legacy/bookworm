@@ -12,47 +12,31 @@
         equal(fieldKey.documentKey.documentType, 'hello', "should set document type");
         equal(fieldKey.documentKey.documentId, 'world', "should set document ID");
         equal(fieldKey.fieldName, 'foo', "should set field name");
+        equal(fieldKey.eventPath.toString(), 'entity>document>hello>world>foo',
+            "should set event path");
     });
 
     test("Conversion from String", function () {
-        var key;
+        var fieldKey;
 
-        key = 'foo/bar/baz'.toFieldKey();
-        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
-        equal(key.documentKey.documentType, 'foo', "should set document type");
-        equal(key.documentKey.documentId, 'bar', "should set document ID");
-        equal(key.fieldName, 'baz', "should set field name");
+        fieldKey = 'foo/bar/baz'.toFieldKey();
+        ok(fieldKey.isA(bookworm.FieldKey), "should return FieldKey instance");
+        equal(fieldKey.documentKey.documentType, 'foo', "should set document type");
+        equal(fieldKey.documentKey.documentId, 'bar', "should set document ID");
+        equal(fieldKey.fieldName, 'baz', "should set field name");
 
-        key = 'foo/bar/b%2Faz'.toFieldKey();
-        equal(key.fieldName, 'b/az', "should URI decode field name");
+        fieldKey = 'foo/bar/b%2Faz'.toFieldKey();
+        equal(fieldKey.fieldName, 'b/az', "should URI decode field name");
     });
 
     test("Conversion from Array", function () {
-        var key;
+        var fieldKey;
 
-        key = ['foo', 'bar', 'baz'].toFieldKey();
-        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
-        equal(key.documentKey.documentType, 'foo', "should set document type");
-        equal(key.documentKey.documentId, 'bar', "should set document ID");
-        equal(key.fieldName, 'baz', "should set field name");
-    });
-
-    test("Conversion from EntityKey", function () {
-        var key = bookworm.EntityKey.create('foo', 'bar', 'baz');
-
-        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
-        equal(key.documentKey.documentType, 'foo', "should set document type");
-        equal(key.documentKey.documentId, 'bar', "should set document ID");
-        equal(key.fieldName, 'baz', "should set field name");
-    });
-
-    test("Conversion from Path", function () {
-        var key = 'foo>bar>baz'.toPath().toFieldKey();
-
-        ok(key.isA(bookworm.FieldKey), "should return FieldKey instance");
-        equal(key.documentKey.documentType, 'foo', "should set document type");
-        equal(key.documentKey.documentId, 'bar', "should set document ID");
-        equal(key.fieldName, 'baz', "should set field name");
+        fieldKey = ['foo', 'bar', 'baz'].toFieldKey();
+        ok(fieldKey.isA(bookworm.FieldKey), "should return FieldKey instance");
+        equal(fieldKey.documentKey.documentType, 'foo', "should set document type");
+        equal(fieldKey.documentKey.documentId, 'bar', "should set document ID");
+        equal(fieldKey.fieldName, 'baz', "should set field name");
     });
 
     test("Equivalence tester", function () {
@@ -78,8 +62,7 @@
 
         var fieldKey = 'foo/bar/baz'.toFieldKey(),
             documentEntityPath = 'document>entity'.toPath(),
-            entityPath = {},
-            path;
+            entityPath = {};
 
         bookworm.DocumentKey.addMocks({
             getEntityPath: function () {
@@ -95,11 +78,9 @@
             }
         });
 
-        path = fieldKey.getEntityPath();
-
         bookworm.DocumentKey.removeMocks();
 
-        strictEqual(path, entityPath, "should return correct field path");
+        strictEqual(fieldKey.getEntityPath(), entityPath, "should return correct field path");
     });
 
     test("Attribute path getter", function () {
@@ -107,8 +88,7 @@
 
         var fieldKey = 'foo/bar/baz'.toFieldKey(),
             entityPath = 'entity>path'.toPath(),
-            attributePath = {},
-            path;
+            attributePath = {};
 
         fieldKey.addMocks({
             getEntityPath: function () {
@@ -124,45 +104,43 @@
             }
         });
 
-        path = fieldKey.getAttributePath('hello');
-
-        strictEqual(path, attributePath, "should return attribute path");
+        strictEqual(fieldKey.getAttributePath('hello'), attributePath, "should return attribute path");
     });
 
     test("Field type getter", function () {
         var fieldKey = 'foo/bar/baz'.toFieldKey(),
-            paths;
+            entityPaths;
 
         bookworm.config.addMocks({
             getNode: function (path) {
-                paths.push(path.toString());
+                entityPaths.push(path.toString());
                 return undefined;
             }
         });
 
-        paths = [];
+        entityPaths = [];
         fieldKey.getFieldType();
 
         bookworm.config.removeMocks();
 
-        deepEqual(paths, [
+        deepEqual(entityPaths, [
             "document>document>foo>baz>fieldType",
             "document>document>foo>baz"
         ], "should try attribute first, then field value");
 
         bookworm.config.addMocks({
             getNode: function (path) {
-                paths.push(path.toString());
+                entityPaths.push(path.toString());
                 return 'fieldType';
             }
         });
 
-        paths = [];
+        entityPaths = [];
         fieldKey.getFieldType();
 
         bookworm.config.removeMocks();
 
-        deepEqual(paths, [
+        deepEqual(entityPaths, [
             "document>document>foo>baz>fieldType"
         ], "should fetch field type from attribute if it is found there");
     });
@@ -171,8 +149,7 @@
         expect(2);
 
         var fieldKey = 'foo/bar/baz'.toFieldKey(),
-            entityPath = {},
-            path;
+            entityPath = {};
 
         fieldKey.addMocks({
             getEntityPath: function () {
@@ -181,18 +158,16 @@
             }
         });
 
-        path = fieldKey.getValuePath();
-
-        strictEqual(path, entityPath, "should return entity path");
+        strictEqual(fieldKey.getValuePath(), entityPath, "should return entity path");
     });
 
     test("Config path getter", function () {
         var fieldKey = 'foo/bar/baz'.toFieldKey(),
-            path;
+            configPath;
 
-        path = fieldKey.getConfigPath();
-        ok(path.isA(sntls.Path), "should return Path instance");
-        deepEqual(path.asArray, ['document', 'document', 'foo', 'baz'], "should set path contents");
+        configPath = fieldKey.getConfigPath();
+        ok(configPath.isA(sntls.Path), "should return Path instance");
+        deepEqual(configPath.asArray, ['document', 'document', 'foo', 'baz'], "should set path contents");
     });
 
     test("Conversion to String", function () {
