@@ -2,8 +2,6 @@
 troop.postpone(bookworm, 'Entity', function () {
     "use strict";
 
-    var slice = Array.prototype.slice;
-
     /**
      * Creates an Entity instance.
      * Entity instantiation is expected to be done via subclasses, unless there are suitable surrogates defined.
@@ -16,10 +14,36 @@ troop.postpone(bookworm, 'Entity', function () {
     /**
      * The Entity class serves as the base class for all entities. It provides an API to access and modify the cache
      * node represented by the entity.
+     * TODO: Add .appendNode()
      * @class
      * @extends troop.Base
      */
     bookworm.Entity = troop.Base.extend()
+        .addConstants(/** @lends bookworm.Entity */{
+            /**
+             * Signals that an absent entity has been accessed.
+             * @constant
+             */
+            EVENT_ENTITY_ACCESS: 'bookworm.entity.access',
+
+            /**
+             * Signals that an entity node was changed.
+             * @constant
+             */
+            EVENT_ENTITY_CHANGE: 'bookworm.entity.change',
+
+            /**
+             * Signals that an entity node is about to be appended.
+             * @constant
+             */
+            EVENT_ENTITY_BEFORE_APPEND: 'bookworm.entity.change.before-append',
+
+            /**
+             * Signals that an entity node was appended.
+             * @constant
+             */
+            EVENT_ENTITY_AFTER_APPEND: 'bookworm.entity.change.after-append'
+        })
         .addMethods(/** @lends bookworm.Entity# */{
             /**
              * @param {bookworm.EntityKey} entityKey
@@ -42,46 +66,40 @@ troop.postpone(bookworm, 'Entity', function () {
              * @returns {*}
              */
             getNode: function () {
-                var entityPath = this.entityKey.getEntityPath();
+                var entityPath = this.entityKey.getEntityPath(),
+                    entityNode = bookworm.entities.getNode(entityPath);
 
-                if (arguments.length) {
-                    entityPath = entityPath.append(slice.call(arguments).toPath());
+                if (typeof entityNode === 'undefined') {
+                    // triggering event about absent node
+                    this.entityKey.triggerSync(this.EVENT_ENTITY_ACCESS);
                 }
 
-                return bookworm.entities.getNode(entityPath);
+                return entityNode;
             },
 
             /**
              * Fetches entity node from cache, wrapped in a Hash instance.
-             * Arguments will be appended to the entity path.
              * @returns {sntls.Hash}
              */
             getNodeAsHash: function () {
-                return sntls.Hash.create(this.getNode.apply(this, arguments));
+                return sntls.Hash.create(this.getNode());
             },
 
             /**
              * Fetches entity node from cache without triggering access events.
-             * Arguments will be appended to the entity path.
              * @returns {*}
              */
             getSilentNode: function () {
                 var entityPath = this.entityKey.getEntityPath();
-
-                if (arguments.length) {
-                    entityPath = entityPath.append(slice.call(arguments).toPath());
-                }
-
-                return sntls.Tree.getNode.call(bookworm.entities, entityPath);
+                return bookworm.entities.getNode(entityPath);
             },
 
             /**
              * Fetches entity node from cache, wrapped in a Hash instance, without triggering access events.
-             * Arguments will be appended to the entity path.
              * @returns {sntls.Hash}
              */
             getSilentNodeAsHash: function () {
-                return sntls.Hash.create(this.getSilentNode.apply(this, arguments));
+                return sntls.Hash.create(this.getSilentNode());
             },
 
             /**
@@ -99,17 +117,21 @@ troop.postpone(bookworm, 'Entity', function () {
              * @example
              * // will set 'hello world' on the path 'foo>bar' relative to the entity root
              * entity.setNode('hello world', 'foo', 'bar');
-             * @param {*} value
+             * @param {*} node
              * @returns {bookworm.Entity}
              */
-            setNode: function (value) {
-                var dataPath = this.entityKey.getEntityPath();
+            setNode: function (node) {
+                var entityKey = this.entityKey,
+                    beforeNode = this.getSilentNode();
 
-                if (arguments.length > 1) {
-                    dataPath = dataPath.append(slice.call(arguments, 1).toPath());
+                if (node !== beforeNode) {
+                    bookworm.entities.setNode(entityKey.getEntityPath(), node);
+
+                    entityKey.spawnEvent(this.EVENT_ENTITY_CHANGE)
+                        .setBeforeNode(beforeNode)
+                        .setAfterNode(node)
+                        .triggerSync();
                 }
-
-                bookworm.entities.setNode(dataPath, value);
 
                 return this;
             },
@@ -122,14 +144,18 @@ troop.postpone(bookworm, 'Entity', function () {
              * entity.unsetKey('foo', 'bar');
              * @returns {bookworm.Entity}
              */
-            unsetKey: function () {
-                var dataPath = this.entityKey.getEntityPath();
+            unsetNode: function () {
+                var entityKey = this.entityKey,
+                    entityPath = entityKey.getEntityPath(),
+                    beforeNode = this.getSilentNode();
 
-                if (arguments.length) {
-                    dataPath = dataPath.append(slice.call(arguments).toPath());
+                if (typeof beforeNode !== 'undefined') {
+                    bookworm.entities.unsetNode(entityPath);
+
+                    entityKey.spawnEvent(this.EVENT_ENTITY_CHANGE)
+                        .setBeforeNode(beforeNode)
+                        .triggerSync();
                 }
-
-                bookworm.entities.unsetKey(dataPath);
 
                 return this;
             }

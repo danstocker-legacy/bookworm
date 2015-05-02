@@ -13,137 +13,265 @@
     });
 
     test("Node getter", function () {
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey()),
-            entityNode = {},
-            paths = [];
+        expect(2);
+
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entity = bookworm.Entity.create(documentKey),
+            entityNode = {};
 
         bookworm.entities.addMocks({
             getNode: function (path) {
-                paths.push(path.toString());
+                ok(path.equals(documentKey.getEntityPath()), "should get node from cache");
                 return entityNode;
             }
         });
 
         strictEqual(entity.getNode(), entityNode, "should return node retrieved from cache");
-        entity.getNode('baz');
 
         bookworm.entities.removeMocks();
+    });
 
-        deepEqual(paths, [
-            'document>foo>bar',
-            'document>foo>bar>baz'
-        ], "should append extra arguments to cache path");
+    test("Absent node getter", function () {
+        expect(2);
+
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entity = bookworm.Entity.create(documentKey);
+
+        bookworm.entities.addMocks({
+            getNode: function (path) {
+            }
+        });
+
+        function onAccess() {
+            ok(true, "should trigger access event");
+        }
+
+        documentKey.subscribeTo(bookworm.Entity.EVENT_ENTITY_ACCESS, onAccess);
+
+        equal(typeof entity.getNode(), 'undefined', "should return undefined");
+
+        documentKey.unsubscribeFrom(bookworm.Entity.EVENT_ENTITY_ACCESS, onAccess);
+        bookworm.entities.removeMocks();
     });
 
     test("Hash node getter", function () {
-        expect(3);
+        expect(2);
 
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey()),
-            entityNode = {},
-            result;
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entity = bookworm.Entity.create(documentKey),
+            entityNode = {};
 
-        bookworm.Entity.addMocks({
+        bookworm.entities.addMocks({
             getNode: function () {
-                deepEqual(arguments, {0: 'hello', 1: 'world'}, "should pass extra arguments to node getter");
                 return entityNode;
             }
         });
 
-        result = entity.getNodeAsHash('hello', 'world');
+        var hash = entity.getNodeAsHash();
+        ok(hash.isA(sntls.Hash), "should return Hash instance");
+        strictEqual(hash.items, entityNode, "should return node retrieved from cache");
 
-        bookworm.Entity.removeMocks();
-
-        ok(result.isA(sntls.Hash), "should return Hash instance");
-        strictEqual(result.items, entityNode, "should return Hash with entity node inside");
+        bookworm.entities.removeMocks();
     });
 
     test("Silent node getter", function () {
-        expect(3);
+        expect(2);
 
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey()),
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entity = bookworm.Entity.create(documentKey),
             entityNode = {};
 
-        sntls.Tree.addMocks({
+        bookworm.entities.addMocks({
             getNode: function (path) {
-                strictEqual(this, bookworm.entities, "should fetch node from ");
-                equal(path.toString(), 'document>foo>bar>baz', "should call Tree node getter with appended path");
+                ok(path.equals(documentKey.getEntityPath()), "should get node from cache");
                 return entityNode;
             }
         });
 
-        strictEqual(entity.getSilentNode('baz'), entityNode, "should return node retrieved from cache");
+        function onAccess() {
+            ok(false, "should NOT trigger access event");
+        }
 
-        sntls.Tree.removeMocks();
+        documentKey.subscribeTo(bookworm.Entity.EVENT_ENTITY_ACCESS, onAccess);
+
+        strictEqual(entity.getSilentNode(), entityNode, "should return node retrieved from cache");
+
+        documentKey.unsubscribeFrom(bookworm.Entity.EVENT_ENTITY_ACCESS, onAccess);
+        bookworm.entities.removeMocks();
     });
 
     test("Silent Hash node getter", function () {
-        expect(3);
+        expect(2);
 
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey()),
-            entityNode = {},
-            result;
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entity = bookworm.Entity.create(documentKey),
+            entityNode = {};
 
-        bookworm.Entity.addMocks({
-            getSilentNode: function () {
-                deepEqual(arguments, {0: 'hello', 1: 'world'}, "should pass extra arguments to silent node getter");
+        bookworm.entities.addMocks({
+            getNode: function () {
                 return entityNode;
             }
         });
 
-        result = entity.getSilentNodeAsHash('hello', 'world');
+        var hash = entity.getSilentNodeAsHash();
+        ok(hash.isA(sntls.Hash), "should return Hash instance");
+        strictEqual(hash.items, entityNode, "should return node retrieved from cache");
 
-        bookworm.Entity.removeMocks();
-
-        ok(result.isA(sntls.Hash), "should return Hash instance");
-        strictEqual(result.items, entityNode, "should return Hash with entity node inside");
+        bookworm.entities.removeMocks();
     });
 
     test("Entity node tester", function () {
         expect(2);
 
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey());
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entity = bookworm.Entity.create(documentKey);
 
-        bookworm.Entity.addMocks({
-            getNode: function () {
-                ok(true, "should call node setter");
+        bookworm.entities.addMocks({
+            getNode: function (path) {
             }
         });
+
+        function onAccess() {
+            ok(true, "should trigger access event");
+        }
+
+        documentKey.subscribeTo(bookworm.Entity.EVENT_ENTITY_ACCESS, onAccess);
 
         strictEqual(entity.touchNode(), entity, "should be chainable");
 
-        bookworm.Entity.removeMocks();
+        documentKey.unsubscribeFrom(bookworm.Entity.EVENT_ENTITY_ACCESS, onAccess);
+        bookworm.entities.removeMocks();
     });
 
-    test("Node setter", function () {
-        expect(3);
+    test("Setting node", function () {
+        expect(7);
 
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey());
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entity = bookworm.Entity.create(documentKey);
 
-        bookworm.entities.addMocks({
-            setNode: function (path, value) {
-                equal(path.toString(), 'document>foo>bar>world', "should set node in cache on the entity's extended path");
-                equal(value, 'hello', "should set correct value in cache");
+        entity.addMocks({
+            getSilentNode: function () {
+                ok(true, "should fetch node silently");
+                return undefined;
             }
         });
 
-        strictEqual(entity.setNode('hello', 'world'), entity, "should be chainable");
+        bookworm.entities.addMocks({
+            setNode: function (path, value) {
+                ok(path.equals(documentKey.getEntityPath()),
+                    "should set node in cache on the entity path path");
+                equal(value, 'hello', "should set specified value in cache");
+            }
+        });
 
+        function onChange(event) {
+            ok(event.isA(bookworm.EntityChangeEvent), "should trigger change event");
+            equal(typeof event.beforeNode, 'undefined', "should set beforeNode property on event");
+            equal(event.afterNode, 'hello', "should set afterNode property on event");
+        }
+
+        documentKey.subscribeTo(bookworm.Entity.EVENT_ENTITY_CHANGE, onChange);
+
+        strictEqual(entity.setNode('hello'), entity, "should be chainable");
+
+        documentKey.unsubscribeFrom(bookworm.Entity.EVENT_ENTITY_CHANGE, onChange);
+        bookworm.entities.removeMocks();
+    });
+
+    test("Re-setting node", function () {
+        expect(0);
+
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entity = bookworm.Entity.create(documentKey),
+            entityNode = {};
+
+        entity.addMocks({
+            getSilentNode: function () {
+                return entityNode;
+            }
+        });
+
+        bookworm.entities.addMocks({
+            setNode: function () {
+                ok(false, "should NOT set entity node");
+            }
+        });
+
+        function onChange(event) {
+            ok(false, "should NOT trigger change event");
+        }
+
+        documentKey.subscribeTo(bookworm.Entity.EVENT_ENTITY_CHANGE, onChange);
+
+        entity.setNode(entityNode);
+
+        documentKey.unsubscribeFrom(bookworm.Entity.EVENT_ENTITY_CHANGE, onChange);
         bookworm.entities.removeMocks();
     });
 
     test("Node removal", function () {
-        expect(2);
+        expect(6);
 
-        var entity = bookworm.Entity.create('foo/bar'.toDocumentKey());
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entity = bookworm.Entity.create(documentKey),
+            entityNode = {};
 
-        bookworm.entities.addMocks({
-            unsetKey: function (path) {
-                equal(path.toString(), 'document>foo>bar>world', "should remove key from cache at the entity's extended path");
+        entity.addMocks({
+            getSilentNode: function () {
+                ok(true, "should fetch node silently");
+                return entityNode;
             }
         });
 
-        strictEqual(entity.unsetKey('world'), entity, "should be chainable");
+        bookworm.entities.addMocks({
+            unsetNode: function (path) {
+                ok(path.equals(documentKey.getEntityPath()),
+                    "should set node to undefined");
+            }
+        });
 
+        function onChange(event) {
+            ok(event.isA(bookworm.EntityChangeEvent), "should trigger change event");
+            strictEqual(event.beforeNode, entityNode, "should set beforeNode property on event");
+            equal(typeof event.afterNode, 'undefined', "should set afterNode property on event");
+        }
+
+        documentKey.subscribeTo(bookworm.Entity.EVENT_ENTITY_CHANGE, onChange);
+
+        strictEqual(entity.unsetNode(), entity, "should be chainable");
+
+        documentKey.unsubscribeFrom(bookworm.Entity.EVENT_ENTITY_CHANGE, onChange);
+        bookworm.entities.removeMocks();
+    });
+
+    test("Node re-removal", function () {
+        expect(0);
+
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entity = bookworm.Entity.create(documentKey),
+            entityNode = {};
+
+        entity.addMocks({
+            getSilentNode: function () {
+                return undefined;
+            }
+        });
+
+        bookworm.entities.addMocks({
+            unsetNode: function () {
+                ok(false, "should NOT set entity node");
+            }
+        });
+
+        function onChange(event) {
+            ok(false, "should NOT trigger change event");
+        }
+
+        documentKey.subscribeTo(bookworm.Entity.EVENT_ENTITY_CHANGE, onChange);
+
+        entity.unsetNode(entityNode);
+
+        documentKey.unsubscribeFrom(bookworm.Entity.EVENT_ENTITY_CHANGE, onChange);
         bookworm.entities.removeMocks();
     });
 }());
