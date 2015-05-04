@@ -20,6 +20,14 @@
         strictEqual(entity.entityKey, entityKey, "should set entity key");
     });
 
+    test("Attribute entity getter", function () {
+        var entity = 'foo/bar'.toDocument(),
+            attribute = entity.getAttribute('baz');
+
+        ok(attribute.isA(bookworm.Attribute), "should return Attribute instance");
+        ok(attribute.entityKey.equals('foo/bar'.toDocumentKey().getAttributeKey('baz')), "should set key on attribute");
+    });
+
     test("Node getter", function () {
         expect(2);
 

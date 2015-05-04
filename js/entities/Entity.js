@@ -57,6 +57,15 @@ troop.postpone(bookworm, 'Entity', function () {
             },
 
             /**
+             * Fetches an Attribute entity for the specified attribute name.
+             * @param {string} attributeName
+             * @returns {bookworm.Attribute}
+             */
+            getAttribute: function (attributeName) {
+                return this.entityKey.getAttributeKey(attributeName).toAttribute();
+            },
+
+            /**
              * Fetches entity node from cache.
              * Arguments will be appended to the entity path.
              * @example
