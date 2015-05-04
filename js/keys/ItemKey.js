@@ -56,15 +56,6 @@ troop.postpone(bookworm, 'ItemKey', function () {
             },
 
             /**
-             * Creates a field key that is parent of the item identified by the current key.
-             * @returns {bookworm.FieldKey}
-             */
-            getFieldKey: function () {
-                var documentKey = this.documentKey;
-                return [documentKey.documentType, documentKey.documentId, this.fieldName].toFieldKey();
-            },
-
-            /**
              * Determines absolute path for the item identified by the current key.
              * In case the item entity node sits on a different path
              * relative to the field node for a certain `documentType` / `fieldName` combination,
@@ -74,6 +65,15 @@ troop.postpone(bookworm, 'ItemKey', function () {
             getEntityPath: function () {
                 return base.getEntityPath.call(this)
                     .appendKey(String(this.itemId));
+            },
+
+            /**
+             * Creates a field key that is parent of the item identified by the current key.
+             * @returns {bookworm.FieldKey}
+             */
+            getFieldKey: function () {
+                var documentKey = this.documentKey;
+                return [documentKey.documentType, documentKey.documentId, this.fieldName].toFieldKey();
             },
 
             /**

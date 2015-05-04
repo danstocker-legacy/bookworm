@@ -64,6 +64,16 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
+             * Determines absolute path to the entity node of the document identified by the current key.
+             * In case document node sits on a different path for a certain `documentType`,
+             * subclass `DocumentKey` and override `.getEntityPath()` to reflect the correct path.
+             * @returns {sntls.Path}
+             */
+            getEntityPath: function () {
+                return ['document', String(this.documentType), String(this.documentId)].toPath();
+            },
+
+            /**
              * Creates a `FieldKey` instance based on the current document key and the specified field name.
              * @param {string} fieldName
              * @returns {bookworm.FieldKey}
@@ -74,16 +84,6 @@ troop.postpone(bookworm, 'DocumentKey', function () {
                     this.documentId,
                     fieldName
                 );
-            },
-
-            /**
-             * Determines absolute path to the entity node of the document identified by the current key.
-             * In case document node sits on a different path for a certain `documentType`,
-             * subclass `DocumentKey` and override `.getEntityPath()` to reflect the correct path.
-             * @returns {sntls.Path}
-             */
-            getEntityPath: function () {
-                return ['document', String(this.documentType), String(this.documentId)].toPath();
             },
 
             /**

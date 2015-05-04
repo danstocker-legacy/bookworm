@@ -53,6 +53,14 @@
         ok(configKey.equals('document/foo'.toDocumentKey()), "should return correct config key");
     });
 
+    test("Entity path getter", function () {
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            documentEntityPath = documentKey.getEntityPath();
+
+        ok(documentEntityPath.isA(sntls.Path), "should return Path instance");
+        deepEqual(documentEntityPath.asArray, ['document', 'foo', 'bar'], "should set path contents correctly");
+    });
+
     test("Field key getter", function () {
         var documentKey = 'foo/bar'.toDocumentKey(),
             fieldKey = documentKey.getFieldKey('baz');
@@ -62,14 +70,6 @@
         equal(fieldKey.documentKey.documentType, 'foo', "should set document type");
         equal(fieldKey.documentKey.documentId, 'bar', "should set document ID");
         equal(fieldKey.fieldName, 'baz', "should set field name");
-    });
-
-    test("Entity path getter", function () {
-        var documentKey = 'foo/bar'.toDocumentKey(),
-            documentEntityPath = documentKey.getEntityPath();
-
-        ok(documentEntityPath.isA(sntls.Path), "should return Path instance");
-        deepEqual(documentEntityPath.asArray, ['document', 'foo', 'bar'], "should set path contents correctly");
     });
 
     test("Conversion to String", function () {

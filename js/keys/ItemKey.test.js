@@ -50,16 +50,6 @@
         ok(!'hello/world/foo/bar'.toItemKey().equals('hello/world/foo/baz'.toItemKey()), "should fail for different item ID");
     });
 
-    test("Field key getter", function () {
-        var itemKey = ['foo', 'bar', 'hello', 'world'].toItemKey(),
-            fieldKey = itemKey.getFieldKey();
-
-        strictEqual(fieldKey.getBase(), bookworm.FieldKey, "should return FieldKey instance (not subclass)");
-        equal(fieldKey.fieldName, 'hello', "should set field name");
-        equal(fieldKey.documentKey.documentId, 'bar', "should set document ID");
-        equal(fieldKey.documentKey.documentType, 'foo', "should set document type");
-    });
-
     test("Entity path getter", function () {
         expect(3);
 
@@ -85,6 +75,16 @@
         strictEqual(itemKey.getEntityPath(), entityPath, "should return correct item entity path");
 
         bookworm.FieldKey.removeMocks();
+    });
+
+    test("Field key getter", function () {
+        var itemKey = ['foo', 'bar', 'hello', 'world'].toItemKey(),
+            fieldKey = itemKey.getFieldKey();
+
+        strictEqual(fieldKey.getBase(), bookworm.FieldKey, "should return FieldKey instance (not subclass)");
+        equal(fieldKey.fieldName, 'hello', "should set field name");
+        equal(fieldKey.documentKey.documentId, 'bar', "should set document ID");
+        equal(fieldKey.documentKey.documentType, 'foo', "should set document type");
     });
 
     test("Value path getter", function () {

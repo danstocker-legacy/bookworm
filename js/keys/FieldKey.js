@@ -95,34 +95,6 @@ troop.postpone(bookworm, 'FieldKey', function () {
             },
 
             /**
-             * Retrieves the field type associated with the current field from the config datastore.
-             * @returns {string}
-             * @see bookworm.config
-             */
-            getFieldType: function () {
-                var field = this.getConfigKey().getFieldKey('fieldType');
-                return bookworm.config.getNode(field.getEntityPath());
-            },
-
-                        /**
-                         * Retrieves item type string for the item entity identified by the current key.
-                         * @returns {string}
-                         */
-                        getItemType: function () {
-                            var field = this.getConfigKey().getFieldKey('itemType');
-                            return bookworm.config.getNode(field.getEntityPath());
-                        },
-
-                        /**
-                         * Retrieves item type string for the item entity identified by the current key.
-                         * @returns {string}
-                         */
-                        getItemIdType: function () {
-                            var field = this.getConfigKey().getFieldKey('itemIdType');
-                            return bookworm.config.getNode(field.getEntityPath());
-                        },
-
-            /**
              * Determines absolute path to the value node of the field identified by the current key.
              * In case field value node sits on a different path relative the field node
              * for a certain `documentType` / `fieldName` combination,
@@ -132,6 +104,34 @@ troop.postpone(bookworm, 'FieldKey', function () {
              */
             getValuePath: function () {
                 return this.getEntityPath();
+            },
+
+            /**
+             * Retrieves the field type associated with the current field from the config datastore.
+             * @returns {string}
+             * @see bookworm.config
+             */
+            getFieldType: function () {
+                var field = this.getConfigKey().getFieldKey('fieldType');
+                return bookworm.config.getNode(field.getEntityPath());
+            },
+
+            /**
+             * Retrieves item type string for the item entity identified by the current key.
+             * @returns {string}
+             */
+            getItemType: function () {
+                var field = this.getConfigKey().getFieldKey('itemType');
+                return bookworm.config.getNode(field.getEntityPath());
+            },
+
+            /**
+             * Retrieves item type string for the item entity identified by the current key.
+             * @returns {string}
+             */
+            getItemIdType: function () {
+                var field = this.getConfigKey().getFieldKey('itemIdType');
+                return bookworm.config.getNode(field.getEntityPath());
             },
 
             /**
