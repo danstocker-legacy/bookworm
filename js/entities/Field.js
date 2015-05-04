@@ -38,43 +38,12 @@ troop.postpone(bookworm, 'Field', function () {
             },
 
             /**
-             * Fetches field attribute node from cache.
-             * @param {string} attribute
-             * @returns {*}
-             */
-            getAttribute: function (attribute) {
-                var attributePath = this.entityKey.getAttributePath(attribute);
-                return bookworm.entities.getNode(attributePath);
-            },
-
-            /**
-             * Fetches field attribute node from cache without triggering access events.
-             * @param {string} attribute
-             * @returns {*}
-             */
-            getSilentAttribute: function (attribute) {
-                var attributePath = this.entityKey.getAttributePath(attribute);
-                return bookworm.entities.toTree().getNode(attributePath);
-            },
-
-            /**
-             * Sets field attribute node in cache.
-             * @param {string} attribute
-             * @param {*} attributeNode
-             * @returns {*}
-             */
-            setAttribute: function (attribute, attributeNode) {
-                var attributePath = this.entityKey.getAttributePath(attribute);
-                bookworm.entities.setNode(attributePath, attributeNode);
-                return this;
-            },
-
-            /**
              * Fetches field value node from cache.
+             * Identical to the node by default.
              * @returns {*}
              */
             getValue: function () {
-                return bookworm.entities.getNode(this.entityKey.getValuePath());
+                return this.getNode();
             },
 
             /**
@@ -82,7 +51,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {*}
              */
             getSilentValue: function () {
-                return bookworm.entities.toTree().getNode(this.entityKey.getValuePath());
+                return this.getSilentNode();
             },
 
             /**
@@ -91,7 +60,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {bookworm.Field}
              */
             setValue: function (value) {
-                bookworm.entities.setNode(this.entityKey.getValuePath(), value);
+                this.setNode(value);
                 return this;
             }
         });

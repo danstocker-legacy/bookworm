@@ -52,33 +52,6 @@
         strictEqual(document.entityKey, documentKey, "should set document key");
     });
 
-    test("Attribute node getter", function () {
-        expect(3);
-
-        var document = 'foo/bar'.toDocument(),
-            attributePath = {},
-            attributeNode = {};
-
-        document.entityKey.addMocks({
-            getAttributePath: function (attribute) {
-                equal(attribute, 'hello', "should get attribute path for specified attribute");
-                return attributePath;
-            }
-        });
-
-        bookworm.entities.addMocks({
-            getNode: function (path) {
-                strictEqual(path, attributePath,
-                    "should fetch the node from attribute path");
-                return attributeNode;
-            }
-        });
-
-        strictEqual(document.getDocumentAttribute('hello'), attributeNode, "should return attribute node");
-
-        bookworm.entities.removeMocks();
-    });
-
     test("Field entity getter", function () {
         var document = 'foo/bar'.toDocument(),
             field = document.getField('baz');

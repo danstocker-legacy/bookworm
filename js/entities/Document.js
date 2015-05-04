@@ -38,16 +38,6 @@ troop.postpone(bookworm, 'Document', function () {
             },
 
             /**
-             * Fetches document attribute node from cache.
-             * @param {string} attribute
-             * @returns {*}
-             */
-            getDocumentAttribute: function (attribute) {
-                var attributePath = this.entityKey.getAttributePath(attribute);
-                return bookworm.entities.getNode(attributePath);
-            },
-
-            /**
              * Retrieves Field entity matching the specified field name.
              * @param {string} fieldName
              * @returns {bookworm.Field}

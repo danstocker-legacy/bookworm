@@ -52,159 +52,50 @@
         strictEqual(field.entityKey, fieldKey, "should set field key");
     });
 
-    test("Field attribute getter", function () {
-        expect(3);
-
-        var field = 'foo/bar/baz'.toField(),
-            attributePath = {},
-            attributeNode = {};
-
-        field.entityKey.addMocks({
-            getAttributePath: function (attribute) {
-                equal(attribute, 'hello', "should fetch path for specified attribute");
-                return attributePath;
-            }
-        });
-
-        bookworm.entities.addMocks({
-            getNode: function (path) {
-                strictEqual(path, attributePath, "should fetch node at attribute path");
-                return attributeNode;
-            }
-        });
-
-        strictEqual(field.getAttribute('hello'), attributeNode, "should return attribute node");
-
-        bookworm.entities.removeMocks();
-    });
-
-    test("Silent field attribute getter", function () {
-        expect(3);
-
-        var field = 'foo/bar/baz'.toField(),
-            attributePath = {},
-            attributeNode = {};
-
-        field.entityKey.addMocks({
-            getAttributePath: function (attribute) {
-                equal(attribute, 'hello', "should fetch path for specified attribute");
-                return attributePath;
-            }
-        });
-
-        sntls.Tree.addMocks({
-            getNode: function (path) {
-                strictEqual(path, attributePath, "should fetch node silently at attribute path");
-                return attributeNode;
-            }
-        });
-
-        strictEqual(field.getSilentAttribute('hello'), attributeNode, "should return attribute node");
-
-        sntls.Tree.removeMocks();
-    });
-
-    test("Field attribute setter", function () {
-        expect(4);
-
-        var field = 'foo/bar/baz'.toField(),
-            attributePath = {},
-            attributeNode = {};
-
-        field.entityKey.addMocks({
-            getAttributePath: function (attribute) {
-                equal(attribute, 'hello', "should fetch path for specified attribute");
-                return attributePath;
-            }
-        });
-
-        bookworm.entities.addMocks({
-            setNode: function (path, node) {
-                strictEqual(path, attributePath, "should set node at attribute path");
-                strictEqual(node, attributeNode, "should set specified value at attribute path");
-            }
-        });
-
-        strictEqual(field.setAttribute('hello', attributeNode), field, "should be chainable");
-
-        bookworm.entities.removeMocks();
-    });
-
     test("Field value getter", function () {
-        expect(3);
+        expect(2);
 
         var field = 'foo/bar/baz'.toField(),
-            valuePath = {},
             valueNode = {};
 
-        field.entityKey.addMocks({
-            getValuePath: function () {
-                ok(true, "should fetch value path for current key");
-                return valuePath;
-            }
-        });
-
-        bookworm.entities.addMocks({
-            getNode: function (path) {
-                strictEqual(path, valuePath, "should fetch node at specified value path");
+        field.addMocks({
+            getNode: function () {
+                ok(true, "should fetch field node");
                 return valueNode;
             }
         });
 
-        strictEqual(field.getValue(), valueNode, "should return value node");
-
-        bookworm.entities.removeMocks();
+        strictEqual(field.getValue(), valueNode, "should return field node");
     });
 
     test("Silent field value getter", function () {
-        expect(3);
+        expect(2);
 
         var field = 'foo/bar/baz'.toField(),
-            valuePath = {},
             valueNode = {};
 
-        field.entityKey.addMocks({
-            getValuePath: function () {
-                ok(true, "should fetch value path for current key");
-                return valuePath;
-            }
-        });
-
-        sntls.Tree.addMocks({
-            getNode: function (path) {
-                strictEqual(path, valuePath, "should fetch node silently at specified value path");
+        field.addMocks({
+            getSilentNode: function () {
+                ok(true, "should fetch field node silently");
                 return valueNode;
             }
         });
 
-        strictEqual(field.getSilentValue(), valueNode, "should return value node");
-
-        sntls.Tree.removeMocks();
+        strictEqual(field.getSilentValue(), valueNode, "should return field node");
     });
 
     test("Field value setter", function () {
-        expect(4);
+        expect(2);
 
         var field = 'foo/bar/baz'.toField(),
-            valuePath = {},
             valueNode = {};
 
-        field.entityKey.addMocks({
-            getValuePath: function () {
-                ok(true, "should fetch value path for current key");
-                return valuePath;
-            }
-        });
-
-        bookworm.entities.addMocks({
-            setNode: function (path, value) {
-                strictEqual(path, valuePath, "should set node at specified value path");
-                strictEqual(value, valueNode, "should set specified value node at path");
+        field.addMocks({
+            setNode: function (node) {
+                strictEqual(node, valueNode, "should should set field node");
             }
         });
 
         strictEqual(field.setValue(valueNode), field, "should be chainable");
-
-        bookworm.entities.removeMocks();
     });
 }());
