@@ -67,7 +67,6 @@ troop.postpone(bookworm, 'Entity', function () {
 
             /**
              * Fetches entity node from cache.
-             * Arguments will be appended to the entity path.
              * @example
              * // will fetch the node under 'foo>bar' relative to the entity root
              * entity.getNode('foo', 'bar');
@@ -121,7 +120,6 @@ troop.postpone(bookworm, 'Entity', function () {
 
             /**
              * Replaces entity node with the specified value.
-             * Extra arguments will be appended to the entity path.
              * @example
              * // will set 'hello world' on the path 'foo>bar' relative to the entity root
              * entity.setNode('hello world', 'foo', 'bar');
@@ -145,11 +143,43 @@ troop.postpone(bookworm, 'Entity', function () {
             },
 
             /**
+             * Appends the specified node to the current node. Performs a shallow-merge.
+             * In case of conflicts, the specified node's properties win out.
+             * @param {object} node
+             * @returns {bookworm.Entity}
+             */
+            appendNode: function (node) {
+                var entityKey = this.entityKey,
+                    entityNode = this.getSilentNode(),
+                    keys,
+                    i, key;
+
+                if (typeof entityNode === 'object') {
+                    // merging node
+                    entityKey.triggerSync(this.EVENT_ENTITY_BEFORE_APPEND);
+
+                    keys = Object.keys(node);
+                    for (i = 0; i < keys.length; i++) {
+                        key = keys[i];
+                        entityNode[key] = node[key];
+                    }
+
+                    entityKey.triggerSync(this.EVENT_ENTITY_AFTER_APPEND);
+                } else {
+                    // node is either undefined or primitive
+                    // replacing node
+                    this.setNode(node);
+                }
+
+                return this;
+            },
+
+            /**
              * Removes entity node from cache.
              * Arguments will be appended to the entity path.
              * @example
              * // will remove the node under 'foo>bar' relative to the entity root
-             * entity.unsetKey('foo', 'bar');
+             * entity.unsetNode('foo', 'bar');
              * @returns {bookworm.Entity}
              */
             unsetNode: function () {
@@ -168,14 +198,6 @@ troop.postpone(bookworm, 'Entity', function () {
                 return this;
             }
         });
-
-    /**
-     * Appends the specified node to the entity's current node's contents.
-     * @name bookworm.Entity#appendNode
-     * @function
-     * @param {*} node
-     * @returns {bookworm.Entity}
-     */
 });
 
 troop.amendPostponed(bookworm, 'EntityKey', function () {

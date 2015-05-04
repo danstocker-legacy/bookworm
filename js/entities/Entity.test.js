@@ -225,6 +225,68 @@
         bookworm.entities.removeMocks();
     });
 
+    test("Appending absent node", function () {
+        expect(3);
+
+        var document = 'foo/bar'.toDocument(),
+            entityNode = {};
+
+        document.addMocks({
+            getSilentNode: function () {
+                ok(true, "should fetch node silently");
+                return undefined;
+            },
+
+            setNode: function (node) {
+                strictEqual(node, entityNode, "should set node");
+            }
+        });
+
+        strictEqual(document.appendNode(entityNode), document,
+            "should be chainable");
+    });
+
+    test("Appending node", function () {
+        var document = 'foo/bar'.toDocument(),
+            entityNode = {
+                hello: 'world',
+                hi   : 'test'
+            },
+            nodeToAppend = {
+                hi: 'all'
+            };
+
+        document.addMocks({
+            getSilentNode: function () {
+                return entityNode;
+            }
+        });
+
+        function onBeforeAppend() {
+            deepEqual(entityNode, {
+                hello: "world",
+                hi   : "test"
+            }, "should trigger before-append event");
+        }
+
+        function onAfterAppend() {
+            deepEqual(entityNode, {
+                hello: "world",
+                hi   : "all"
+            }, "should trigger after-append event");
+        }
+
+        document.entityKey
+            .subscribeTo(document.EVENT_ENTITY_BEFORE_APPEND, onBeforeAppend)
+            .subscribeTo(document.EVENT_ENTITY_AFTER_APPEND, onAfterAppend);
+
+        document.appendNode(nodeToAppend);
+
+        document.entityKey
+            .unsubscribeFrom(document.EVENT_ENTITY_BEFORE_APPEND, onBeforeAppend)
+            .unsubscribeFrom(document.EVENT_ENTITY_AFTER_APPEND, onAfterAppend);
+    });
+
     test("Node removal", function () {
         expect(6);
 
