@@ -59,16 +59,6 @@ troop.postpone(bookworm, 'EntityKey', function () {
      */
 
     /**
-     * Resolves key to a path that points to the specified entity attribute in the cache.
-     * @name bookworm.EntityKey#getAttributePath
-     * @function
-     * @param {string} attribute
-     * @returns {sntls.Path}
-     * @deprecated
-     * Use attribute key getter instead.
-     */
-
-    /**
      * Retrieves config node path for the current key.
      * @name bookworm.EntityKey#getConfigPath
      * @function

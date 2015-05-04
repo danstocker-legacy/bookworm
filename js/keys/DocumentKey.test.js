@@ -72,31 +72,6 @@
         deepEqual(documentEntityPath.asArray, ['document', 'foo', 'bar'], "should set path contents correctly");
     });
 
-    test("Attribute path getter", function () {
-        expect(3);
-
-        var documentKey = 'foo/bar'.toFieldKey(),
-            entityPath = 'entity>path'.toPath(),
-            attributePath = {};
-
-        documentKey.addMocks({
-            getEntityPath: function () {
-                ok(true, "should fetch entity path for current key");
-                return entityPath;
-            }
-        });
-
-        entityPath.addMocks({
-            appendKey: function (key) {
-                equal(key, 'hello', "should append attribute to entity path");
-                return attributePath;
-            }
-        });
-
-
-        strictEqual(documentKey.getAttributePath('hello'), attributePath, "should return attribute path");
-    });
-
     test("Config path getter", function () {
         var documentKey = 'foo/bar'.toDocumentKey(),
             entityPath = documentKey.getConfigPath();

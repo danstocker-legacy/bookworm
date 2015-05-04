@@ -94,49 +94,22 @@
         bookworm.DocumentKey.removeMocks();
     });
 
-    test("Attribute path getter", function () {
-        expect(3);
-
-        var fieldKey = 'foo/bar/baz'.toFieldKey(),
-            entityPath = 'entity>path'.toPath(),
-            attributePath = {};
-
-        fieldKey.addMocks({
-            getEntityPath: function () {
-                ok(true, "should fetch entity path for current key");
-                return entityPath;
-            }
-        });
-
-        entityPath.addMocks({
-            appendKey: function (key) {
-                equal(key, 'hello', "should append attribute to entity path");
-                return attributePath;
-            }
-        });
-
-        strictEqual(fieldKey.getAttributePath('hello'), attributePath, "should return attribute path");
-    });
-
     test("Field type getter", function () {
+        expect(2);
+
         var fieldKey = 'foo/bar/baz'.toFieldKey(),
-            entityPaths;
+            fieldType = {};
 
         bookworm.config.addMocks({
             getNode: function (path) {
-                entityPaths.push(path.toString());
-                return 'fieldType';
+                equal(path.toString(), 'document>field>foo/baz>fieldType');
+                return fieldType;
             }
         });
 
-        entityPaths = [];
-        fieldKey.getFieldType();
+        strictEqual(fieldKey.getFieldType(), fieldType, "should return node fetched from config");
 
         bookworm.config.removeMocks();
-
-        deepEqual(entityPaths, [
-            "document>document>foo>baz>fieldType"
-        ], "should fetch field type from attribute if it is found there");
     });
 
     test("Value path getter", function () {

@@ -87,18 +87,6 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
-             * Determines absolute path to the specified attribute of the document identified by the current key.
-             * In case attribute node sits on a different path for a certain `documentType`,
-             * subclass `DocumentKey` and override `.getAttributePath()` to reflect the correct path.
-             * @param {string} attribute Identifies document attribute.
-             * @returns {sntls.Path}
-             */
-            getAttributePath: function (attribute) {
-                return this.getEntityPath()
-                    .appendKey(attribute);
-            },
-
-            /**
              * Determines the absolute path to the config node of the current document.
              * @returns {sntls.Path}
              */

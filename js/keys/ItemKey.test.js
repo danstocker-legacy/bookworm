@@ -87,30 +87,6 @@
         bookworm.FieldKey.removeMocks();
     });
 
-    test("Attribute path getter", function () {
-        expect(3);
-
-        var itemKey = 'foo/bar/baz/A'.toItemKey(),
-            entityPath = 'entity>path'.toPath(),
-            attributePath = {};
-
-        itemKey.addMocks({
-            getEntityPath: function () {
-                equal(this.toString(), 'foo/bar/baz/A', "should fetch entity path for current key");
-                return entityPath;
-            }
-        });
-
-        entityPath.addMocks({
-            appendKey: function (key) {
-                equal(key, 'hello', "should append attribute to entity path");
-                return attributePath;
-            }
-        });
-
-        strictEqual(itemKey.getAttributePath('hello'), attributePath, "should return attribute path");
-    });
-
     test("Item type getter", function () {
         expect(1);
 

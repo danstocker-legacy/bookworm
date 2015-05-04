@@ -106,29 +106,13 @@ troop.postpone(bookworm, 'FieldKey', function () {
             },
 
             /**
-             * Determines absolute path to the attribute node of the field identified by the current key.
-             * In case attribute node sits on a different path relative the Field node
-             * for a certain `documentType` / `fieldName` combination,
-             * subclass `FieldKey` and override `.getAttributePath()` to reflect the correct path.
-             * @param {string} attribute Identifies field attribute.
-             * @returns {sntls.Path}
-             */
-            getAttributePath: function (attribute) {
-                return this.getEntityPath()
-                    .appendKey(attribute);
-            },
-
-            /**
-             * Retrieves the value of a specific attribute (fieldType) on the config document matching
-             * the current `documentType` / `fieldName`. When no such field attribute is found,
-             * returns the config field value itself.
+             * Retrieves the field type associated with the current field from the config datastore.
              * @returns {string}
+             * @see bookworm.config
              */
             getFieldType: function () {
-                var config = bookworm.config,
-                    configFieldKey = this._getConfigFieldKey();
-
-                return config.getNode(configFieldKey.getAttributePath('fieldType'));
+                var field = this.getConfigKey().getFieldKey('fieldType');
+                return bookworm.config.getNode(field.getEntityPath());
             },
 
             /**
