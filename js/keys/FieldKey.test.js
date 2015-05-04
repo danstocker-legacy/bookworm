@@ -48,6 +48,14 @@
         ok(!'foo/bar/baz'.toFieldKey().equals('foo/bar/hello'.toFieldKey()), "should fail on different field name");
     });
 
+    test("Config key getter", function () {
+        var fieldKey = 'foo/bar/baz'.toFieldKey(),
+            configKey = fieldKey.getConfigKey();
+
+        ok(configKey.isA(bookworm.DocumentKey), "should return DocumentKey instance");
+        ok(configKey.equals(['field', 'foo/baz'].toDocumentKey()), "should return correct config key");
+    });
+
     test("Item key getter", function () {
         var fieldKey = 'foo/bar/baz'.toFieldKey(),
             itemKey = fieldKey.getItemKey('hello');

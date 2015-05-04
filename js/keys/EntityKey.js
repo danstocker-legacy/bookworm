@@ -45,6 +45,13 @@ troop.postpone(bookworm, 'EntityKey', function () {
      */
 
     /**
+     * Fetches a key to the document that contains the config information about the current entity.
+     * @name bookworm.EntityKey#getConfigKey
+     * @function
+     * @returns {bookworm.DocumentKey}
+     */
+
+    /**
      * Resolves key to a path that points to the entity node in the cache.
      * @name bookworm.EntityKey#getEntityPath
      * @function

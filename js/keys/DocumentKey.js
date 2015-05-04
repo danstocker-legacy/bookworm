@@ -56,6 +56,14 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
+             * Fetches a document key to the
+             * @returns {bookworm.DocumentKey}
+             */
+            getConfigKey: function () {
+                return ['document', this.documentType].toDocumentKey();
+            },
+
+            /**
              * Creates a `FieldKey` instance based on the current document key and the specified field name.
              * @param {string} fieldName
              * @returns {bookworm.FieldKey}

@@ -45,6 +45,14 @@
         ok(!'foo/bar'.toDocumentKey().equals('fuu/bar'.toDocumentKey()), "should fail for different types");
     });
 
+    test("Config key getter", function () {
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            configKey = documentKey.getConfigKey();
+
+        ok(configKey.isA(bookworm.DocumentKey), "should return DocumentKey instance");
+        ok(configKey.equals('document/foo'.toDocumentKey()), "should return correct config key");
+    });
+
     test("Field key getter", function () {
         var documentKey = 'foo/bar'.toDocumentKey(),
             fieldKey = documentKey.getFieldKey('baz');
