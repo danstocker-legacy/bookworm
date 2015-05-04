@@ -50,4 +50,11 @@
 
         bookworm.EntityKey.removeMocks();
     });
+
+    test("Attribute key getter", function () {
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            attributeKey;
+
+        attributeKey = documentKey.getAttributeKey()
+    });
 }());

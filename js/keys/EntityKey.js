@@ -24,7 +24,17 @@ troop.postpone(bookworm, 'EntityKey', function () {
      */
     bookworm.EntityKey = self
         .setEventSpace(bookworm.entityEventSpace)
-        .setEventPath('entity'.toPath());
+        .setEventPath('entity'.toPath())
+        .addMethods(/** @lends bookworm.EntityKey# */{
+            /**
+             * Fetches an attribute key based on the current key as parent and the specified attribute name.
+             * @param {string} attributeName
+             * @returns {bookworm.AttributeKey}
+             */
+            getAttributeKey: function (attributeName) {
+                return bookworm.AttributeKey.create(this, attributeName);
+            }
+        });
 
     /**
      * Tells whether specified entity key is identical to the current one.
@@ -47,6 +57,8 @@ troop.postpone(bookworm, 'EntityKey', function () {
      * @function
      * @param {string} attribute
      * @returns {sntls.Path}
+     * @deprecated
+     * Use attribute key getter instead.
      */
 
     /**
@@ -54,6 +66,8 @@ troop.postpone(bookworm, 'EntityKey', function () {
      * @name bookworm.EntityKey#getConfigPath
      * @function
      * @returns {sntls.Path}
+     * @deprecated
+     * Use config key getter instead.
      */
 });
 
