@@ -11,6 +11,7 @@ module.exports = function (grunt) {
             'js/cache/index.js',
             'js/events/EntityChangeEvent.js',
             'js/keys/EntityKey.js',
+            'js/keys/AttributeKey.js',
             'js/keys/DocumentKey.js',
             'js/keys/DocumentKeyCollection.js',
             'js/keys/FieldKey.js',
