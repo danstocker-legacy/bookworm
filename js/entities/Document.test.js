@@ -52,6 +52,11 @@
         strictEqual(document.entityKey, documentKey, "should set document key");
     });
 
+    test("Fields entity getter", function () {
+        var document = 'foo/bar'.toDocument();
+        strictEqual(document.getFieldsEntity(), document, "should return self");
+    });
+
     test("Field entity getter", function () {
         var document = 'foo/bar'.toDocument(),
             field = document.getField('baz');

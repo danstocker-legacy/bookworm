@@ -52,6 +52,12 @@
         strictEqual(field.entityKey, fieldKey, "should set field key");
     });
 
+    test("Value entity getter", function () {
+        var field = 'foo/bar/baz'.toField();
+
+        strictEqual(field.getValueEntity(), field, "should return self");
+    });
+
     test("Field value getter", function () {
         expect(2);
 

@@ -38,12 +38,21 @@ troop.postpone(bookworm, 'Field', function () {
             },
 
             /**
+             * Fetches entity associated with the field's value.
+             * Returns self by default.
+             * @returns {bookworm.Entity}
+             */
+            getValueEntity: function () {
+                return this;
+            },
+
+            /**
              * Fetches field value node from cache.
              * Identical to the node by default.
              * @returns {*}
              */
             getValue: function () {
-                return this.getNode();
+                return this.getValueEntity().getNode();
             },
 
             /**
@@ -51,7 +60,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {*}
              */
             getSilentValue: function () {
-                return this.getSilentNode();
+                return this.getValueEntity().getSilentNode();
             },
 
             /**
@@ -60,7 +69,7 @@ troop.postpone(bookworm, 'Field', function () {
              * @returns {bookworm.Field}
              */
             setValue: function (value) {
-                this.setNode(value);
+                this.getValueEntity().setNode(value);
                 return this;
             }
         });
