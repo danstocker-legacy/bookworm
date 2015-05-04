@@ -72,14 +72,6 @@
         deepEqual(documentEntityPath.asArray, ['document', 'foo', 'bar'], "should set path contents correctly");
     });
 
-    test("Config path getter", function () {
-        var documentKey = 'foo/bar'.toDocumentKey(),
-            entityPath = documentKey.getConfigPath();
-
-        ok(entityPath.isA(sntls.Path), "should return Path instance");
-        deepEqual(entityPath.asArray, ['document', 'document', 'foo'], "should set path contents correctly");
-    });
-
     test("Conversion to String", function () {
         equal(bookworm.DocumentKey.create('foo', 'bar').toString(), 'foo/bar', 'should concatenate type / ID with slash');
         equal(bookworm.DocumentKey.create('f/oo', 'b/ar').toString(), 'f%2Foo/b%2Far', 'should URI encode type / ID');

@@ -81,7 +81,8 @@ troop.postpone(bookworm, 'ItemKey', function () {
              * @returns {string}
              */
             getItemType: function () {
-                return bookworm.config.getNode(this.getConfigPath().appendKey('itemType'));
+                var field = this.getConfigKey().getFieldKey('itemType');
+                return bookworm.config.getNode(field.getEntityPath());
             },
 
             /**
@@ -89,7 +90,8 @@ troop.postpone(bookworm, 'ItemKey', function () {
              * @returns {string}
              */
             getItemIdType: function () {
-                return bookworm.config.getNode(this.getConfigPath().appendKey('itemIdType'));
+                var field = this.getConfigKey().getFieldKey('itemIdType');
+                return bookworm.config.getNode(field.getEntityPath());
             },
 
             /**

@@ -87,14 +87,6 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             },
 
             /**
-             * Determines the absolute path to the config node of the current document.
-             * @returns {sntls.Path}
-             */
-            getConfigPath: function () {
-                return ['document', String(this.documentType)].toDocumentKey().getEntityPath();
-            },
-
-            /**
              * Serializes current document key.
              * @example
              * bookworm.DocumentKey.create('user', '1234').toString() // "user/1234"

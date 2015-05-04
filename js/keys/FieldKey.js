@@ -23,17 +23,6 @@ troop.postpone(bookworm, 'FieldKey', function () {
      */
     bookworm.FieldKey = self
         .setEventPath(['document'].toPath().prepend(base.eventPath))
-        .addPrivateMethods(/** @lends bookworm.FieldKey# */{
-            /**
-             * Retrieves `FieldKey` pointing to the config node associated with the current
-             * `documentType` / `fieldName` combination.
-             * @returns {bookworm.FieldKey}
-             * @private
-             */
-            _getConfigFieldKey: function () {
-                return ['document', this.documentKey.documentType, this.fieldName].toFieldKey();
-            }
-        })
         .addMethods(/** @lends bookworm.FieldKey# */{
             /**
              * @param {string} documentType
@@ -125,15 +114,6 @@ troop.postpone(bookworm, 'FieldKey', function () {
              */
             getValuePath: function () {
                 return this.getEntityPath();
-            },
-
-            /**
-             * Determines the absolute path to the config node of the current field.
-             * @returns {sntls.Path}
-             */
-            getConfigPath: function () {
-                return this._getConfigFieldKey()
-                    .getEntityPath();
             },
 
             /**

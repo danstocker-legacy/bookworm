@@ -57,15 +57,6 @@ troop.postpone(bookworm, 'EntityKey', function () {
      * @function
      * @returns {sntls.Path}
      */
-
-    /**
-     * Retrieves config node path for the current key.
-     * @name bookworm.EntityKey#getConfigPath
-     * @function
-     * @returns {sntls.Path}
-     * @deprecated
-     * Use config key getter instead.
-     */
 });
 
 (function () {

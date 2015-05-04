@@ -128,15 +128,6 @@
         strictEqual(fieldKey.getValuePath(), entityPath, "should return entity path");
     });
 
-    test("Config path getter", function () {
-        var fieldKey = 'foo/bar/baz'.toFieldKey(),
-            configPath;
-
-        configPath = fieldKey.getConfigPath();
-        ok(configPath.isA(sntls.Path), "should return Path instance");
-        deepEqual(configPath.asArray, ['document', 'document', 'foo', 'baz'], "should set path contents");
-    });
-
     test("Conversion to String", function () {
         equal(bookworm.FieldKey.create('foo', 'bar', 'baz').toString(), 'foo/bar/baz');
         equal(bookworm.FieldKey.create('foo', 'bar', 'b/az').toString(), 'foo/bar/b%2Faz');

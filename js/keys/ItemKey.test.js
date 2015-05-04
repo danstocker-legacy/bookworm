@@ -88,48 +88,40 @@
     });
 
     test("Item type getter", function () {
-        expect(1);
+        expect(2);
 
-        var itemKey = 'foo/bar/baz/hello'.toItemKey();
-
-        bookworm.FieldKey.addMocks({
-            getConfigPath: function () {
-                return 'config>path'.toPath();
-            }
-        });
+        var itemKey = 'foo/bar/baz/hello'.toItemKey(),
+            itemType = {};
 
         bookworm.config.addMocks({
             getNode: function (path) {
-                equal(path.toString(), 'config>path>itemType', "should fetch item type from field config");
+                equal(path.toString(), 'document>field>foo/baz>itemType',
+                    "should fetch item type from field config");
+                return itemType;
             }
         });
 
-        itemKey.getItemType();
+        strictEqual(itemKey.getItemType(), itemType, "should return item type from config");
 
-        bookworm.FieldKey.removeMocks();
         bookworm.config.removeMocks();
     });
 
     test("Item ID type getter", function () {
-        expect(1);
+        expect(2);
 
-        var key = 'foo/bar/baz/hello'.toItemKey();
-
-        bookworm.FieldKey.addMocks({
-            getConfigPath: function () {
-                return 'config>path'.toPath();
-            }
-        });
+        var itemKey = 'foo/bar/baz/hello'.toItemKey(),
+            itemIdType = {};
 
         bookworm.config.addMocks({
             getNode: function (path) {
-                equal(path.toString(), 'config>path>itemIdType', "should fetch item type from field config");
+                equal(path.toString(), 'document>field>foo/baz>itemIdType',
+                    "should fetch item ID type from field config");
+                return itemIdType;
             }
         });
 
-        key.getItemIdType();
+        strictEqual(itemKey.getItemIdType(), itemIdType, "should return item ID type from config");
 
-        bookworm.FieldKey.removeMocks();
         bookworm.config.removeMocks();
     });
 
@@ -147,14 +139,6 @@
         });
 
         strictEqual(itemKey.getValuePath(), entityPath, "should return entity path");
-    });
-
-    test("Config path getter", function () {
-        var itemKey = 'foo/bar/baz/A'.toItemKey(),
-            configPath = itemKey.getConfigPath();
-
-        ok(configPath.isA(sntls.Path), "should return Path instance");
-        ok(configPath.equals(itemKey.getFieldKey().getConfigPath()), "should return same config path as FieldKey");
     });
 
     test("Conversion to String", function () {
