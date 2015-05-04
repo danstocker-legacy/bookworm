@@ -18,7 +18,6 @@ module.exports = function (grunt) {
             'js/keys/ItemKey.js',
             'js/keys/ReferenceItemKey.js',
             'js/entities/Entity.js',
-            'js/entities/Attribute.js',
             'js/entities/Document.js',
             'js/entities/Field.js',
             'js/entities/CollectionField.js',

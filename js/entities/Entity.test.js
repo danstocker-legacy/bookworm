@@ -24,7 +24,7 @@
         var entity = 'foo/bar'.toDocument(),
             attribute = entity.getAttribute('baz');
 
-        ok(attribute.isA(bookworm.Attribute), "should return Attribute instance");
+        ok(attribute.isA(bookworm.Entity), "should return Entity instance");
         ok(attribute.entityKey.equals('foo/bar'.toDocumentKey().getAttributeKey('baz')), "should set key on attribute");
     });
 

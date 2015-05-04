@@ -59,10 +59,10 @@ troop.postpone(bookworm, 'Entity', function () {
             /**
              * Fetches an Attribute entity for the specified attribute name.
              * @param {string} attributeName
-             * @returns {bookworm.Attribute}
+             * @returns {bookworm.Entity}
              */
             getAttribute: function (attributeName) {
-                return this.entityKey.getAttributeKey(attributeName).toAttribute();
+                return this.entityKey.getAttributeKey(attributeName).toEntity();
             },
 
             /**
