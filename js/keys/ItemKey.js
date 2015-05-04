@@ -77,24 +77,6 @@ troop.postpone(bookworm, 'ItemKey', function () {
             },
 
             /**
-             * Retrieves item type string for the item entity identified by the current key.
-             * @returns {string}
-             */
-            getItemType: function () {
-                var field = this.getConfigKey().getFieldKey('itemType');
-                return bookworm.config.getNode(field.getEntityPath());
-            },
-
-            /**
-             * Retrieves item type string for the item entity identified by the current key.
-             * @returns {string}
-             */
-            getItemIdType: function () {
-                var field = this.getConfigKey().getFieldKey('itemIdType');
-                return bookworm.config.getNode(field.getEntityPath());
-            },
-
-            /**
              * Serializes current item key.
              * @example
              * bookworm.ItemKey.create('user', '1234', 'phones', 'work').toString() // "user/1234/phones/work"

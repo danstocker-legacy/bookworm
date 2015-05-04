@@ -104,6 +104,24 @@ troop.postpone(bookworm, 'FieldKey', function () {
                 return bookworm.config.getNode(field.getEntityPath());
             },
 
+                        /**
+                         * Retrieves item type string for the item entity identified by the current key.
+                         * @returns {string}
+                         */
+                        getItemType: function () {
+                            var field = this.getConfigKey().getFieldKey('itemType');
+                            return bookworm.config.getNode(field.getEntityPath());
+                        },
+
+                        /**
+                         * Retrieves item type string for the item entity identified by the current key.
+                         * @returns {string}
+                         */
+                        getItemIdType: function () {
+                            var field = this.getConfigKey().getFieldKey('itemIdType');
+                            return bookworm.config.getNode(field.getEntityPath());
+                        },
+
             /**
              * Determines absolute path to the value node of the field identified by the current key.
              * In case field value node sits on a different path relative the field node

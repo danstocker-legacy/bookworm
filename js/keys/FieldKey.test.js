@@ -112,6 +112,44 @@
         bookworm.config.removeMocks();
     });
 
+    test("Item type getter", function () {
+        expect(2);
+
+        var fieldKey = 'foo/bar/baz'.toFieldKey(),
+            itemType = {};
+
+        bookworm.config.addMocks({
+            getNode: function (path) {
+                equal(path.toString(), 'document>field>foo/baz>itemType',
+                    "should fetch item type from field config");
+                return itemType;
+            }
+        });
+
+        strictEqual(fieldKey.getItemType(), itemType, "should return item type from config");
+
+        bookworm.config.removeMocks();
+    });
+
+    test("Item ID type getter", function () {
+        expect(2);
+
+        var fieldKey = 'foo/bar/baz'.toFieldKey(),
+            itemIdType = {};
+
+        bookworm.config.addMocks({
+            getNode: function (path) {
+                equal(path.toString(), 'document>field>foo/baz>itemIdType',
+                    "should fetch item ID type from field config");
+                return itemIdType;
+            }
+        });
+
+        strictEqual(fieldKey.getItemIdType(), itemIdType, "should return item ID type from config");
+
+        bookworm.config.removeMocks();
+    });
+
     test("Value path getter", function () {
         expect(2);
 

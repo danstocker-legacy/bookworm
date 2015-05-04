@@ -87,44 +87,6 @@
         bookworm.FieldKey.removeMocks();
     });
 
-    test("Item type getter", function () {
-        expect(2);
-
-        var itemKey = 'foo/bar/baz/hello'.toItemKey(),
-            itemType = {};
-
-        bookworm.config.addMocks({
-            getNode: function (path) {
-                equal(path.toString(), 'document>field>foo/baz>itemType',
-                    "should fetch item type from field config");
-                return itemType;
-            }
-        });
-
-        strictEqual(itemKey.getItemType(), itemType, "should return item type from config");
-
-        bookworm.config.removeMocks();
-    });
-
-    test("Item ID type getter", function () {
-        expect(2);
-
-        var itemKey = 'foo/bar/baz/hello'.toItemKey(),
-            itemIdType = {};
-
-        bookworm.config.addMocks({
-            getNode: function (path) {
-                equal(path.toString(), 'document>field>foo/baz>itemIdType',
-                    "should fetch item ID type from field config");
-                return itemIdType;
-            }
-        });
-
-        strictEqual(itemKey.getItemIdType(), itemIdType, "should return item ID type from config");
-
-        bookworm.config.removeMocks();
-    });
-
     test("Value path getter", function () {
         expect(2);
 
