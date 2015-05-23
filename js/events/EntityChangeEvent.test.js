@@ -11,8 +11,9 @@
                 'foo',
                 eventSpace);
 
-        equal(typeof event.beforeNode, 'undefined', "should set before value to undefined");
-        equal(typeof event.afterNode, 'undefined', "should set After value is not defined");
+        equal(typeof event.beforeNode, 'undefined', "should add beforeNode property");
+        equal(typeof event.afterNode, 'undefined', "should add afterNode property");
+        equal(typeof event.affectedKey, 'undefined', "should add affectedKey property");
     });
 
     test("Conversion from Event", function () {
@@ -36,14 +37,17 @@
 
     test("Cloning", function () {
         var eventSpace = evan.EventSpace.create(),
+            documentKey = 'foo/bar'.toDocumentKey(),
             originalEvent = eventSpace.spawnEvent('bookworm.entity.change')
                 .setBeforeNode('foo')
-                .setAfterNode('bar'),
+                .setAfterNode('bar')
+                .setAffectedKey(documentKey),
             cloneEvent = originalEvent.clone('foo>bar>baz'.toPath());
 
         ok(cloneEvent.isA(bookworm.EntityChangeEvent), "should return EntityChangeEvent instance");
         equal(originalEvent.beforeNode, 'foo', "should set beforeNode on clone");
         equal(originalEvent.afterNode, 'bar', "should set afterNode on clone");
+        strictEqual(originalEvent.affectedKey, documentKey, "should set affectedKey on clone");
     });
 
     test("Before node setter", function () {
@@ -62,53 +66,62 @@
         equal(event.afterNode, 'foo', "should set afterNode property");
     });
 
-        test("Insertion tester", function () {
-            var eventSpace = evan.EventSpace.create(),
-                entityChangeEvent;
+    test("Affected key setter", function () {
+        var eventSpace = evan.EventSpace.create(),
+            documentKey = 'foo/bar'.toDocumentKey(),
+            event = eventSpace.spawnEvent('bookworm.entity.change');
 
-            entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change');
-            ok(!entityChangeEvent.isInsert(),
-                "should return false when neither beforeNode nor afterNode is set");
+        strictEqual(event.setAffectedKey(documentKey), event, "should be chainable");
+        strictEqual(event.affectedKey, documentKey, "should set affectedKey property");
+    });
 
-            entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
-                .setBeforeNode('foo');
-            ok(!entityChangeEvent.isInsert(),
-                "should return false when beforeNode is set");
+    test("Insertion tester", function () {
+        var eventSpace = evan.EventSpace.create(),
+            entityChangeEvent;
 
-            entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
-                .setAfterNode('bar');
-            ok(entityChangeEvent.isInsert(),
-                "should return true when only afterNode is set");
+        entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change');
+        ok(!entityChangeEvent.isInsert(),
+            "should return false when neither beforeNode nor afterNode is set");
 
-            entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
-                .setBeforeNode('foo')
-                .setAfterNode('bar');
-            ok(!entityChangeEvent.isInsert(),
-                "should return false when both beforeNode and afterNode are set");
-        });
+        entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
+            .setBeforeNode('foo');
+        ok(!entityChangeEvent.isInsert(),
+            "should return false when beforeNode is set");
 
-        test("Deletion tester", function () {
-            var eventSpace = evan.EventSpace.create(),
-                entityChangeEvent;
+        entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
+            .setAfterNode('bar');
+        ok(entityChangeEvent.isInsert(),
+            "should return true when only afterNode is set");
 
-            entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change');
-            ok(!entityChangeEvent.isDelete(),
-                "should return false when neither beforeNode nor afterNode is set");
+        entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
+            .setBeforeNode('foo')
+            .setAfterNode('bar');
+        ok(!entityChangeEvent.isInsert(),
+            "should return false when both beforeNode and afterNode are set");
+    });
 
-            entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
-                .setBeforeNode('foo');
-            ok(entityChangeEvent.isDelete(),
-                "should return true when only beforeNode is set");
+    test("Deletion tester", function () {
+        var eventSpace = evan.EventSpace.create(),
+            entityChangeEvent;
 
-            entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
-                .setAfterNode('bar');
-            ok(!entityChangeEvent.isDelete(),
-                "should return false when only afterNode is set");
+        entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change');
+        ok(!entityChangeEvent.isDelete(),
+            "should return false when neither beforeNode nor afterNode is set");
 
-            entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
-                .setBeforeNode('foo')
-                .setAfterNode('bar');
-            ok(!entityChangeEvent.isDelete(),
-                "should return false when both beforeNode and afterNode are set");
-        });
+        entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
+            .setBeforeNode('foo');
+        ok(entityChangeEvent.isDelete(),
+            "should return true when only beforeNode is set");
+
+        entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
+            .setAfterNode('bar');
+        ok(!entityChangeEvent.isDelete(),
+            "should return false when only afterNode is set");
+
+        entityChangeEvent = eventSpace.spawnEvent('bookworm.entity.change')
+            .setBeforeNode('foo')
+            .setAfterNode('bar');
+        ok(!entityChangeEvent.isDelete(),
+            "should return false when both beforeNode and afterNode are set");
+    });
 }());

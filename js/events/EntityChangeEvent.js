@@ -39,6 +39,12 @@ troop.postpone(bookworm, 'EntityChangeEvent', function () {
                  * @type {*}
                  */
                 this.afterNode = undefined;
+
+                /**
+                 * Identifies the node that changed if it is different from the observed key.
+                 * @type {bookworm.EntityKey}
+                 */
+                this.affectedKey = undefined;
             },
 
             /**
@@ -69,6 +75,16 @@ troop.postpone(bookworm, 'EntityChangeEvent', function () {
              */
             setAfterNode: function (value) {
                 this.afterNode = value;
+                return this;
+            },
+
+            /**
+             * Sets key identifying changed node.
+             * @param {bookworm.EntityKey} affectedKey
+             * @returns {bookworm.EntityChangeEvent}
+             */
+            setAffectedKey: function (affectedKey) {
+                this.affectedKey = affectedKey;
                 return this;
             },
 
