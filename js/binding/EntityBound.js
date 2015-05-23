@@ -202,9 +202,25 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
+             * Unsubscribes from all bound entities.
              * @returns {bookworm.EntityBound}
              */
             unbindAll: function () {
+                var that = this;
+
+                // querying all binding parameters
+                this.entityBindings
+                    .queryValuesAsHash('|>|>|>|'.toQuery())
+                    .toCollection()
+                    .forEachItem(function (bindingInfo) {
+                        that._unbindFromEntity(
+                            bindingInfo.targetKey,
+                            bindingInfo.captureKey,
+                            bindingInfo.eventName,
+                            bindingInfo.methodName,
+                            bindingInfo.bindingType);
+                    });
+
                 return this;
             }
         });

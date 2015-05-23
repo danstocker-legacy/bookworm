@@ -238,4 +238,16 @@
                 baz: "Hello World!"
             });
     });
+
+    test("Unbinding from all keys", function () {
+        var entityBound = EntityBound.create()
+            .bindToEntityChange('foo/bar'.toDocumentKey(), 'onEntityEvent')
+            .bindToEntityReplace('foo/bar'.toDocumentKey(), 'onEntityEvent')
+            .bindToFieldChange('foo/bar/baz'.toFieldKey(), 'onEntityEvent');
+
+        strictEqual(entityBound.unbindAll(), entityBound, "should be chainable");
+
+        deepEqual(entityBound.entityBindings.items, {},
+            "should clear binding registry");
+    });
 }());
