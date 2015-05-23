@@ -29,6 +29,8 @@ troop.postpone(bookworm, 'DocumentKey', function () {
              * @ignore
              */
             init: function (documentType, documentId) {
+                base.init.call(this);
+
                 /**
                  * Document type.
                  * @type {string}

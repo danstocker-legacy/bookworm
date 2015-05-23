@@ -26,6 +26,8 @@ troop.postpone(bookworm, 'AttributeKey', function () {
              * @ignore
              */
             init: function (parentKey, attributeName) {
+                base.init.call(this);
+
                 /**
                  * @type {bookworm.EntityKey}
                  */

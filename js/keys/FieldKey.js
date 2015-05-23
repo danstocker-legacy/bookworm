@@ -31,6 +31,8 @@ troop.postpone(bookworm, 'FieldKey', function () {
              * @ignore
              */
             init: function (documentType, documentId, fieldName) {
+                base.init.call(this);
+
                 /**
                  * Document key reference.
                  * @type {bookworm.DocumentKey}

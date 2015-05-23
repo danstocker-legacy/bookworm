@@ -26,6 +26,11 @@ troop.postpone(bookworm, 'EntityKey', function () {
         .setEventSpace(bookworm.entityEventSpace)
         .setEventPath('entity'.toPath())
         .addMethods(/** @lends bookworm.EntityKey# */{
+            /** @ignore */
+            init: function () {
+                evan.Evented.init.call(this);
+            },
+
             /**
              * Fetches an attribute key based on the current key as parent and the specified attribute name.
              * @param {string} attributeName

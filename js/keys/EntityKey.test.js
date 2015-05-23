@@ -5,6 +5,12 @@
 
     module("Entity Key");
 
+    test("Instantiation", function () {
+        var entityKey = bookworm.EntityKey.create();
+
+       ok(entityKey.hasOwnProperty('subscriptionRegistry'), "should initialize Evented trait");
+    });
+
     test("String conversion", function () {
         expect(1);
 
