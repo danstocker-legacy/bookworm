@@ -8,7 +8,7 @@ troop.postpone(bookworm, 'HandlerSpawner', function () {
     /**
      * @name bookworm.HandlerSpawner.create
      * @function
-     * @param {string} bindingType
+     * @param {string} [bindingType]
      * @returns {bookworm.HandlerSpawner}
      */
 
@@ -19,7 +19,7 @@ troop.postpone(bookworm, 'HandlerSpawner', function () {
     bookworm.HandlerSpawner = self
         .addMethods(/** @lends bookworm.HandlerSpawner# */{
             /**
-             * @param {string} bindingType
+             * @param {string} [bindingType]
              * @ignore
              */
             init: function (bindingType) {
