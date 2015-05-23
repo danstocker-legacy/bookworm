@@ -42,6 +42,49 @@ troop.postpone(bookworm, 'EntityBound', function () {
                         that[methodName](event);
                     }
                 };
+            },
+
+            /**
+             * @param {string} methodName
+             * @param {bookworm.FieldKey} fieldKey
+             * @returns {Function}
+             * @private
+             */
+            _spawnFieldChangeHandler: function (methodName, fieldKey) {
+                var that = this;
+                return function (event) {
+                    var affectedKey = event.sender,
+                        fieldPath,
+                        beforeNode,
+                        afterNode;
+
+                    if (affectedKey.equals(fieldKey)) {
+                        // field changed
+                        // same as if we were subscribing on the event itself
+                        event.setAffectedKey(fieldKey);
+                        that[methodName](event);
+                    } else if (affectedKey.equals(fieldKey.documentKey)) {
+                        // document changed
+
+                        fieldPath = fieldKey.getEntityPath();
+                        beforeNode = sntls.Tree.create()
+                            .setNode(affectedKey.getEntityPath(), event.beforeNode)
+                            .getNode(fieldPath);
+                        afterNode = bookworm.entities.getNode(fieldPath);
+
+                        if (beforeNode !== afterNode) {
+                            // field has changed
+
+                            // creating event that carries correct information
+                            event = event.clone()
+                                .setAffectedKey(fieldKey)
+                                .setBeforeNode(beforeNode)
+                                .setAfterNode(afterNode);
+
+                            that[methodName](event);
+                        }
+                    }
+                };
             }
         })
         .addMethods(/** @lends bookworm.EntityBound# */{
@@ -89,7 +132,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
 
                 if (handler) {
                     entityKey.unsubscribeFrom(EVENT_ENTITY_CHANGE, handler);
-                    entityBindings.unsetPath(bindingPath, handler);
+                    entityBindings.unsetPath(bindingPath);
                 }
 
                 return this;
@@ -133,9 +176,65 @@ troop.postpone(bookworm, 'EntityBound', function () {
 
                 if (handler) {
                     entityKey.unsubscribeFrom(EVENT_ENTITY_CHANGE, handler);
-                    entityBindings.unsetPath(bindingPath, handler);
+                    entityBindings.unsetPath(bindingPath);
                 }
 
+                return this;
+            },
+
+            /**
+             * Subscribes method to be triggered when field or document changes.
+             * Adds `affectedKey` payload / property to event.
+             * @param {bookworm.FieldKey} fieldKey
+             * @param {string} methodName
+             * @returns {bookworm.EntityBound}
+             */
+            bindToFieldChange: function (fieldKey, methodName) {
+                dessert
+                    .isFieldKeyStrict(fieldKey, "Invalid field key")
+                    .isFunction(this[methodName], "Attempting to bind non-method");
+
+                var entityBindings = this.entityBindings,
+                    EVENT_ENTITY_CHANGE = bookworm.Entity.EVENT_ENTITY_CHANGE,
+                    bindingPath = [fieldKey.toString(), EVENT_ENTITY_CHANGE, methodName, 'cascading'].toPath(),
+                    handler = entityBindings.getNode(bindingPath);
+
+                if (!handler) {
+                    handler = this._spawnFieldChangeHandler(methodName, fieldKey);
+                    fieldKey.documentKey.subscribeTo(EVENT_ENTITY_CHANGE, handler);
+                    entityBindings.setNode(bindingPath, handler);
+                }
+
+                return this;
+            },
+
+            /**
+             * @param {bookworm.FieldKey} fieldKey
+             * @param {string} methodName
+             * @returns {bookworm.EntityBound}
+             */
+            unbindFromFieldChange: function (fieldKey, methodName) {
+                dessert
+                    .isFieldKeyStrict(fieldKey, "Invalid field key")
+                    .isFunction(this[methodName], "Attempting to unbind non-method");
+
+                var entityBindings = this.entityBindings,
+                    EVENT_ENTITY_CHANGE = bookworm.Entity.EVENT_ENTITY_CHANGE,
+                    bindingPath = [fieldKey.toString(), EVENT_ENTITY_CHANGE, methodName, 'cascading'].toPath(),
+                    handler = entityBindings.getNode(bindingPath);
+
+                if (handler) {
+                    fieldKey.documentKey.unsubscribeFrom(EVENT_ENTITY_CHANGE, handler);
+                    entityBindings.unsetPath(bindingPath);
+                }
+
+                return this;
+            },
+
+            /**
+             * @returns {bookworm.EntityBound}
+             */
+            unbindAll: function () {
                 return this;
             }
         });

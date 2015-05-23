@@ -169,4 +169,97 @@
                 baz: "Hello World!"
             });
     });
+
+    test("Binding to field and changing field", function () {
+        expect(5);
+
+        var entityBound = EntityBound.create(),
+            fieldKey = 'foo/bar/baz'.toFieldKey();
+
+        fieldKey.documentKey.toDocument()
+            .setNode({});
+
+        entityBound.addMocks({
+            onEntityEvent: function (event) {
+                ok(fieldKey.equals(event.affectedKey), "should set affectedKey on event");
+                equal(typeof event.beforeNode, 'undefined', "should set beforeNode on event");
+                equal(event.afterNode, "Hello World!", "should set afterNode on event");
+            }
+        });
+
+        strictEqual(entityBound.bindToFieldChange(fieldKey, 'onEntityEvent'), entityBound, "should be chainable");
+
+        deepEqual(JSON.parse(JSON.stringify(entityBound.entityBindings.items)), {
+            "foo/bar/baz": {
+                "bookworm.entity.change": {
+                    "onEntityEvent": {}
+                }
+            }
+        }, "should set binding info in registry");
+
+        // should not trigger
+        fieldKey.toField()
+            .setValue("Hello World!");
+
+        entityBound.unbindFromFieldChange(fieldKey, 'onEntityEvent');
+    });
+
+    test("Binding to field and changing document", function () {
+        expect(3);
+
+        var entityBound = EntityBound.create(),
+            fieldKey = 'foo/bar/baz'.toFieldKey();
+
+        fieldKey.documentKey.toDocument()
+            .setNode({});
+
+        entityBound.addMocks({
+            onEntityEvent: function (event) {
+                ok(fieldKey.equals(event.affectedKey), "should set affectedKey on event");
+                equal(typeof event.beforeNode, 'undefined', "should set beforeNode on event");
+                equal(event.afterNode, "Hello World!", "should set afterNode on event");
+            }
+        });
+
+        entityBound.bindToFieldChange(fieldKey, 'onEntityEvent');
+
+        // should trigger
+        fieldKey.documentKey.toDocument()
+            .setNode({
+                baz: "Hello World!"
+            });
+
+        // should not trigger
+        fieldKey.documentKey.toDocument()
+            .setNode({
+                baz: "Hello World!"
+            });
+
+        entityBound.unbindFromFieldChange(fieldKey, 'onEntityEvent');
+    });
+
+    test("Unbinding from field change", function () {
+        var fieldKey = 'foo/bar/baz'.toFieldKey(),
+            entityBound = EntityBound.create();
+
+        entityBound.addMocks({
+            onEntityEvent: function () {
+                ok(false, "should not call handler");
+            }
+        });
+
+        entityBound.bindToFieldChange(fieldKey, 'onEntityEvent');
+
+        strictEqual(entityBound.unbindFromFieldChange(fieldKey, 'onEntityEvent'), entityBound,
+            "should be chainable");
+
+        deepEqual(JSON.parse(JSON.stringify(entityBound.entityBindings.items)), {},
+            "should remove binding info from registry");
+
+        // should not trigger
+        fieldKey.documentKey.toDocument()
+            .setNode({
+                baz: "Hello World!"
+            });
+    });
 }());
