@@ -8,17 +8,6 @@ troop.postpone(bookworm, 'EntityBound', function () {
      * @extends troop.Base
      */
     bookworm.EntityBound = troop.Base.extend()
-        .addConstants(/** @lends bookworm.EntityBound */{
-            /**
-             * @type {object}
-             * @constant
-             */
-            entityBindingTypes: {
-                change : 'change',
-                replace: 'replace',
-                field  : 'field'
-            }
-        })
         .addPrivateMethods(/** @lends bookworm.EntityBound# */{
             /**
              * @param {bookworm.EntityKey} targetKey
