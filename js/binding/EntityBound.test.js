@@ -120,4 +120,71 @@
 
         strictEqual(entityBound.unbindFromEntityChange(documentKey, 'onEntityEvent'), entityBound, "should be chainable");
     });
+
+    test("Binding to entity replacement", function () {
+        expect(7);
+
+        var entityBound = EntityBound.create(),
+            documentKey = 'foo/bar'.toDocumentKey(),
+            finalHandler = function () {};
+
+        entityBound.entityBindings.addMocks({
+            getNode: function (path) {
+                ok(path.equals(['foo/bar', 'bookworm.entity.change', 'onEntityEvent', 'replace'].toPath()),
+                    "should fetch handler from binding registry");
+                return undefined;
+            },
+            setNode: function (path, value) {
+                ok(path.equals(['foo/bar', 'bookworm.entity.change', 'onEntityEvent', 'replace'].toPath()),
+                    "should store handler in registry");
+                strictEqual(value, finalHandler, "should pass final handler to registry");
+            }
+        });
+
+        entityBound.addMocks({
+            _spawnReplaceEntityHandler: function (methodName) {
+                equal(methodName, 'onEntityEvent', "should spawn handler for method");
+                return finalHandler;
+            }
+        });
+
+        documentKey.addMocks({
+            subscribeTo: function (eventName, handler) {
+                equal(eventName, 'bookworm.entity.change', "should subscribe to entity change");
+                strictEqual(handler, finalHandler, "should pass final handler to subscription");
+            }
+        });
+
+        strictEqual(entityBound.bindToEntityReplace(documentKey, 'onEntityEvent'), entityBound, "should be chainable");
+    });
+
+    test("Unbinding from entity replacement", function () {
+        expect(5);
+
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entityBound = EntityBound.create()
+                .bindToEntityChange(documentKey, 'onEntityEvent'),
+            finalHandler = function () {};
+
+        entityBound.entityBindings.addMocks({
+            getNode  : function (path) {
+                ok(path.equals(['foo/bar', 'bookworm.entity.change', 'onEntityEvent', 'replace'].toPath()),
+                    "should fetch handler from binding registry");
+                return finalHandler;
+            },
+            unsetPath: function (path) {
+                ok(path.equals(['foo/bar', 'bookworm.entity.change', 'onEntityEvent', 'replace'].toPath()),
+                    "should remove subscription from registry");
+            }
+        });
+
+        documentKey.addMocks({
+            unsubscribeFrom: function (eventName, handler) {
+                equal(eventName, 'bookworm.entity.change', "should unsubscribe from change on key");
+                strictEqual(handler, finalHandler, "should pass handler to unsubscription");
+            }
+        });
+
+        strictEqual(entityBound.unbindFromEntityReplace(documentKey, 'onEntityEvent'), entityBound, "should be chainable");
+    });
 }());
