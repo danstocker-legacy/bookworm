@@ -3,12 +3,12 @@
 (function () {
     "use strict";
 
-    module("ChangeHandlerSpawner");
+    module("PassThroughHandlerSpawner");
 
     test("Conversion from HandlerSpawner", function () {
-        var handlerSpawner = bookworm.HandlerSpawner.create('change');
+        var handlerSpawner = bookworm.HandlerSpawner.create('pass-through');
 
-        ok(handlerSpawner.isA(bookworm.ChangeHandlerSpawner),
-            "should return ChangeHandlerSpawner instance");
+        ok(handlerSpawner.isA(bookworm.PassThroughHandlerSpawner),
+            "should return PassThroughHandlerSpawner instance");
     });
 }());

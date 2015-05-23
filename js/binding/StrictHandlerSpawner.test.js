@@ -3,12 +3,12 @@
 (function () {
     "use strict";
 
-    module("ReplaceHandlerSpawner");
+    module("StrictHandlerSpawner");
 
     test("Conversion from HandlerSpawner", function () {
-        var handlerSpawner = bookworm.HandlerSpawner.create('replace');
+        var handlerSpawner = bookworm.HandlerSpawner.create('strict');
 
-        ok(handlerSpawner.isA(bookworm.ReplaceHandlerSpawner),
-            "should return ReplaceHandlerSpawner instance");
+        ok(handlerSpawner.isA(bookworm.StrictHandlerSpawner),
+            "should return StrictHandlerSpawner instance");
     });
 }());

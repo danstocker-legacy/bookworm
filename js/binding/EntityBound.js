@@ -82,7 +82,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     entityKey,
                     bookworm.Entity.EVENT_ENTITY_CHANGE,
                     methodName,
-                    'change');
+                    'pass-through');
 
                 return this;
             },
@@ -102,7 +102,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     entityKey,
                     bookworm.Entity.EVENT_ENTITY_CHANGE,
                     methodName,
-                    'change');
+                    'pass-through');
 
                 return this;
             },
@@ -123,7 +123,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     entityKey,
                     bookworm.Entity.EVENT_ENTITY_CHANGE,
                     methodName,
-                    'replace');
+                    'strict');
 
                 return this;
             },
@@ -143,7 +143,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     entityKey,
                     bookworm.Entity.EVENT_ENTITY_CHANGE,
                     methodName,
-                    'replace');
+                    'strict');
 
                 return this;
             },

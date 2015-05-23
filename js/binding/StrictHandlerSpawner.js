@@ -1,22 +1,22 @@
 /*global dessert, troop, sntls, bookworm */
-troop.postpone(bookworm, 'ReplaceHandlerSpawner', function () {
+troop.postpone(bookworm, 'StrictHandlerSpawner', function () {
     "use strict";
 
     var base = bookworm.HandlerSpawner,
         self = base.extend();
 
     /**
-     * @name bookworm.ReplaceHandlerSpawner.create
+     * @name bookworm.StrictHandlerSpawner.create
      * @function
-     * @returns {bookworm.ReplaceHandlerSpawner}
+     * @returns {bookworm.StrictHandlerSpawner}
      */
 
     /**
      * @class
      * @extends bookworm.HandlerSpawner
      */
-    bookworm.ReplaceHandlerSpawner = self
-        .addMethods(/** @lends bookworm.ReplaceHandlerSpawner# */{
+    bookworm.StrictHandlerSpawner = self
+        .addMethods(/** @lends bookworm.StrictHandlerSpawner# */{
             /**
              * @param {bookworm.EntityBound} instance
              * @param {string} methodName
@@ -37,7 +37,7 @@ troop.amendPostponed(bookworm, 'HandlerSpawner', function () {
     "use strict";
 
     bookworm.HandlerSpawner
-        .addSurrogate(bookworm, 'ReplaceHandlerSpawner', function (bindingType) {
-            return bindingType === 'replace';
+        .addSurrogate(bookworm, 'StrictHandlerSpawner', function (bindingType) {
+            return bindingType === 'strict';
         });
 });
