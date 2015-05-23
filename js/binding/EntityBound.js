@@ -38,15 +38,14 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     handler = bookworm.HandlerSpawner.create(bindingType)
                         .spawnHandler(this, methodName, targetKey);
                     captureKey.subscribeTo(eventName, handler);
-                    entityBindings.setNode(bindingPath, handler);
-                    //                    entityBindings.setNode(bindingPath, {
-                    //                        targetKey  : targetKey,
-                    //                        affectedKey: captureKey,
-                    //                        eventName  : eventName,
-                    //                        methodName : methodName,
-                    //                        bindingType: bindingType,
-                    //                        handler    : handler
-                    //                    });
+                    entityBindings.setNode(bindingPath, {
+                        targetKey  : targetKey,
+                        captureKey : captureKey,
+                        eventName  : eventName,
+                        methodName : methodName,
+                        bindingType: bindingType,
+                        handler    : handler
+                    });
                 }
             },
 
@@ -65,8 +64,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     handler;
 
                 if (bindingInfo) {
-                    //                    handler = bindingInfo.handler;
-                    handler = bindingInfo;
+                    handler = bindingInfo.handler;
                     captureKey.unsubscribeFrom(eventName, handler);
                     entityBindings.unsetPath(bindingPath);
                 }

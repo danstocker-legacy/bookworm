@@ -21,7 +21,7 @@
     });
 
     test("Binding to entity change", function () {
-        expect(4);
+        expect(3);
 
         var entityBound = EntityBound.create(),
             documentKey = 'foo/bar'.toDocumentKey();
@@ -39,14 +39,6 @@
         strictEqual(entityBound.bindToEntityChange(documentKey, 'onEntityEvent'), entityBound,
             "should be chainable");
 
-        deepEqual(JSON.parse(JSON.stringify(entityBound.entityBindings.items)), {
-            "foo/bar": {
-                "bookworm.entity.change": {
-                    "onEntityEvent": {}
-                }
-            }
-        }, "should set binding info in registry");
-
         // should trigger
         documentKey.toDocument().getField('baz')
             .setValue("Hello World!");
@@ -59,7 +51,7 @@
             entityBound = EntityBound.create()
                 .bindToEntityChange(documentKey, 'onEntityEvent'),
             handler = entityBound.entityBindings.getNode([
-                "foo/bar", "bookworm.entity.change", "onEntityEvent", "normal"].toPath());
+                "foo/bar", "bookworm.entity.change", "onEntityEvent", "change"].toPath());
 
         entityBound.addMocks({
             onEntityEvent: function () {
@@ -70,7 +62,7 @@
         entityBound.bindToEntityChange(documentKey, 'onEntityEvent');
 
         strictEqual(entityBound.entityBindings.getNode([
-            "foo/bar", "bookworm.entity.change", "onEntityEvent", "normal"].toPath()),
+            "foo/bar", "bookworm.entity.change", "onEntityEvent", "change"].toPath()),
             handler,
             "should not alter current subscription");
 
@@ -105,7 +97,7 @@
     });
 
     test("Binding to entity replacement", function () {
-        expect(4);
+        expect(3);
 
         var entityBound = EntityBound.create(),
             documentKey = 'foo/bar'.toDocumentKey();
@@ -123,14 +115,6 @@
         });
 
         strictEqual(entityBound.bindToEntityReplace(documentKey, 'onEntityEvent'), entityBound, "should be chainable");
-
-        deepEqual(JSON.parse(JSON.stringify(entityBound.entityBindings.items)), {
-            "foo/bar": {
-                "bookworm.entity.change": {
-                    "onEntityEvent": {}
-                }
-            }
-        }, "should set binding info in registry");
 
         // should trigger
         documentKey.toDocument()
@@ -160,7 +144,7 @@
         strictEqual(entityBound.unbindFromEntityReplace(documentKey, 'onEntityEvent'), entityBound,
             "should be chainable");
 
-        deepEqual(JSON.parse(JSON.stringify(entityBound.entityBindings.items)), {},
+        deepEqual(entityBound.entityBindings.items, {},
             "should remove binding info from registry");
 
         // should not trigger
@@ -171,7 +155,7 @@
     });
 
     test("Binding to field and changing field", function () {
-        expect(5);
+        expect(4);
 
         var entityBound = EntityBound.create(),
             fieldKey = 'foo/bar/baz'.toFieldKey();
@@ -188,14 +172,6 @@
         });
 
         strictEqual(entityBound.bindToFieldChange(fieldKey, 'onEntityEvent'), entityBound, "should be chainable");
-
-        deepEqual(JSON.parse(JSON.stringify(entityBound.entityBindings.items)), {
-            "foo/bar/baz": {
-                "bookworm.entity.change": {
-                    "onEntityEvent": {}
-                }
-            }
-        }, "should set binding info in registry");
 
         // should not trigger
         fieldKey.toField()
@@ -253,7 +229,7 @@
         strictEqual(entityBound.unbindFromFieldChange(fieldKey, 'onEntityEvent'), entityBound,
             "should be chainable");
 
-        deepEqual(JSON.parse(JSON.stringify(entityBound.entityBindings.items)), {},
+        deepEqual(entityBound.entityBindings.items, {},
             "should remove binding info from registry");
 
         // should not trigger
