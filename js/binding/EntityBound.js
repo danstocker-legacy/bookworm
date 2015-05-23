@@ -14,77 +14,62 @@ troop.postpone(bookworm, 'EntityBound', function () {
              * @constant
              */
             entityBindingTypes: {
-                normal   : 'normal',
-                replace  : 'replace',
-                cascading: 'cascading'
+                change : 'change',
+                replace: 'replace',
+                field  : 'field'
             }
         })
         .addPrivateMethods(/** @lends bookworm.EntityBound# */{
             /**
+             * @param {bookworm.EntityKey} targetKey
+             * @param {bookworm.EntityKey} captureKey
+             * @param {string} eventName
              * @param {string} methodName
-             * @returns {Function}
+             * @param {string} bindingType
              * @private
              */
-            _spawnNormalEntityHandler: function (methodName) {
-                return this[methodName].bind(this);
+            _bindToEntity: function (targetKey, captureKey, eventName, methodName, bindingType) {
+                var entityBindings = this.entityBindings,
+                    bindingPath = [targetKey.toString(), eventName, methodName, bindingType].toPath(),
+                    bindingInfo = entityBindings.getNode(bindingPath),
+                    handler;
+
+                if (!bindingInfo) {
+                    handler = bookworm.HandlerSpawner.create(bindingType)
+                        .spawnHandler(this, methodName, targetKey);
+                    captureKey.subscribeTo(eventName, handler);
+                    entityBindings.setNode(bindingPath, handler);
+                    //                    entityBindings.setNode(bindingPath, {
+                    //                        targetKey  : targetKey,
+                    //                        affectedKey: captureKey,
+                    //                        eventName  : eventName,
+                    //                        methodName : methodName,
+                    //                        bindingType: bindingType,
+                    //                        handler    : handler
+                    //                    });
+                }
             },
 
             /**
+             * @param {bookworm.EntityKey} targetKey
+             * @param {bookworm.EntityKey} captureKey
+             * @param {string} eventName
              * @param {string} methodName
-             * @param {bookworm.EntityKey} entityKey
-             * @returns {Function}
+             * @param {string} bindingType
              * @private
              */
-            _spawnReplaceEntityHandler: function (methodName, entityKey) {
-                var that = this;
-                return function (event) {
-                    if (event.sender.equals(entityKey)) {
-                        that[methodName](event);
-                    }
-                };
-            },
+            _unbindFromEntity: function (targetKey, captureKey, eventName, methodName, bindingType) {
+                var entityBindings = this.entityBindings,
+                    bindingPath = [targetKey.toString(), eventName, methodName, bindingType].toPath(),
+                    bindingInfo = entityBindings.getNode(bindingPath),
+                    handler;
 
-            /**
-             * @param {string} methodName
-             * @param {bookworm.FieldKey} fieldKey
-             * @returns {Function}
-             * @private
-             */
-            _spawnFieldChangeHandler: function (methodName, fieldKey) {
-                var that = this;
-                return function (event) {
-                    var affectedKey = event.sender,
-                        fieldPath,
-                        beforeNode,
-                        afterNode;
-
-                    if (affectedKey.equals(fieldKey)) {
-                        // field changed
-                        // same as if we were subscribing on the event itself
-                        event.setAffectedKey(fieldKey);
-                        that[methodName](event);
-                    } else if (affectedKey.equals(fieldKey.documentKey)) {
-                        // document changed
-
-                        fieldPath = fieldKey.getEntityPath();
-                        beforeNode = sntls.Tree.create()
-                            .setNode(affectedKey.getEntityPath(), event.beforeNode)
-                            .getNode(fieldPath);
-                        afterNode = bookworm.entities.getNode(fieldPath);
-
-                        if (beforeNode !== afterNode) {
-                            // field has changed
-
-                            // creating event that carries correct information
-                            event = event.clone()
-                                .setAffectedKey(fieldKey)
-                                .setBeforeNode(beforeNode)
-                                .setAfterNode(afterNode);
-
-                            that[methodName](event);
-                        }
-                    }
-                };
+                if (bindingInfo) {
+                    //                    handler = bindingInfo.handler;
+                    handler = bindingInfo;
+                    captureKey.unsubscribeFrom(eventName, handler);
+                    entityBindings.unsetPath(bindingPath);
+                }
             }
         })
         .addMethods(/** @lends bookworm.EntityBound# */{
@@ -101,18 +86,16 @@ troop.postpone(bookworm, 'EntityBound', function () {
              * @returns {bookworm.EntityBound}
              */
             bindToEntityChange: function (entityKey, methodName) {
-                dessert.isFunction(this[methodName], "Attempting to bind non-method");
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isFunction(this[methodName], "Attempting to bind non-method");
 
-                var entityBindings = this.entityBindings,
-                    EVENT_ENTITY_CHANGE = bookworm.Entity.EVENT_ENTITY_CHANGE,
-                    bindingPath = [entityKey.toString(), EVENT_ENTITY_CHANGE, methodName, 'normal'].toPath(),
-                    handler = entityBindings.getNode(bindingPath);
-
-                if (!handler) {
-                    handler = this._spawnNormalEntityHandler(methodName);
-                    entityKey.subscribeTo(EVENT_ENTITY_CHANGE, handler);
-                    entityBindings.setNode(bindingPath, handler);
-                }
+                this._bindToEntity(
+                    entityKey,
+                    entityKey,
+                    bookworm.Entity.EVENT_ENTITY_CHANGE,
+                    methodName,
+                    'change');
 
                 return this;
             },
@@ -123,17 +106,16 @@ troop.postpone(bookworm, 'EntityBound', function () {
              * @returns {bookworm.EntityBound}
              */
             unbindFromEntityChange: function (entityKey, methodName) {
-                dessert.isFunction(this[methodName], "Attempting to unbind non-method");
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isFunction(this[methodName], "Attempting to unbind non-method");
 
-                var entityBindings = this.entityBindings,
-                    EVENT_ENTITY_CHANGE = bookworm.Entity.EVENT_ENTITY_CHANGE,
-                    bindingPath = [entityKey.toString(), EVENT_ENTITY_CHANGE, methodName, 'normal'].toPath(),
-                    handler = entityBindings.getNode(bindingPath);
-
-                if (handler) {
-                    entityKey.unsubscribeFrom(EVENT_ENTITY_CHANGE, handler);
-                    entityBindings.unsetPath(bindingPath);
-                }
+                this._unbindFromEntity(
+                    entityKey,
+                    entityKey,
+                    bookworm.Entity.EVENT_ENTITY_CHANGE,
+                    methodName,
+                    'change');
 
                 return this;
             },
@@ -145,18 +127,16 @@ troop.postpone(bookworm, 'EntityBound', function () {
              * @returns {bookworm.EntityBound}
              */
             bindToEntityReplace: function (entityKey, methodName) {
-                dessert.isFunction(this[methodName], "Attempting to bind non-method");
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isFunction(this[methodName], "Attempting to bind non-method");
 
-                var entityBindings = this.entityBindings,
-                    EVENT_ENTITY_CHANGE = bookworm.Entity.EVENT_ENTITY_CHANGE,
-                    bindingPath = [entityKey.toString(), EVENT_ENTITY_CHANGE, methodName, 'replace'].toPath(),
-                    handler = entityBindings.getNode(bindingPath);
-
-                if (!handler) {
-                    handler = this._spawnReplaceEntityHandler(methodName, entityKey);
-                    entityKey.subscribeTo(EVENT_ENTITY_CHANGE, handler);
-                    entityBindings.setNode(bindingPath, handler);
-                }
+                this._bindToEntity(
+                    entityKey,
+                    entityKey,
+                    bookworm.Entity.EVENT_ENTITY_CHANGE,
+                    methodName,
+                    'replace');
 
                 return this;
             },
@@ -167,17 +147,16 @@ troop.postpone(bookworm, 'EntityBound', function () {
              * @returns {bookworm.EntityBound}
              */
             unbindFromEntityReplace: function (entityKey, methodName) {
-                dessert.isFunction(this[methodName], "Attempting to unbind non-method");
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isFunction(this[methodName], "Attempting to unbind non-method");
 
-                var entityBindings = this.entityBindings,
-                    EVENT_ENTITY_CHANGE = bookworm.Entity.EVENT_ENTITY_CHANGE,
-                    bindingPath = [entityKey.toString(), EVENT_ENTITY_CHANGE, methodName, 'replace'].toPath(),
-                    handler = entityBindings.getNode(bindingPath);
-
-                if (handler) {
-                    entityKey.unsubscribeFrom(EVENT_ENTITY_CHANGE, handler);
-                    entityBindings.unsetPath(bindingPath);
-                }
+                this._unbindFromEntity(
+                    entityKey,
+                    entityKey,
+                    bookworm.Entity.EVENT_ENTITY_CHANGE,
+                    methodName,
+                    'replace');
 
                 return this;
             },
@@ -194,16 +173,12 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     .isFieldKeyStrict(fieldKey, "Invalid field key")
                     .isFunction(this[methodName], "Attempting to bind non-method");
 
-                var entityBindings = this.entityBindings,
-                    EVENT_ENTITY_CHANGE = bookworm.Entity.EVENT_ENTITY_CHANGE,
-                    bindingPath = [fieldKey.toString(), EVENT_ENTITY_CHANGE, methodName, 'cascading'].toPath(),
-                    handler = entityBindings.getNode(bindingPath);
-
-                if (!handler) {
-                    handler = this._spawnFieldChangeHandler(methodName, fieldKey);
-                    fieldKey.documentKey.subscribeTo(EVENT_ENTITY_CHANGE, handler);
-                    entityBindings.setNode(bindingPath, handler);
-                }
+                this._bindToEntity(
+                    fieldKey,
+                    fieldKey.documentKey,
+                    bookworm.Entity.EVENT_ENTITY_CHANGE,
+                    methodName,
+                    'field');
 
                 return this;
             },
@@ -218,15 +193,12 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     .isFieldKeyStrict(fieldKey, "Invalid field key")
                     .isFunction(this[methodName], "Attempting to unbind non-method");
 
-                var entityBindings = this.entityBindings,
-                    EVENT_ENTITY_CHANGE = bookworm.Entity.EVENT_ENTITY_CHANGE,
-                    bindingPath = [fieldKey.toString(), EVENT_ENTITY_CHANGE, methodName, 'cascading'].toPath(),
-                    handler = entityBindings.getNode(bindingPath);
-
-                if (handler) {
-                    fieldKey.documentKey.unsubscribeFrom(EVENT_ENTITY_CHANGE, handler);
-                    entityBindings.unsetPath(bindingPath);
-                }
+                this._unbindFromEntity(
+                    fieldKey,
+                    fieldKey.documentKey,
+                    bookworm.Entity.EVENT_ENTITY_CHANGE,
+                    methodName,
+                    'field');
 
                 return this;
             },

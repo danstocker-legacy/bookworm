@@ -23,7 +23,10 @@ module.exports = function (grunt) {
             'js/entities/CollectionField.js',
             'js/entities/OrderedCollectionField.js',
             'js/entities/Item.js',
-            'js/binding/EntityBound.js',
+            'js/binding/HandlerSpawner.js',
+            'js/binding/ChangeHandlerSpawner.js',
+            'js/binding/ReplaceHandlerSpawner.js',
+            'js/binding/FieldHandlerSpawner.js',
             'js/exports.js'
         ],
 
