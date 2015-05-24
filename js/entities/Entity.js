@@ -67,9 +67,6 @@ troop.postpone(bookworm, 'Entity', function () {
 
             /**
              * Fetches entity node from cache.
-             * @example
-             * // will fetch the node under 'foo>bar' relative to the entity root
-             * entity.getNode('foo', 'bar');
              * @returns {*}
              */
             getNode: function () {
@@ -120,9 +117,6 @@ troop.postpone(bookworm, 'Entity', function () {
 
             /**
              * Replaces entity node with the specified value.
-             * @example
-             * // will set 'hello world' on the path 'foo>bar' relative to the entity root
-             * entity.setNode('hello world', 'foo', 'bar');
              * @param {*} node
              * @returns {bookworm.Entity}
              */
@@ -177,9 +171,6 @@ troop.postpone(bookworm, 'Entity', function () {
             /**
              * Removes entity node from cache.
              * Arguments will be appended to the entity path.
-             * @example
-             * // will remove the node under 'foo>bar' relative to the entity root
-             * entity.unsetNode('foo', 'bar');
              * @returns {bookworm.Entity}
              */
             unsetNode: function () {
