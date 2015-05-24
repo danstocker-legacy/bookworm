@@ -104,4 +104,16 @@
 
         strictEqual(field.setValue(valueNode), field, "should be chainable");
     });
+
+    test("Serialization", function () {
+        var field = 'foo/bar/baz'.toField();
+
+        field.addMocks({
+            getValue: function () {
+                return 0;
+            }
+        });
+
+        equal(field.toString(), '0', "should return field value, serialized");
+    });
 }());

@@ -1,4 +1,4 @@
-/*global dessert, troop, sntls, bookworm */
+/*global dessert, troop, sntls, bookworm, rubberband */
 troop.postpone(bookworm, 'Field', function () {
     "use strict";
 
@@ -18,6 +18,7 @@ troop.postpone(bookworm, 'Field', function () {
      * of the field's value and attributes.
      * @class
      * @extends bookworm.Entity
+     * @extends rubberband.Stringifiable
      */
     bookworm.Field = self
         .addMethods(/** @lends bookworm.Field# */{
@@ -71,6 +72,14 @@ troop.postpone(bookworm, 'Field', function () {
             setValue: function (value) {
                 this.getValueEntity().setNode(value);
                 return this;
+            },
+
+            /**
+             * Returns the stringified value of the field.
+             * @returns {string}
+             */
+            toString: function () {
+                return rubberband.Stringifier.stringify(this.getValue());
             }
         });
 });
