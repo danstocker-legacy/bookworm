@@ -67,6 +67,90 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
+             * Subscribes method to be triggered on any access event passing through the node.
+             * @param {bookworm.EntityKey} entityKey
+             * @param {string} methodName
+             * @returns {bookworm.EntityBound}
+             */
+            bindToEntityContentAccess: function (entityKey, methodName) {
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isFunction(this[methodName], "Attempting to bind non-method");
+
+                this._bindToEntity(
+                    entityKey,
+                    entityKey,
+                    bookworm.Entity.EVENT_ENTITY_ACCESS,
+                    methodName,
+                    'content');
+
+                return this;
+            },
+
+            /**
+             * Unsubscribes method from access events passing through the node.
+             * @param {bookworm.EntityKey} entityKey
+             * @param {string} methodName
+             * @returns {bookworm.EntityBound}
+             */
+            unbindFromEntityContentAccess: function (entityKey, methodName) {
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isFunction(this[methodName], "Attempting to unbind non-method");
+
+                this._unbindFromEntity(
+                    entityKey,
+                    entityKey,
+                    bookworm.Entity.EVENT_ENTITY_ACCESS,
+                    methodName,
+                    'content');
+
+                return this;
+            },
+
+            /**
+             * Subscribes method to be triggered when the specified node is accessed.
+             * @param {bookworm.EntityKey} entityKey
+             * @param {string} methodName
+             * @returns {bookworm.EntityBound}
+             */
+            bindToEntityAccess: function (entityKey, methodName) {
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isFunction(this[methodName], "Attempting to bind non-method");
+
+                this._bindToEntity(
+                    entityKey,
+                    entityKey,
+                    bookworm.Entity.EVENT_ENTITY_ACCESS,
+                    methodName,
+                    'strict');
+
+                return this;
+            },
+
+            /**
+             * Unsubscribes method from access events triggered on the specified node.
+             * @param {bookworm.EntityKey} entityKey
+             * @param {string} methodName
+             * @returns {bookworm.EntityBound}
+             */
+            unbindFromEntityAccess: function (entityKey, methodName) {
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isFunction(this[methodName], "Attempting to unbind non-method");
+
+                this._unbindFromEntity(
+                    entityKey,
+                    entityKey,
+                    bookworm.Entity.EVENT_ENTITY_ACCESS,
+                    methodName,
+                    'strict');
+
+                return this;
+            },
+
+            /**
              * Subscribes method to be triggered on any change event passing through the node.
              * @param {bookworm.EntityKey} entityKey
              * @param {string} methodName
@@ -88,6 +172,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
+             * Unsubscribes method from change events passing through the node.
              * @param {bookworm.EntityKey} entityKey
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
@@ -129,6 +214,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
+             * Unsubscribes method from change events triggered on the specified node.
              * @param {bookworm.EntityKey} entityKey
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
@@ -171,6 +257,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
+             * Unsubscribes method from field changes.
              * @param {bookworm.FieldKey} fieldKey
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
@@ -191,7 +278,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Unsubscribes from all bound entities.
+             * Unsubscribes each bound method.
              * @returns {bookworm.EntityBound}
              */
             unbindAll: function () {

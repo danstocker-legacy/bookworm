@@ -20,7 +20,106 @@
         ok(entityBound.entityBindings.isA(sntls.Tree), "should set entityBindings property");
     });
 
-    test("Binding to entity change", function () {
+    test("Binding to entity content access", function () {
+        expect(2);
+
+        var entityBound = EntityBound.create(),
+            documentKey = 'foo/bar'.toDocumentKey();
+
+        documentKey.toDocument()
+            .setNode({});
+
+        entityBound.addMocks({
+            onEntityEvent: function (event) {
+                ok(event.sender.equals('foo/bar/baz'.toFieldKey()), "should trigger event");
+            }
+        });
+
+        strictEqual(entityBound.bindToEntityContentAccess(documentKey, 'onEntityEvent'), entityBound,
+            "should be chainable");
+
+        // should trigger
+        documentKey.toDocument().getField('baz')
+            .getValue();
+
+        entityBound.unbindFromEntityContentAccess(documentKey, 'onEntityEvent');
+    });
+
+    test("Unbinding from entity content access", function () {
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entityBound = EntityBound.create();
+
+        entityBound.addMocks({
+            onEntityEvent: function () {
+                ok(false, "should not call handler");
+            }
+        });
+
+        entityBound.bindToEntityContentAccess(documentKey, 'onEntityEvent');
+
+        strictEqual(entityBound.unbindFromEntityContentAccess(documentKey, 'onEntityEvent'), entityBound,
+            "should be chainable");
+
+        deepEqual(JSON.parse(JSON.stringify(entityBound.entityBindings.items)), {},
+            "should remove binding info from registry");
+
+        // should not trigger
+        documentKey.toDocument().getField('baz')
+            .getValue();
+    });
+
+    test("Binding to entity access", function () {
+        expect(1);
+
+        var entityBound = EntityBound.create(),
+            documentKey = 'foo/bar'.toDocumentKey();
+
+        documentKey.toDocument()
+            .setNode({});
+
+        entityBound.addMocks({
+            onEntityEvent: function (event) {
+                ok(event.sender.equals('foo/bar'.toFieldKey()), "should trigger event");
+            }
+        });
+
+        strictEqual(entityBound.bindToEntityAccess(documentKey, 'onEntityEvent'), entityBound, "should be chainable");
+
+        // should trigger
+        documentKey.toDocument()
+            .getNode();
+
+        // should not trigger
+        documentKey.toDocument().getField('baz')
+            .getValue();
+
+        entityBound.unbindFromEntityAccess(documentKey, 'onEntityEvent');
+    });
+
+    test("Unbinding from entity access", function () {
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entityBound = EntityBound.create();
+
+        entityBound.addMocks({
+            onEntityEvent: function () {
+                ok(false, "should not call handler");
+            }
+        });
+
+        entityBound.bindToEntityAccess(documentKey, 'onEntityEvent');
+
+        strictEqual(entityBound.unbindFromEntityAccess(documentKey, 'onEntityEvent'), entityBound,
+            "should be chainable");
+
+        deepEqual(entityBound.entityBindings.items, {},
+            "should remove binding info from registry");
+
+        // should not trigger
+        documentKey.toDocument()
+            .getNode();
+    });
+
+    test("Binding to entity content change", function () {
         expect(3);
 
         var entityBound = EntityBound.create(),
@@ -46,7 +145,7 @@
         entityBound.unbindFromEntityContentChange(documentKey, 'onEntityEvent');
     });
 
-    test("Re-binding to entity change", function () {
+    test("Re-binding to entity content change", function () {
         var documentKey = 'foo/bar'.toDocumentKey(),
             entityBound = EntityBound.create()
                 .bindToEntityContentChange(documentKey, 'onEntityEvent'),
@@ -73,7 +172,7 @@
         entityBound.unbindFromEntityContentChange(documentKey, 'onEntityEvent');
     });
 
-    test("Unbinding from entity change", function () {
+    test("Unbinding from entity content change", function () {
         var documentKey = 'foo/bar'.toDocumentKey(),
             entityBound = EntityBound.create();
 
