@@ -1,22 +1,22 @@
 /*global dessert, troop, sntls, bookworm */
-troop.postpone(bookworm, 'PassThroughHandlerSpawner', function () {
+troop.postpone(bookworm, 'ContentHandlerSpawner', function () {
     "use strict";
 
     var base = bookworm.HandlerSpawner,
         self = base.extend();
 
     /**
-     * @name bookworm.PassThroughHandlerSpawner.create
+     * @name bookworm.ContentHandlerSpawner.create
      * @function
-     * @returns {bookworm.PassThroughHandlerSpawner}
+     * @returns {bookworm.ContentHandlerSpawner}
      */
 
     /**
      * @class
      * @extends bookworm.HandlerSpawner
      */
-    bookworm.PassThroughHandlerSpawner = self
-        .addMethods(/** @lends bookworm.PassThroughHandlerSpawner# */{
+    bookworm.ContentHandlerSpawner = self
+        .addMethods(/** @lends bookworm.ContentHandlerSpawner# */{
             /**
              * @param {bookworm.EntityBound} instance
              * @param {string} methodName
@@ -32,7 +32,7 @@ troop.amendPostponed(bookworm, 'HandlerSpawner', function () {
     "use strict";
 
     bookworm.HandlerSpawner
-        .addSurrogate(bookworm, 'PassThroughHandlerSpawner', function (bindingType) {
-            return bindingType === 'pass-through';
+        .addSurrogate(bookworm, 'ContentHandlerSpawner', function (bindingType) {
+            return bindingType === 'content';
         });
 });

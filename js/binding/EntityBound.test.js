@@ -36,20 +36,20 @@
             }
         });
 
-        strictEqual(entityBound.bindToEntityChange(documentKey, 'onEntityEvent'), entityBound,
+        strictEqual(entityBound.bindToEntityContentChange(documentKey, 'onEntityEvent'), entityBound,
             "should be chainable");
 
         // should trigger
         documentKey.toDocument().getField('baz')
             .setValue("Hello World!");
 
-        entityBound.unbindFromEntityChange(documentKey, 'onEntityEvent');
+        entityBound.unbindFromEntityContentChange(documentKey, 'onEntityEvent');
     });
 
     test("Re-binding to entity change", function () {
         var documentKey = 'foo/bar'.toDocumentKey(),
             entityBound = EntityBound.create()
-                .bindToEntityChange(documentKey, 'onEntityEvent'),
+                .bindToEntityContentChange(documentKey, 'onEntityEvent'),
             handler = entityBound.entityBindings.getNode([
                 "foo/bar", "bookworm.entity.change", "onEntityEvent", "change"].toPath());
 
@@ -59,7 +59,7 @@
             }
         });
 
-        entityBound.bindToEntityChange(documentKey, 'onEntityEvent');
+        entityBound.bindToEntityContentChange(documentKey, 'onEntityEvent');
 
         strictEqual(entityBound.entityBindings.getNode([
             "foo/bar", "bookworm.entity.change", "onEntityEvent", "change"].toPath()),
@@ -70,7 +70,7 @@
         documentKey.toDocument().getField('baz')
             .setValue("Hello World!");
 
-        entityBound.unbindFromEntityChange(documentKey, 'onEntityEvent');
+        entityBound.unbindFromEntityContentChange(documentKey, 'onEntityEvent');
     });
 
     test("Unbinding from entity change", function () {
@@ -83,9 +83,9 @@
             }
         });
 
-        entityBound.bindToEntityChange(documentKey, 'onEntityEvent');
+        entityBound.bindToEntityContentChange(documentKey, 'onEntityEvent');
 
-        strictEqual(entityBound.unbindFromEntityChange(documentKey, 'onEntityEvent'), entityBound,
+        strictEqual(entityBound.unbindFromEntityContentChange(documentKey, 'onEntityEvent'), entityBound,
             "should be chainable");
 
         deepEqual(JSON.parse(JSON.stringify(entityBound.entityBindings.items)), {},
@@ -96,7 +96,7 @@
             .setValue("Hello World!");
     });
 
-    test("Binding to entity replacement", function () {
+    test("Binding to entity change", function () {
         expect(3);
 
         var entityBound = EntityBound.create(),
@@ -114,7 +114,7 @@
             }
         });
 
-        strictEqual(entityBound.bindToEntityReplace(documentKey, 'onEntityEvent'), entityBound, "should be chainable");
+        strictEqual(entityBound.bindToEntityChange(documentKey, 'onEntityEvent'), entityBound, "should be chainable");
 
         // should trigger
         documentKey.toDocument()
@@ -126,10 +126,10 @@
         documentKey.toDocument().getField('baz')
             .setValue("Hi All!");
 
-        entityBound.unbindFromEntityReplace(documentKey, 'onEntityEvent');
+        entityBound.unbindFromEntityChange(documentKey, 'onEntityEvent');
     });
 
-    test("Unbinding from entity replacement", function () {
+    test("Unbinding from entity change", function () {
         var documentKey = 'foo/bar'.toDocumentKey(),
             entityBound = EntityBound.create();
 
@@ -139,9 +139,9 @@
             }
         });
 
-        entityBound.bindToEntityReplace(documentKey, 'onEntityEvent');
+        entityBound.bindToEntityChange(documentKey, 'onEntityEvent');
 
-        strictEqual(entityBound.unbindFromEntityReplace(documentKey, 'onEntityEvent'), entityBound,
+        strictEqual(entityBound.unbindFromEntityChange(documentKey, 'onEntityEvent'), entityBound,
             "should be chainable");
 
         deepEqual(entityBound.entityBindings.items, {},
@@ -241,8 +241,8 @@
 
     test("Unbinding from all keys", function () {
         var entityBound = EntityBound.create()
+            .bindToEntityContentChange('foo/bar'.toDocumentKey(), 'onEntityEvent')
             .bindToEntityChange('foo/bar'.toDocumentKey(), 'onEntityEvent')
-            .bindToEntityReplace('foo/bar'.toDocumentKey(), 'onEntityEvent')
             .bindToFieldChange('foo/bar/baz'.toFieldKey(), 'onEntityEvent');
 
         strictEqual(entityBound.unbindAll(), entityBound, "should be chainable");

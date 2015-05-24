@@ -72,7 +72,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
              */
-            bindToEntityChange: function (entityKey, methodName) {
+            bindToEntityContentChange: function (entityKey, methodName) {
                 dessert
                     .isEntityKey(entityKey, "Invalid entity key")
                     .isFunction(this[methodName], "Attempting to bind non-method");
@@ -82,7 +82,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     entityKey,
                     bookworm.Entity.EVENT_ENTITY_CHANGE,
                     methodName,
-                    'pass-through');
+                    'content');
 
                 return this;
             },
@@ -92,7 +92,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
              */
-            unbindFromEntityChange: function (entityKey, methodName) {
+            unbindFromEntityContentChange: function (entityKey, methodName) {
                 dessert
                     .isEntityKey(entityKey, "Invalid entity key")
                     .isFunction(this[methodName], "Attempting to unbind non-method");
@@ -102,7 +102,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     entityKey,
                     bookworm.Entity.EVENT_ENTITY_CHANGE,
                     methodName,
-                    'pass-through');
+                    'content');
 
                 return this;
             },
@@ -113,7 +113,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
              */
-            bindToEntityReplace: function (entityKey, methodName) {
+            bindToEntityChange: function (entityKey, methodName) {
                 dessert
                     .isEntityKey(entityKey, "Invalid entity key")
                     .isFunction(this[methodName], "Attempting to bind non-method");
@@ -133,7 +133,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
              */
-            unbindFromEntityReplace: function (entityKey, methodName) {
+            unbindFromEntityChange: function (entityKey, methodName) {
                 dessert
                     .isEntityKey(entityKey, "Invalid entity key")
                     .isFunction(this[methodName], "Attempting to unbind non-method");
