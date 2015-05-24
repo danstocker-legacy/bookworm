@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    module("Document Key");
+    module("DocumentKey");
 
     test("Instantiation", function () {
         var documentKey = bookworm.DocumentKey.create('hello', 'world');

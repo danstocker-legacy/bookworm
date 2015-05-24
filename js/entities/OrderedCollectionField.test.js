@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    module("Ordered Collection Field");
+    module("OrderedCollectionField");
 
     test("Field surrogate", function () {
         var collection,

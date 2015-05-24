@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    module("Collection Field");
+    module("CollectionField");
 
     test("Field surrogate", function () {
         expect(4);

@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    module("Item Key");
+    module("ItemKey");
 
     test("Instantiation", function () {
         var itemKey = bookworm.ItemKey.create('hello', 'world', 'foo', 'bar');

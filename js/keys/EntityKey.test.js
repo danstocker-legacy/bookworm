@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    module("Entity Key");
+    module("EntityKey");
 
     test("Instantiation", function () {
         var entityKey = bookworm.EntityKey.create();

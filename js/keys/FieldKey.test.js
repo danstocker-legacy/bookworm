@@ -3,7 +3,7 @@
 (function () {
     "use strict";
 
-    module("Field Key");
+    module("FieldKey");
 
     test("Instantiation", function () {
         var fieldKey = bookworm.FieldKey.create('hello', 'world', 'foo');
