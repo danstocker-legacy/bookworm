@@ -112,14 +112,22 @@ troop.postpone(bookworm, 'ItemKey', function () {
              * @returns {bookworm.ItemKey}
              */
             toItemKey: function () {
-                var parts = this.split('/');
+                var parts = this.split('/'),
+                    documentType = parts[0],
+                    documentId = parts[1],
+                    fieldName = parts[2],
+                    itemId = parts[3];
 
-                return bookworm.ItemKey.create(
-                    parts[0] && decodeURIComponent(parts[0]),
-                    parts[1] && decodeURIComponent(parts[1]),
-                    parts[2] && decodeURIComponent(parts[2]),
-                    parts[3] && decodeURIComponent(parts[3])
-                );
+                return typeof documentType === 'string' &&
+                       typeof documentId === 'string' &&
+                       typeof fieldName === 'string' &&
+                       typeof itemId === 'string' ?
+                    bookworm.ItemKey.create(
+                        decodeURIComponent(documentType),
+                        decodeURIComponent(documentId),
+                        decodeURIComponent(fieldName),
+                        decodeURIComponent(itemId)) :
+                    undefined;
             }
         },
         false, false, false
@@ -133,7 +141,17 @@ troop.postpone(bookworm, 'ItemKey', function () {
              * @returns {bookworm.ItemKey}
              */
             toItemKey: function () {
-                return bookworm.ItemKey.create(this[0], this[1], this[2], this[3]);
+                var documentType = this[0],
+                    documentId = this[1],
+                    fieldName = this[2],
+                    itemId = this[3];
+
+                return typeof documentType !== 'undefined' &&
+                       typeof documentId !== 'undefined' &&
+                       typeof fieldName !== 'undefined' &&
+                       typeof itemId !== 'undefined' ?
+                    bookworm.ItemKey.create(documentType, documentId, fieldName, itemId) :
+                    undefined;
             }
         },
         false, false, false

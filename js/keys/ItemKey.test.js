@@ -29,17 +29,30 @@
         equal(itemKey.itemId, 'b/ar', "should URI decode item ID");
 
         itemKey = 'hello/world/foo'.toItemKey();
-        equal(typeof itemKey.itemId, 'undefined', "should set undefined item ID for invalid key string");
+        equal(typeof itemKey, 'undefined', "should return undefined for invalid key string");
     });
 
     test("Conversion from Array", function () {
-        var itemKey = ['hello', 'world', 'foo', 'bar'].toItemKey();
+        var itemKey;
 
+        itemKey = ['hello', 'world', 'foo', 'bar'].toItemKey();
         ok(itemKey.isA(bookworm.ItemKey), "should return ItemKey instance");
         equal(itemKey.documentKey.documentType, 'hello', "should set document type");
         equal(itemKey.documentKey.documentId, 'world', "should set document ID");
         equal(itemKey.fieldName, 'foo', "should set field name");
         equal(itemKey.itemId, 'bar', "should set item ID");
+
+        itemKey = ['hello', 'world', 'foo'].toItemKey();
+        equal(typeof itemKey, 'undefined', "should return undefined for invalid item ID");
+
+        itemKey = ['hello', 'world', undefined, 'bar'].toItemKey();
+        equal(typeof itemKey, 'undefined', "should return undefined for invalid field name");
+
+        itemKey = ['hello', undefined, 'foo', 'bar'].toItemKey();
+        equal(typeof itemKey, 'undefined', "should return undefined for invalid document ID");
+
+        itemKey = [undefined, 'world', 'foo', 'bar'].toItemKey();
+        equal(typeof itemKey, 'undefined', "should return undefined for invalid document type");
     });
 
     test("Equivalence tester", function () {

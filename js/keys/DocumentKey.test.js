@@ -26,7 +26,7 @@
         equal(documentKey.documentId, 'b/ar', "should decode encoded chars in document ID");
 
         documentKey = 'foo'.toDocumentKey();
-        equal(typeof documentKey.documentId, 'undefined', "should set undefined document type for invalid key string");
+        equal(typeof documentKey, 'undefined', "should return undefined for invalid key string");
     });
 
     test("Conversion from Array", function () {
@@ -36,6 +36,12 @@
         ok(documentKey.isA(bookworm.DocumentKey), "should return DocumentKey instance");
         equal(documentKey.documentType, 'foo', "should set document type");
         equal(documentKey.documentId, 'bar', "should set document ID");
+
+        documentKey = ['foo'].toDocumentKey();
+        equal(typeof documentKey, 'undefined', "should return undefined for invalid document ID");
+
+        documentKey = [undefined, 'bar'].toDocumentKey();
+        equal(typeof documentKey, 'undefined', "should return undefined for invalid document type");
     });
 
     test("Equivalence tester", function () {

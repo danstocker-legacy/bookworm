@@ -13,17 +13,25 @@
     });
 
     test("Conversion from String", function () {
-        var itemKey = 'hello/world/foo/bar%2Fbaz'.toReferenceItemKey();
+        var itemKey;
 
+        itemKey = 'hello/world/foo/bar%2Fbaz'.toReferenceItemKey();
         equal(itemKey.itemId, 'bar/baz', "should set item ID");
         ok(itemKey.referenceKey.equals('bar/baz'.toDocumentKey()), "should set reference key");
+
+        itemKey = 'hello/world/foo/bar'.toReferenceItemKey();
+        equal(typeof itemKey, 'undefined', "should return undefined for invalid item ID");
     });
 
     test("Conversion from Array", function () {
-        var itemKey = ['hello', 'world', 'foo', 'bar/baz'].toReferenceItemKey();
+        var itemKey;
 
+        itemKey = ['hello', 'world', 'foo', 'bar/baz'].toReferenceItemKey();
         equal(itemKey.itemId, 'bar/baz', "should set item ID");
         ok(itemKey.referenceKey.equals('bar/baz'.toDocumentKey()), "should set reference key");
+
+        itemKey = ['hello', 'world', 'foo', 'bar'].toReferenceItemKey();
+        equal(typeof itemKey, 'undefined', "should undefined for invalid item ID");
     });
 
     test("ItemKey surrogate", function () {

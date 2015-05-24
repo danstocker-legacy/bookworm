@@ -124,11 +124,13 @@ troop.postpone(bookworm, 'DocumentKey', function () {
              * @returns {bookworm.DocumentKey}
              */
             toDocumentKey: function () {
-                var parts = this.split('/');
-                return bookworm.DocumentKey.create(
-                    parts[0] && decodeURIComponent(parts[0]),
-                    parts[1] && decodeURIComponent(parts[1])
-                );
+                var parts = this.split('/'),
+                    documentType = parts[0],
+                    documentId = parts[1];
+
+                return typeof documentType === 'string' && typeof documentId === 'string' ?
+                    bookworm.DocumentKey.create(decodeURIComponent(documentType), decodeURIComponent(documentId)) :
+                    undefined;
             }
         },
         false, false, false);
@@ -144,7 +146,12 @@ troop.postpone(bookworm, 'DocumentKey', function () {
              * ['foo', 'bar'].toDocumentKey() // single document key
              */
             toDocumentKey: function () {
-                return bookworm.DocumentKey.create(this[0], this[1]);
+                var documentType = this[0],
+                    documentId = this[1];
+
+                return typeof documentType !== 'undefined' && typeof documentId !== 'undefined' ?
+                    bookworm.DocumentKey.create(documentType, documentId) :
+                    undefined;
             }
         },
         false, false, false);

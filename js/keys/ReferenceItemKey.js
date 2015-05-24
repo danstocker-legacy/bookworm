@@ -50,7 +50,7 @@ troop.amendPostponed(bookworm, 'ItemKey', function () {
 
     bookworm.ItemKey
         .addSurrogate(bookworm, 'ReferenceItemKey', function (documentType, documentId, fieldName, itemId) {
-            return itemId && itemId.toDocumentKey().documentId;
+            return itemId && itemId.toDocumentKey();
         });
 });
 
@@ -78,14 +78,23 @@ troop.amendPostponed(bookworm, 'ItemKey', function () {
              * @returns {bookworm.ReferenceItemKey}
              */
             toReferenceItemKey: function () {
-                var parts = this.split('/');
-                return bookworm.ReferenceItemKey.create(
-                    parts[0] && decodeURIComponent(parts[0]),
-                    parts[1] && decodeURIComponent(parts[1]),
-                    parts[2] && decodeURIComponent(parts[2]),
-                    parts[3] && decodeURIComponent(parts[3])
-                );
+                var parts = this.split('/'),
+                    documentType = parts[0],
+                    documentId = parts[1],
+                    fieldName = parts[2],
+                    itemId = parts[3];
 
+                return typeof documentType === 'string' &&
+                       typeof documentId === 'string' &&
+                       typeof fieldName === 'string' &&
+                       typeof itemId === 'string' &&
+                       decodeURIComponent(itemId).toDocumentKey() ?
+                    bookworm.ReferenceItemKey.create(
+                        decodeURIComponent(documentType),
+                        decodeURIComponent(documentId),
+                        decodeURIComponent(fieldName),
+                        decodeURIComponent(itemId)) :
+                    undefined;
             }
         },
         false, false, false
@@ -100,7 +109,18 @@ troop.amendPostponed(bookworm, 'ItemKey', function () {
              * @returns {bookworm.ReferenceItemKey}
              */
             toReferenceItemKey: function () {
-                return bookworm.ReferenceItemKey.create(this[0], this[1], this[2], this[3]);
+                var documentType = this[0],
+                    documentId = this[1],
+                    fieldName = this[2],
+                    itemId = this[3];
+
+                return typeof documentType !== 'undefined' &&
+                       typeof documentId !== 'undefined' &&
+                       typeof fieldName !== 'undefined' &&
+                       typeof itemId !== 'undefined' &&
+                       itemId.toDocumentKey() ?
+                    bookworm.ReferenceItemKey.create(documentType, documentId, fieldName, itemId) :
+                    undefined;
             }
         },
         false, false, false

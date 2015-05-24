@@ -29,7 +29,7 @@
         equal(fieldKey.fieldName, 'b/az', "should URI decode field name");
 
         fieldKey = 'foo/bar'.toFieldKey();
-        equal(typeof fieldKey.fieldName, 'undefined', "should set undefined field name for invalid key string");
+        equal(typeof fieldKey, 'undefined', "should return undefined for invalid key string");
     });
 
     test("Conversion from Array", function () {
@@ -40,6 +40,15 @@
         equal(fieldKey.documentKey.documentType, 'foo', "should set document type");
         equal(fieldKey.documentKey.documentId, 'bar', "should set document ID");
         equal(fieldKey.fieldName, 'baz', "should set field name");
+
+        fieldKey = ['foo', 'bar'].toFieldKey();
+        equal(typeof fieldKey, 'undefined', "should return undefined for invalid field name");
+
+        fieldKey = [undefined, 'bar', 'baz'].toFieldKey();
+        equal(typeof fieldKey, 'undefined', "should return undefined for invalid document type");
+
+        fieldKey = ['foo', undefined, 'baz'].toFieldKey();
+        equal(typeof fieldKey, 'undefined', "should return undefined for invalid document ID");
     });
 
     test("Equivalence tester", function () {

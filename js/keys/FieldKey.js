@@ -178,13 +178,19 @@ troop.postpone(bookworm, 'FieldKey', function () {
              * @returns {bookworm.FieldKey}
              */
             toFieldKey: function () {
-                var parts = this.split('/');
+                var parts = this.split('/'),
+                    documentType = parts[0],
+                    documentId = parts[1],
+                    fieldName = parts[2];
 
-                return bookworm.FieldKey.create(
-                    parts[0] && decodeURIComponent(parts[0]),
-                    parts[1] && decodeURIComponent(parts[1]),
-                    parts[2] && decodeURIComponent(parts[2])
-                );
+                return typeof documentType === 'string' &&
+                       typeof documentId === 'string' &&
+                       typeof fieldName === 'string' ?
+                    bookworm.FieldKey.create(
+                        decodeURIComponent(documentType),
+                        decodeURIComponent(documentId),
+                        decodeURIComponent(fieldName)) :
+                    undefined;
             }
         },
         false, false, false
@@ -199,7 +205,15 @@ troop.postpone(bookworm, 'FieldKey', function () {
              * @returns {bookworm.FieldKey}
              */
             toFieldKey: function () {
-                return bookworm.FieldKey.create(this[0], this[1], this[2]);
+                var documentType = this[0],
+                    documentId = this[1],
+                    fieldName = this[2];
+
+                return typeof documentType !== 'undefined' &&
+                       typeof documentId !== 'undefined' &&
+                       typeof fieldName !== 'undefined' ?
+                    bookworm.FieldKey.create(documentType, documentId, fieldName) :
+                    undefined;
             }
         },
         false, false, false
