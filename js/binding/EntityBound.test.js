@@ -60,7 +60,7 @@
         strictEqual(entityBound.unbindFromEntityContentAccess(documentKey, 'onEntityEvent'), entityBound,
             "should be chainable");
 
-        deepEqual(JSON.parse(JSON.stringify(entityBound.entityBindings.items)), {},
+        deepEqual(entityBound.entityBindings.items, {},
             "should remove binding info from registry");
 
         // should not trigger
@@ -187,7 +187,7 @@
         strictEqual(entityBound.unbindFromEntityContentChange(documentKey, 'onEntityEvent'), entityBound,
             "should be chainable");
 
-        deepEqual(JSON.parse(JSON.stringify(entityBound.entityBindings.items)), {},
+        deepEqual(entityBound.entityBindings.items, {},
             "should remove binding info from registry");
 
         // should not trigger
@@ -335,6 +335,158 @@
         fieldKey.documentKey.toDocument()
             .setNode({
                 baz: "Hello World!"
+            });
+    });
+
+    test("Binding to entity content append", function () {
+        expect(3);
+
+        var entityBound = EntityBound.create(),
+            documentKey = 'foo/bar'.toDocumentKey();
+
+        documentKey.toDocument()
+            .setNode({
+                baz: {
+                    hello: "world"
+                }
+            });
+
+        entityBound.addMocks({
+            onBeforeAppend: function (event) {
+                deepEqual(event.sender.toField().getNode(), {
+                    hello: "world"
+                }, "should trigger before-append event");
+            },
+
+            onAfterAppend: function (event) {
+                deepEqual(event.sender.toField().getNode(), {
+                    hello: "world",
+                    hi   : "all"
+                }, "should trigger after-append event");
+            }
+        });
+
+        strictEqual(entityBound.bindToEntityContentAppend(documentKey, 'onBeforeAppend', 'onAfterAppend'), entityBound, "should be chainable");
+
+        // should trigger
+        documentKey.toDocument().getField('baz')
+            .appendNode({
+                hi: "all"
+            });
+
+        entityBound.unbindFromEntityContentAppend(documentKey, 'onBeforeAppend', 'onAfterAppend');
+    });
+
+    test("Unbinding from entity content append", function () {
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entityBound = EntityBound.create();
+
+        entityBound.addMocks({
+            onBeforeAppend: function () {
+                ok(false, "should not call handler");
+            },
+
+            onAfterAppend: function () {
+                ok(false, "should not call handler");
+            }
+        });
+
+        entityBound.bindToEntityContentAppend(documentKey, 'onBeforeAppend', 'onAfterAppend');
+
+        strictEqual(entityBound.unbindFromEntityContentAppend(documentKey, 'onBeforeAppend', 'onAfterAppend'), entityBound,
+            "should be chainable");
+
+        deepEqual(entityBound.entityBindings.items, {},
+            "should remove binding info from registry");
+
+        // should not trigger
+        documentKey.toDocument().getField('baz')
+            .appendNode({
+                hi: "all"
+            });
+    });
+
+    test("Binding to entity append", function () {
+        expect(3);
+
+        var entityBound = EntityBound.create(),
+            documentKey = 'foo/bar'.toDocumentKey();
+
+        documentKey.toDocument()
+            .setNode({
+                baz: {
+                    hello: "world"
+                }
+            });
+
+        entityBound.addMocks({
+            onBeforeAppend: function (event) {
+                deepEqual(event.sender.toDocument().getNode(), {
+                    baz: {
+                        hello: "world"
+                    }
+                }, "should trigger before-append event");
+            },
+
+            onAfterAppend: function (event) {
+                deepEqual(event.sender.toDocument().getNode(), {
+                    baz: {
+                        hello: "world"
+                    },
+                    qux: {
+                        hi: "all"
+                    }
+                }, "should trigger after-append event");
+            }
+        });
+
+        strictEqual(entityBound.bindToEntityAppend(documentKey, 'onBeforeAppend', 'onAfterAppend'), entityBound, "should be chainable");
+
+        // should trigger
+        documentKey.toDocument()
+            .appendNode({
+                qux: {
+                    hi: "all"
+                }
+            });
+
+        // should not trigger
+        documentKey.toDocument().getField('baz')
+            .appendNode({
+                howdy: "y'all"
+            });
+
+        entityBound.unbindFromEntityAppend(documentKey, 'onBeforeAppend', 'onAfterAppend');
+    });
+
+    test("Unbinding from entity append", function () {
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entityBound = EntityBound.create();
+
+        entityBound.addMocks({
+            onBeforeAppend: function () {
+                ok(false, "should not call handler");
+            },
+
+            onAfterAppend: function () {
+                ok(false, "should not call handler");
+            }
+        });
+
+        entityBound.bindToEntityAppend(documentKey, 'onBeforeAppend', 'onAfterAppend');
+
+        strictEqual(entityBound.unbindFromEntityAppend(documentKey, 'onBeforeAppend', 'onAfterAppend'), entityBound,
+            "should be chainable");
+
+        deepEqual(entityBound.entityBindings.items, {},
+            "should remove binding info from registry");
+
+        // should not trigger
+        documentKey.toDocument()
+            .appendNode({
+                qux: {
+                    hi: "all"
+                }
             });
     });
 
