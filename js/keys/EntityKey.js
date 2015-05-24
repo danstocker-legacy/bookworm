@@ -79,36 +79,4 @@ troop.postpone(bookworm, 'EntityKey', function () {
                    bookworm.EntityKey.isBaseOf(expr);
         }
     });
-
-    troop.Properties.addProperties.call(
-        String.prototype,
-        /** @lends String# */{
-            /**
-             * Converts `String` to `EntityKey` instance. Assumes that string is a serialized `EntityKey`.
-             * @returns {bookworm.EntityKey}
-             */
-            toEntityKey: function () {
-                var parts = this.split('/')
-                    .map(function (part) {
-                        return decodeURIComponent(part);
-                    });
-                return bookworm.EntityKey.create.apply(bookworm.EntityKey, parts);
-            }
-        },
-        false, false, false
-    );
-
-    troop.Properties.addProperties.call(
-        Array.prototype,
-        /** @lends Array# */{
-            /**
-             * Converts `Array` to `EntityKey` instance. Assumes that array is an entity key in array notation.
-             * @returns {bookworm.EntityKey}
-             */
-            toEntityKey: function () {
-                return bookworm.EntityKey.create.apply(bookworm.EntityKey, this);
-            }
-        },
-        false, false, false
-    );
 }());
