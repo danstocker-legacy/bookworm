@@ -26,6 +26,12 @@ var sntls = sntls || require('sntls');
 
 /**
  * @namespace
+ * @see https://github.com/danstocker/evan
+ */
+var evan = evan || require('evan');
+
+/**
+ * @namespace
  * @see https://github.com/danstocker/rubberband
  */
 var rubberband = rubberband || require('rubberband');
