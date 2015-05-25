@@ -25,6 +25,7 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
         .addMethods(/** @lends bookworm.OrderedCollectionField# */{
             /**
              * Fetches item order for specified item ID.
+             * TODO: Add more tests.
              * @param {string} itemId
              * @returns {number}
              */
@@ -32,7 +33,7 @@ troop.postpone(bookworm, 'OrderedCollectionField', function () {
                 var itemKey = this.entityKey.getItemKey(itemId),
                     item = itemKey.toItem();
 
-                return item.getAttribute('order') ||
+                return item.getAttribute('order').getNode() ||
                        item.getValue();
             },
 

@@ -35,7 +35,7 @@
             getAttribute: function (attribute) {
                 equal(this.entityKey.toString(), 'foo/bar/baz/hello', "should fetch attribute for specified item");
                 ok(attribute, 'order', "should attempt to fetch order attribute");
-                return undefined;
+                return this.entityKey.getAttributeKey(attribute).toEntity();
             },
 
             getValue: function () {
