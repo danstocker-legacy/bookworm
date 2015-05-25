@@ -27,6 +27,7 @@ module.exports = function (grunt) {
             'js/binding/ContentHandlerSpawner.js',
             'js/binding/StrictHandlerSpawner.js',
             'js/binding/FieldHandlerSpawner.js',
+            'js/binding/EntityBound.js',
             'js/exports.js'
         ],
 
