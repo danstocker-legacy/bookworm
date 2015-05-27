@@ -6,6 +6,7 @@ troop.postpone(bookworm, 'StringUtils', function () {
         self = base.extend();
 
     /**
+     * TODO: Investigate moving to sntls.
      * @class
      * @extends troop.Base
      */
@@ -18,16 +19,20 @@ troop.postpone(bookworm, 'StringUtils', function () {
              * @returns {string[]}
              */
             safeSplit: function (str, delimiter) {
-                var reSplit = new RegExp(
-                        '([^\\\\\\' + delimiter + ']*(?:\\\\' + delimiter + '|\\\\)?[^\\\\' + delimiter + ']*)(?=' + delimiter + '|$)'),
-                    components = str.split(reSplit),
-                    componentCount = components.length,
+                var reComponents = new RegExp(
+                        '([^\\\\\\' + delimiter + ']+(\\\\' + delimiter + '|\\\\)*)*(?=' + delimiter + '|$)', 'g'),
+                    matched = str.match(reComponents),
+                    matchCount = matched.length,
                     result = [],
-                    i;
+                    i, match;
 
-                // filtering out splitting artifacts
-                for (i = 1; i < componentCount; i += 2) {
-                    result.push(components[i]);
+                // filtering out extra empty strings introduced by the regex match
+                for (i = 0; i < matchCount; i++) {
+                    match = matched[i];
+                    result.push(match);
+                    if (match && !matched[i + 1]) {
+                        i++;
+                    }
                 }
 
                 return result;
@@ -40,7 +45,7 @@ troop.postpone(bookworm, 'StringUtils', function () {
              * @param {string} charsToEscape
              * @returns {string}
              */
-            escape: function (str, charsToEscape) {
+            escapeChars: function (str, charsToEscape) {
                 var optionsExpression = charsToEscape.split('').join('|'),
                     reEscape = new RegExp(optionsExpression, 'g');
                 return String(str).replace(reEscape, '\\$&');
@@ -53,7 +58,7 @@ troop.postpone(bookworm, 'StringUtils', function () {
              * @param {string} charsToUnescape
              * @returns {string}
              */
-            unescape: function (str, charsToUnescape){
+            unescapeChars: function (str, charsToUnescape) {
                 var optionsExpression = charsToUnescape.split('').join('|'),
                     reEscape = new RegExp('\\\\(\\' + optionsExpression + ')', 'g');
                 return String(str).replace(reEscape, '$1');
