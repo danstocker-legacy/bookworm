@@ -84,10 +84,11 @@ troop.postpone(bookworm, 'EntityKey', function () {
              * @returns {bookworm.EntityKey}
              */
             toEntityKey: function () {
-                var parts = this.split('/')
-                    .map(function (part) {
-                        return decodeURIComponent(part);
-                    });
+                var StringUtils = bookworm.StringUtils,
+                    parts = StringUtils.safeSplit(this, '/')
+                        .map(function (part) {
+                            return StringUtils.unescapeChars(part, '/');
+                        });
                 return bookworm.EntityKey.create.apply(bookworm.EntityKey, parts);
             }
         },

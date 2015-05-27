@@ -103,7 +103,9 @@ troop.postpone(bookworm, 'DocumentKey', function () {
              * @returns {string}
              */
             toString: function () {
-                return encodeURIComponent(this.documentType) + '/' + encodeURIComponent(this.documentId);
+                var StringUtils = bookworm.StringUtils;
+                return StringUtils.escapeChars(this.documentType, '/') + '/' +
+                       StringUtils.escapeChars(this.documentId, '/');
             }
         });
 });
@@ -194,10 +196,12 @@ troop.amendPostponed(sntls, 'Hash', function () {
              * @returns {bookworm.DocumentKey}
              */
             toDocumentKey: function () {
-                var parts = this.split('/');
+                var StringUtils = bookworm.StringUtils,
+                    parts = StringUtils.safeSplit(this, '/');
+
                 return bookworm.DocumentKey.create(
-                    decodeURIComponent(parts[0]),
-                    decodeURIComponent(parts[1])
+                    StringUtils.unescapeChars(parts[0], '/'),
+                    StringUtils.unescapeChars(parts[1], '/')
                 );
             }
         },

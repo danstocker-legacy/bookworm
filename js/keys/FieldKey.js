@@ -149,7 +149,8 @@ troop.postpone(bookworm, 'FieldKey', function () {
              * @returns {string}
              */
             toString: function () {
-                return this.documentKey.toString() + '/' + encodeURIComponent(this.fieldName);
+                return this.documentKey.toString() + '/' +
+                       bookworm.StringUtils.escapeChars(this.fieldName, '/');
             }
         });
 });
@@ -208,12 +209,13 @@ troop.amendPostponed(sntls, 'Path', function () {
              * @returns {bookworm.FieldKey}
              */
             toFieldKey: function () {
-                var parts = this.split('/');
+                var StringUtils = bookworm.StringUtils,
+                    parts = StringUtils.safeSplit(this, '/');
 
                 return bookworm.FieldKey.create(
-                    decodeURIComponent(parts[0]),
-                    decodeURIComponent(parts[1]),
-                    decodeURIComponent(parts[2])
+                    StringUtils.unescapeChars(parts[0], '/'),
+                    StringUtils.unescapeChars(parts[1], '/'),
+                    StringUtils.unescapeChars(parts[2], '/')
                 );
             }
         },

@@ -31,7 +31,7 @@
             }
         });
 
-        'f%2Fo/bar'.toEntityKey();
+        'f\\/o/bar'.toEntityKey();
 
         bookworm.EntityKey.removeMocks();
     });

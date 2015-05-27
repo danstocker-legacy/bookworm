@@ -8,6 +8,7 @@ module.exports = function (grunt) {
             'js/cache/config.js',
             'js/cache/entities.js',
             'js/cache/index.js',
+            'js/utils/StringUtils.js',
             'js/keys/EntityKey.js',
             'js/keys/DocumentKey.js',
             'js/keys/FieldKey.js',
@@ -26,7 +27,8 @@ module.exports = function (grunt) {
         test: [
             'js/keys/jsTestDriver.conf',
             'js/binding/jsTestDriver.conf',
-            'js/entities/jsTestDriver.conf'
+            'js/entities/jsTestDriver.conf',
+            'js/utils/jsTestDriver.conf'
         ],
 
         globals: {

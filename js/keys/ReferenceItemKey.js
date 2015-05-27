@@ -88,12 +88,14 @@ troop.amendPostponed(bookworm, 'EntityKey', function () {
              * @returns {bookworm.ReferenceItemKey}
              */
             toReferenceItemKey: function () {
-                var parts = this.split('/');
+                var StringUtils = bookworm.StringUtils,
+                    parts = StringUtils.safeSplit(this, '/');
+
                 return bookworm.ReferenceItemKey.create(
-                    decodeURIComponent(parts[0]),
-                    decodeURIComponent(parts[1]),
-                    decodeURIComponent(parts[2]),
-                    decodeURIComponent(parts[3])
+                    StringUtils.unescapeChars(parts[0], '/'),
+                    StringUtils.unescapeChars(parts[1], '/'),
+                    StringUtils.unescapeChars(parts[2], '/'),
+                    StringUtils.unescapeChars(parts[3], '/')
                 );
 
             }

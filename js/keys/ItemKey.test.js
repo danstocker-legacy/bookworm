@@ -23,7 +23,7 @@
         equal(itemKey.fieldName, 'foo', "should set field name");
         equal(itemKey.itemId, 'bar', "should set item ID");
 
-        itemKey = 'hello/world/foo/b%2Far'.toItemKey();
+        itemKey = 'hello/world/foo/b\\/ar'.toItemKey();
         equal(itemKey.itemId, 'b/ar', "should URI decode item ID");
     });
 
@@ -172,7 +172,7 @@
     test("Conversion to String", function () {
         equal(bookworm.ItemKey.create('hello', 'world', 'foo', 'bar').toString(), 'hello/world/foo/bar',
             "should return correct item path string");
-        equal(bookworm.ItemKey.create('hello', 'world', 'foo', 'b/ar').toString(), 'hello/world/foo/b%2Far',
+        equal(bookworm.ItemKey.create('hello', 'world', 'foo', 'b/ar').toString(), 'hello/world/foo/b\\/ar',
             "should URI encode path contents");
     });
 }());

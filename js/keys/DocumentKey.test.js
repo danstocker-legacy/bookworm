@@ -20,7 +20,7 @@
         equal(key.documentType, 'foo', "should set document type");
         equal(key.documentId, 'bar', "should set document ID");
 
-        key = 'foo/b%2Far'.toDocumentKey();
+        key = 'foo/b\\/ar'.toDocumentKey();
         equal(key.documentId, 'b/ar', "should decode encoded chars in document ID");
     });
 
@@ -113,6 +113,6 @@
 
     test("Conversion to String", function () {
         equal(bookworm.DocumentKey.create('foo', 'bar').toString(), 'foo/bar', 'should concatenate type / ID with slash');
-        equal(bookworm.DocumentKey.create('f/oo', 'b/ar').toString(), 'f%2Foo/b%2Far', 'should URI encode type / ID');
+        equal(bookworm.DocumentKey.create('f/oo', 'b/ar').toString(), 'f\\/oo/b\\/ar', 'should URI encode type / ID');
     });
 }());
