@@ -83,7 +83,8 @@ troop.postpone(bookworm, 'ItemKey', function () {
              * @returns {string}
              */
             toString: function () {
-                return bookworm.FieldKey.toString.call(this) + '/' + encodeURIComponent(this.itemId);
+                return bookworm.FieldKey.toString.call(this) + '/' +
+                       bookworm.StringUtils.escapeChars(this.itemId, '/');
             }
         });
 });
@@ -112,7 +113,8 @@ troop.postpone(bookworm, 'ItemKey', function () {
              * @returns {bookworm.ItemKey}
              */
             toItemKey: function () {
-                var parts = this.split('/'),
+                var StringUtils = bookworm.StringUtils,
+                    parts = StringUtils.safeSplit(this, '/'),
                     documentType = parts[0],
                     documentId = parts[1],
                     fieldName = parts[2],
@@ -123,10 +125,10 @@ troop.postpone(bookworm, 'ItemKey', function () {
                        typeof fieldName === 'string' &&
                        typeof itemId === 'string' ?
                     bookworm.ItemKey.create(
-                        decodeURIComponent(documentType),
-                        decodeURIComponent(documentId),
-                        decodeURIComponent(fieldName),
-                        decodeURIComponent(itemId)) :
+                        StringUtils.unescapeChars(documentType, '/'),
+                        StringUtils.unescapeChars(documentId, '/'),
+                        StringUtils.unescapeChars(fieldName, '/'),
+                        StringUtils.unescapeChars(itemId, '/')) :
                     undefined;
             }
         },

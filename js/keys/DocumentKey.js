@@ -95,7 +95,9 @@ troop.postpone(bookworm, 'DocumentKey', function () {
              * @returns {string}
              */
             toString: function () {
-                return encodeURIComponent(this.documentType) + '/' + encodeURIComponent(this.documentId);
+                var StringUtils = bookworm.StringUtils;
+                return StringUtils.escapeChars(this.documentType, '/') + '/' +
+                       StringUtils.escapeChars(this.documentId, '/');
             }
         });
 });
@@ -124,12 +126,15 @@ troop.postpone(bookworm, 'DocumentKey', function () {
              * @returns {bookworm.DocumentKey}
              */
             toDocumentKey: function () {
-                var parts = this.split('/'),
+                var StringUtils = bookworm.StringUtils,
+                    parts = StringUtils.safeSplit(this, '/'),
                     documentType = parts[0],
                     documentId = parts[1];
 
                 return typeof documentType === 'string' && typeof documentId === 'string' ?
-                    bookworm.DocumentKey.create(decodeURIComponent(documentType), decodeURIComponent(documentId)) :
+                    bookworm.DocumentKey.create(
+                        StringUtils.unescapeChars(documentType, '/'),
+                        StringUtils.unescapeChars(documentId, '/')) :
                     undefined;
             }
         },

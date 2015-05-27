@@ -25,7 +25,7 @@
         equal(fieldKey.documentKey.documentId, 'bar', "should set document ID");
         equal(fieldKey.fieldName, 'baz', "should set field name");
 
-        fieldKey = 'foo/bar/b%2Faz'.toFieldKey();
+        fieldKey = 'foo/bar/b\\/az'.toFieldKey();
         equal(fieldKey.fieldName, 'b/az', "should URI decode field name");
 
         fieldKey = 'foo/bar'.toFieldKey();
@@ -177,7 +177,7 @@
 
     test("Conversion to String", function () {
         equal(bookworm.FieldKey.create('foo', 'bar', 'baz').toString(), 'foo/bar/baz');
-        equal(bookworm.FieldKey.create('foo', 'bar', 'b/az').toString(), 'foo/bar/b%2Faz');
+        equal(bookworm.FieldKey.create('foo', 'bar', 'b/az').toString(), 'foo/bar/b\\/az');
         equal('foo/bar/baz'.toFieldKey().toString(), 'foo/bar/baz');
     });
 }());

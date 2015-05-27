@@ -78,7 +78,8 @@ troop.amendPostponed(bookworm, 'ItemKey', function () {
              * @returns {bookworm.ReferenceItemKey}
              */
             toReferenceItemKey: function () {
-                var parts = this.split('/'),
+                var StringUtils = bookworm.StringUtils,
+                    parts = StringUtils.safeSplit(this, '/'),
                     documentType = parts[0],
                     documentId = parts[1],
                     fieldName = parts[2],
@@ -90,10 +91,10 @@ troop.amendPostponed(bookworm, 'ItemKey', function () {
                        typeof itemId === 'string' &&
                        decodeURIComponent(itemId).toDocumentKey() ?
                     bookworm.ReferenceItemKey.create(
-                        decodeURIComponent(documentType),
-                        decodeURIComponent(documentId),
-                        decodeURIComponent(fieldName),
-                        decodeURIComponent(itemId)) :
+                        StringUtils.unescapeChars(documentType, '/'),
+                        StringUtils.unescapeChars(documentId, '/'),
+                        StringUtils.unescapeChars(fieldName, '/'),
+                        StringUtils.unescapeChars(itemId, '/')) :
                     undefined;
             }
         },

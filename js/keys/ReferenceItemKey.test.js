@@ -15,7 +15,7 @@
     test("Conversion from String", function () {
         var itemKey;
 
-        itemKey = 'hello/world/foo/bar%2Fbaz'.toReferenceItemKey();
+        itemKey = 'hello/world/foo/bar\\/baz'.toReferenceItemKey();
         equal(itemKey.itemId, 'bar/baz', "should set item ID");
         ok(itemKey.referenceKey.equals('bar/baz'.toDocumentKey()), "should set reference key");
 
