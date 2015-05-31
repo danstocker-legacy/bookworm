@@ -44,7 +44,7 @@
             .entityKey
             .triggerSync('qux');
 
-        entityBound.unbindFromEntityContent(documentKey, 'qux', 'onEntityEvent');
+        entityBound.unbindAll();
     });
 
     test("Unbinding from custom entity content event", function () {
@@ -99,7 +99,7 @@
             .entityKey
             .triggerSync('qux');
 
-        entityBound.unbindFromEntity(documentKey, 'qux', 'onEntityEvent');
+        entityBound.unbindAll();
     });
 
     test("Unbinding from custom entity event", function () {
@@ -148,7 +148,7 @@
         documentKey.toDocument().getField('baz')
             .getValue();
 
-        entityBound.unbindFromEntityContentAccess(documentKey, 'onEntityEvent');
+        entityBound.unbindAll();
     });
 
     test("Unbinding from entity content access", function () {
@@ -199,7 +199,7 @@
         documentKey.toDocument().getField('baz')
             .getValue();
 
-        entityBound.unbindFromEntityAccess(documentKey, 'onEntityEvent');
+        entityBound.unbindAll();
     });
 
     test("Unbinding from entity access", function () {
@@ -248,7 +248,7 @@
         documentKey.toDocument().getField('baz')
             .setValue("Hello World!");
 
-        entityBound.unbindFromEntityContentChange(documentKey, 'onEntityEvent');
+        entityBound.unbindAll();
     });
 
     test("Re-binding to entity content change", function () {
@@ -275,7 +275,7 @@
         documentKey.toDocument().getField('baz')
             .setValue("Hello World!");
 
-        entityBound.unbindFromEntityContentChange(documentKey, 'onEntityEvent');
+        entityBound.unbindAll();
     });
 
     test("Unbinding from entity content change", function () {
@@ -331,7 +331,7 @@
         documentKey.toDocument().getField('baz')
             .setValue("Hi All!");
 
-        entityBound.unbindFromEntityChange(documentKey, 'onEntityEvent');
+        entityBound.unbindAll();
     });
 
     test("Unbinding from entity change", function () {
@@ -382,7 +382,7 @@
         fieldKey.toField()
             .setValue("Hello World!");
 
-        entityBound.unbindFromFieldChange(fieldKey, 'onEntityEvent');
+        entityBound.unbindAll();
     });
 
     test("Binding to field and changing document", function () {
@@ -416,7 +416,7 @@
                 baz: "Hello World!"
             });
 
-        entityBound.unbindFromFieldChange(fieldKey, 'onEntityEvent');
+        entityBound.unbindAll();
     });
 
     test("Unbinding from field change", function () {
@@ -480,7 +480,7 @@
                 hi: "all"
             });
 
-        entityBound.unbindFromEntityContentAppend(documentKey, 'onBeforeAppend', 'onAfterAppend');
+        entityBound.unbindAll();
     });
 
     test("Unbinding from entity content append", function () {
@@ -562,7 +562,7 @@
                 howdy: "y'all"
             });
 
-        entityBound.unbindFromEntityAppend(documentKey, 'onBeforeAppend', 'onAfterAppend');
+        entityBound.unbindAll();
     });
 
     test("Unbinding from entity append", function () {
