@@ -27,4 +27,12 @@
         ok(!attributeKey1.equals(attributeKey3), "should fail on attribute name mismatch");
         ok(attributeKey1.equals(attributeKey4), "should succeed when both parent key and attribute name match");
     });
+
+    test("Entity path getter", function () {
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            attributeKey = bookworm.AttributeKey.create(documentKey, 'baz');
+
+        ok(attributeKey.getEntityPath().equals('document>foo>bar>baz'.toPath()),
+            "should append attribute name to document path");
+    });
 }());

@@ -50,6 +50,14 @@ troop.postpone(bookworm, 'AttributeKey', function () {
                 return attributeKey &&
                        this.parentKey.equals(attributeKey.parentKey) &&
                        this.attributeName === attributeKey.attributeName;
+            },
+
+            /**
+             * Resolves attribute key based on the parent key and attribute name.
+             * @returns {sntls.Path}
+             */
+            getEntityPath: function () {
+                return this.parentKey.getEntityPath().appendKey(this.attributeName);
             }
         });
 });
