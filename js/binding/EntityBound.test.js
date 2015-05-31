@@ -20,6 +20,112 @@
         ok(entityBound.entityBindings.isA(sntls.Tree), "should set entityBindings property");
     });
 
+    test("Binding to custom entity content event", function () {
+        expect(3);
+
+        var entityBound = EntityBound.create(),
+            documentKey = 'foo/bar'.toDocumentKey();
+
+        documentKey.toDocument()
+            .setNode({});
+
+        entityBound.addMocks({
+            onEntityEvent: function (event) {
+                ok(event.sender.equals('foo/bar/baz'.toFieldKey()), "should trigger event");
+                equal(event.eventName, 'qux', "should trigger specified event");
+            }
+        });
+
+        strictEqual(entityBound.bindToEntityContent(documentKey, 'qux', 'onEntityEvent'), entityBound,
+            "should be chainable");
+
+        // should trigger
+        documentKey.toDocument().getField('baz')
+            .entityKey
+            .triggerSync('qux');
+
+        entityBound.unbindFromEntityContent(documentKey, 'qux', 'onEntityEvent');
+    });
+
+    test("Unbinding from custom entity content event", function () {
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entityBound = EntityBound.create();
+
+        entityBound.addMocks({
+            onEntityEvent: function () {
+                ok(false, "should not call handler");
+            }
+        });
+
+        entityBound.bindToEntityContent(documentKey, 'qux', 'onEntityEvent');
+
+        strictEqual(entityBound.unbindFromEntityContent(documentKey, 'qux', 'onEntityEvent'), entityBound,
+            "should be chainable");
+
+        deepEqual(entityBound.entityBindings.items, {},
+            "should remove binding info from registry");
+
+        // should not trigger
+        documentKey.toDocument().getField('baz')
+            .entityKey
+            .triggerSync('qux');
+    });
+
+    test("Binding to custom entity event", function () {
+        expect(3);
+
+        var entityBound = EntityBound.create(),
+            documentKey = 'foo/bar'.toDocumentKey();
+
+        documentKey.toDocument()
+            .setNode({});
+
+        entityBound.addMocks({
+            onEntityEvent: function (event) {
+                ok(event.sender.equals('foo/bar'.toDocumentKey()), "should trigger event");
+                equal(event.eventName, 'qux', "should trigger specified event");
+            }
+        });
+
+        strictEqual(entityBound.bindToEntity(documentKey, 'qux', 'onEntityEvent'), entityBound, "should be chainable");
+
+        // should trigger
+        documentKey.toDocument()
+            .entityKey
+            .triggerSync('qux');
+
+        // should not trigger
+        documentKey.toDocument().getField('baz')
+            .entityKey
+            .triggerSync('qux');
+
+        entityBound.unbindFromEntity(documentKey, 'qux', 'onEntityEvent');
+    });
+
+    test("Unbinding from custom entity event", function () {
+        var documentKey = 'foo/bar'.toDocumentKey(),
+            entityBound = EntityBound.create();
+
+        entityBound.addMocks({
+            onEntityEvent: function () {
+                ok(false, "should not call handler");
+            }
+        });
+
+        entityBound.bindToEntity(documentKey, 'qux', 'onEntityEvent');
+
+        strictEqual(entityBound.unbindFromEntity(documentKey, 'qux', 'onEntityEvent'), entityBound,
+            "should be chainable");
+
+        deepEqual(entityBound.entityBindings.items, {},
+            "should remove binding info from registry");
+
+        // should not trigger
+        documentKey.toDocument()
+            .entityKey
+            .triggerSync('qux');
+    });
+
     test("Binding to entity content access", function () {
         expect(2);
 

@@ -67,6 +67,78 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
+             * Subscribes method to be triggered on the specified custom event passing through the node.
+             * @param {bookworm.EntityKey} entityKey
+             * @param {string} eventName
+             * @param {string} methodName
+             * @returns {bookworm.EntityBound}
+             */
+            bindToEntityContent: function (entityKey, eventName, methodName) {
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isString(eventName, "Invalid event name")
+                    .isFunction(this[methodName], "Attempting to bind non-method");
+
+                this._bindToEntity(entityKey, entityKey, eventName, methodName, 'content');
+
+                return this;
+            },
+
+            /**
+             * Unsubscribes method from the specified custom event passing through the node.
+             * @param {bookworm.EntityKey} entityKey
+             * @param {string} eventName
+             * @param {string} methodName
+             * @returns {bookworm.EntityBound}
+             */
+            unbindFromEntityContent: function (entityKey, eventName, methodName) {
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isString(eventName, "Invalid event name")
+                    .isFunction(this[methodName], "Attempting to unbind non-method");
+
+                this._unbindFromEntity(entityKey, entityKey, eventName, methodName, 'content');
+
+                return this;
+            },
+
+            /**
+             * Subscribes method to be triggered on the specified custom event is triggered on the specified entity.
+             * @param {bookworm.EntityKey} entityKey
+             * @param {string} eventName
+             * @param {string} methodName
+             * @returns {bookworm.EntityBound}
+             */
+            bindToEntity: function (entityKey, eventName, methodName) {
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isString(eventName, "Invalid event name")
+                    .isFunction(this[methodName], "Attempting to bind non-method");
+
+                this._bindToEntity(entityKey, entityKey, eventName, methodName, 'strict');
+
+                return this;
+            },
+
+            /**
+             * Unsubscribes method from the specified custom event triggered on the specified entity.
+             * @param {bookworm.EntityKey} entityKey
+             * @param {string} eventName
+             * @param {string} methodName
+             * @returns {bookworm.EntityBound}
+             */
+            unbindFromEntity: function (entityKey, eventName, methodName) {
+                dessert
+                    .isEntityKey(entityKey, "Invalid entity key")
+                    .isString(eventName, "Invalid event name")
+                    .isFunction(this[methodName], "Attempting to unbind non-method");
+
+                this._unbindFromEntity(entityKey, entityKey, eventName, methodName, 'strict');
+
+                return this;
+            },
+
+            /**
              * Subscribes method to be triggered on any access event passing through the node.
              * @param {bookworm.EntityKey} entityKey
              * @param {string} methodName
