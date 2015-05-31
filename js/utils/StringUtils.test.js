@@ -6,18 +6,15 @@
     module("StringUtils");
 
     test("Safe split", function () {
-        console.log("split 1", JSON.stringify(bookworm.StringUtils.safeSplit('foo/bar/baz', '/'), null, 2));
         deepEqual(bookworm.StringUtils.safeSplit('foo/bar/baz', '/'), ['foo', 'bar', 'baz'],
             "should split clean delimited string");
 
-        console.log("split 2", JSON.stringify(bookworm.StringUtils.safeSplit('foo/', '/'), null, 2));
         deepEqual(bookworm.StringUtils.safeSplit('foo/', '/'), ['foo', ''],
             "should preserve trailing empty string component");
 
         deepEqual(bookworm.StringUtils.safeSplit('/foo', '/'), ['', 'foo'],
             "should preserve leading empty string component");
 
-        console.log("split 3", JSON.stringify(bookworm.StringUtils.safeSplit('foo\\/\\/bar/baz\\\\qux', '/'), null, 2));
         deepEqual(bookworm.StringUtils.safeSplit('foo\\/\\/bar/baz\\\\qux', '/'), ['foo\\/\\/bar', 'baz\\\\qux'],
             "should split string with escaped delimiters correctly");
     });

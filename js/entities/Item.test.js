@@ -44,7 +44,7 @@
         ok(entity.isA(bookworm.Item), "should return Item instance for ItemKey");
         equal(entity.entityKey.toString(), 'foo/bar/baz/0', "should set correct key");
 
-        entity = bookworm.Entity.create('foo/bar/baz/hello%2Fworld'.toReferenceItemKey());
+        entity = bookworm.Entity.create('foo/bar/baz/hello\\/world'.toReferenceItemKey());
         ok(entity.isA(bookworm.Item), "should return Item instance for ReferenceItemKey");
     });
 

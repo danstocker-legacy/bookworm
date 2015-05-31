@@ -62,7 +62,7 @@ troop.amendPostponed(bookworm, 'Entity', function () {
 
     bookworm.Entity
         .addSurrogate(bookworm, 'Document', function (entityKey) {
-            return entityKey.instanceOf(bookworm.DocumentKey);
+            return bookworm.DocumentKey.isBaseOf(entityKey);
         });
 });
 

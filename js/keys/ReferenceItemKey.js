@@ -83,13 +83,18 @@ troop.amendPostponed(bookworm, 'ItemKey', function () {
                     documentType = parts[0],
                     documentId = parts[1],
                     fieldName = parts[2],
-                    itemId = parts[3];
+                    itemId = parts[3],
+                    unescapedItemId;
 
-                return typeof documentType === 'string' &&
-                       typeof documentId === 'string' &&
-                       typeof fieldName === 'string' &&
-                       typeof itemId === 'string' &&
-                       decodeURIComponent(itemId).toDocumentKey() ?
+                if (typeof documentType === 'string' &&
+                    typeof documentId === 'string' &&
+                    typeof fieldName === 'string' &&
+                    typeof itemId === 'string'
+                    ) {
+                    unescapedItemId = StringUtils.unescapeChars(itemId, '/');
+                }
+
+                return unescapedItemId && unescapedItemId.toDocumentKey() ?
                     bookworm.ReferenceItemKey.create(
                         StringUtils.unescapeChars(documentType, '/'),
                         StringUtils.unescapeChars(documentId, '/'),
