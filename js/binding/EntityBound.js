@@ -67,7 +67,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Subscribes method to be triggered on the specified custom event passing through the node.
+             * Subscribes method to be triggered on the specified custom event passing through the entity.
              * @param {bookworm.EntityKey} entityKey
              * @param {string} eventName
              * @param {string} methodName
@@ -85,7 +85,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Unsubscribes method from the specified custom event passing through the node.
+             * Unsubscribes method from the specified custom event passing through the entity.
              * @param {bookworm.EntityKey} entityKey
              * @param {string} eventName
              * @param {string} methodName
@@ -139,7 +139,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Subscribes method to be triggered on any access event passing through the node.
+             * Subscribes method to be triggered on any access event passing through the entity.
              * @param {bookworm.EntityKey} entityKey
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
@@ -160,7 +160,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Unsubscribes method from access events passing through the node.
+             * Unsubscribes method from access events passing through the entity.
              * @param {bookworm.EntityKey} entityKey
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
@@ -223,7 +223,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Subscribes method to be triggered on any change event passing through the node.
+             * Subscribes method to be triggered on any change event passing through the entity.
              * @param {bookworm.EntityKey} entityKey
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
@@ -244,7 +244,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Unsubscribes method from change events passing through the node.
+             * Unsubscribes method from change events passing through the entity.
              * @param {bookworm.EntityKey} entityKey
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
@@ -381,7 +381,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Unsubscribes method from append events passing through the node.
+             * Unsubscribes method from append events passing through the entity.
              * @param {bookworm.EntityKey} entityKey
              * @param {string} [beforeMethodName]
              * @param {string} [afterMethodName]

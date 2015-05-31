@@ -175,17 +175,17 @@
     });
 
     test("Binding to entity access", function () {
-        expect(1);
+        expect(2);
 
         var entityBound = EntityBound.create(),
             documentKey = 'foo/bar'.toDocumentKey();
 
         documentKey.toDocument()
-            .setNode({});
+            .unsetNode();
 
         entityBound.addMocks({
             onEntityEvent: function (event) {
-                ok(event.sender.equals('foo/bar'.toFieldKey()), "should trigger event");
+                ok(event.sender.equals('foo/bar'.toDocumentKey()), "should trigger event");
             }
         });
 
