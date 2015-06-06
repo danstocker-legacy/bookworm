@@ -2,6 +2,8 @@
 troop.postpone(bookworm, 'Entity', function () {
     "use strict";
 
+    var shallowCopy = sntls.Utils.shallowCopy;
+
     /**
      * Creates an Entity instance.
      * Entity instantiation is expected to be done via subclasses, unless there are suitable surrogates defined.
@@ -29,19 +31,7 @@ troop.postpone(bookworm, 'Entity', function () {
              * Signals that an entity node was changed.
              * @constant
              */
-            EVENT_ENTITY_CHANGE: 'bookworm.entity.change',
-
-            /**
-             * Signals that an entity node is about to be appended.
-             * @constant
-             */
-            EVENT_ENTITY_BEFORE_APPEND: 'bookworm.entity.change.before-append',
-
-            /**
-             * Signals that an entity node was appended.
-             * @constant
-             */
-            EVENT_ENTITY_AFTER_APPEND: 'bookworm.entity.change.after-append'
+            EVENT_ENTITY_CHANGE: 'bookworm.entity.change'
         })
         .addMethods(/** @lends bookworm.Entity# */{
             /**
@@ -139,26 +129,30 @@ troop.postpone(bookworm, 'Entity', function () {
             /**
              * Appends the specified node to the current node. Performs a shallow-merge.
              * In case of conflicts, the specified node's properties win out.
+             * Triggering the event shallow copies the entire starting contents of the collection.
+             * Do not use on large collections.
              * @param {object} node
              * @returns {bookworm.Entity}
              */
             appendNode: function (node) {
                 var entityKey = this.entityKey,
                     entityNode = this.getSilentNode(),
+                    beforeNode = shallowCopy(entityNode),
                     keys,
                     i, key;
 
                 if (typeof entityNode === 'object') {
                     // merging node
-                    entityKey.triggerSync(this.EVENT_ENTITY_BEFORE_APPEND);
-
                     keys = Object.keys(node);
                     for (i = 0; i < keys.length; i++) {
                         key = keys[i];
                         entityNode[key] = node[key];
                     }
 
-                    entityKey.triggerSync(this.EVENT_ENTITY_AFTER_APPEND);
+                    entityKey.spawnEvent(this.EVENT_ENTITY_CHANGE)
+                        .setBeforeNode(beforeNode)
+                        .setAfterNode(entityNode)
+                        .triggerSync();
                 } else {
                     // node is either undefined or primitive
                     // replacing node

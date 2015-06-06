@@ -247,6 +247,8 @@
     });
 
     test("Appending node", function () {
+        expect(2);
+
         var document = 'foo/bar'.toDocument(),
             entityNode = {
                 hello: 'world',
@@ -262,29 +264,24 @@
             }
         });
 
-        function onBeforeAppend() {
-            deepEqual(entityNode, {
+        function onChange(event) {
+            deepEqual(event.beforeNode, {
                 hello: "world",
                 hi   : "test"
-            }, "should trigger before-append event");
-        }
-
-        function onAfterAppend() {
-            deepEqual(entityNode, {
+            }, "should set beforeNode on event");
+            deepEqual(event.afterNode, {
                 hello: "world",
                 hi   : "all"
-            }, "should trigger after-append event");
+            }, "should set afterNode on event");
         }
 
         document.entityKey
-            .subscribeTo(document.EVENT_ENTITY_BEFORE_APPEND, onBeforeAppend)
-            .subscribeTo(document.EVENT_ENTITY_AFTER_APPEND, onAfterAppend);
+            .subscribeTo(document.EVENT_ENTITY_CHANGE, onChange);
 
         document.appendNode(nodeToAppend);
 
         document.entityKey
-            .unsubscribeFrom(document.EVENT_ENTITY_BEFORE_APPEND, onBeforeAppend)
-            .unsubscribeFrom(document.EVENT_ENTITY_AFTER_APPEND, onAfterAppend);
+            .unsubscribeFrom(document.EVENT_ENTITY_CHANGE, onChange);
     });
 
     test("Node removal", function () {
