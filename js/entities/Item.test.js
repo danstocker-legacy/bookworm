@@ -55,4 +55,14 @@
         ok(item.isA(bookworm.Item), "should return Item instance");
         equal(item.entityKey.toString(), 'foo/bar/baz/hello', "should set item key");
     });
+
+    test("Parent entity getter", function () {
+        var item = ['foo', 'bar', 'baz', 'hello'].toItem(),
+            parentEntity = item.getParentEntity(),
+            itemsEntity = item.entityKey.getFieldKey().toField().getValueEntity();
+
+        ok(parentEntity.isA(bookworm.Entity), "should return an Entity instance");
+        ok(parentEntity.entityKey.equals(itemsEntity.entityKey),
+            "should return associated items entity");
+    });
 }());
