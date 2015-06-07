@@ -234,41 +234,40 @@
     test("Appending absent node", function () {
         expect(3);
 
-        var document = 'foo/bar'.toDocument(),
-            entityNode = {};
+        var document = 'foo/bar'.toDocument()
+            .setNode(undefined);
 
-        document.addMocks({
-            getSilentNode: function () {
-                ok(true, "should fetch node silently");
-                return undefined;
-            },
+        function onChange(event) {
+            equal(typeof event.beforeNode, 'undefined', "should set beforeNode on event");
+            deepEqual(event.afterNode, {
+                hello: "world",
+                hi   : "all"
+            }, "should set afterNode on event");
+        }
 
-            setNode: function (node) {
-                strictEqual(node, entityNode, "should set node");
-            }
-        });
+        document.entityKey
+            .subscribeTo(document.EVENT_ENTITY_CHANGE, onChange);
 
-        strictEqual(document.appendNode(entityNode), document,
-            "should be chainable");
+        strictEqual(document.appendNode({
+            hello: "world",
+            hi   : "all"
+        }), document, "should be chainable");
+
+        document.entityKey
+            .unsubscribeFrom(document.EVENT_ENTITY_CHANGE, onChange);
     });
 
     test("Appending node", function () {
         expect(2);
 
-        var document = 'foo/bar'.toDocument(),
-            entityNode = {
-                hello: 'world',
-                hi   : 'test'
-            },
+        var document = 'foo/bar'.toDocument()
+                .setNode({
+                    hello: 'world',
+                    hi   : 'test'
+                }),
             nodeToAppend = {
                 hi: 'all'
             };
-
-        document.addMocks({
-            getSilentNode: function () {
-                return entityNode;
-            }
-        });
 
         function onChange(event) {
             deepEqual(event.beforeNode, {

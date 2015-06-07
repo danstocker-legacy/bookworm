@@ -140,34 +140,22 @@ troop.postpone(bookworm, 'Entity', function () {
              * In case of conflicts, the specified node's properties win out.
              * Triggering the event shallow copies the entire starting contents of the collection.
              * Do not use on large collections.
-             * TODO: Upgrade to use Tree.appendNode().
              * @param {object} node
              * @returns {bookworm.Entity}
              */
             appendNode: function (node) {
-                var entityKey = this.entityKey,
+                var that = this,
+                    entityKey = this.entityKey,
+                    entityPath = entityKey.getEntityPath(),
                     entityNode = this.getSilentNode(),
-                    beforeNode = shallowCopy(entityNode),
-                    keys,
-                    i, key;
+                    beforeNode = shallowCopy(entityNode);
 
-                if (typeof entityNode === 'object') {
-                    // merging node
-                    keys = Object.keys(node);
-                    for (i = 0; i < keys.length; i++) {
-                        key = keys[i];
-                        entityNode[key] = node[key];
-                    }
-
-                    entityKey.spawnEvent(this.EVENT_ENTITY_CHANGE)
+                bookworm.entities.appendNode(entityPath, node, function (entityPath, afterNode) {
+                    entityKey.spawnEvent(that.EVENT_ENTITY_CHANGE)
                         .setBeforeNode(beforeNode)
-                        .setAfterNode(entityNode)
+                        .setAfterNode(afterNode)
                         .triggerSync();
-                } else {
-                    // node is either undefined or primitive
-                    // replacing node
-                    this.setNode(node);
-                }
+                });
 
                 return this;
             },
