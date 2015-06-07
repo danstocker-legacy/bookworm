@@ -140,6 +140,7 @@ troop.postpone(bookworm, 'Entity', function () {
              * In case of conflicts, the specified node's properties win out.
              * Triggering the event shallow copies the entire starting contents of the collection.
              * Do not use on large collections.
+             * TODO: Upgrade to use Tree.appendNode().
              * @param {object} node
              * @returns {bookworm.Entity}
              */
@@ -173,7 +174,6 @@ troop.postpone(bookworm, 'Entity', function () {
 
             /**
              * Removes entity node from cache.
-             * Arguments will be appended to the entity path.
              * @returns {bookworm.Entity}
              */
             unsetNode: function () {
@@ -188,6 +188,30 @@ troop.postpone(bookworm, 'Entity', function () {
                         .setBeforeNode(beforeNode)
                         .triggerSync();
                 }
+
+                return this;
+            },
+
+            /**
+             * Removes entity from cache, altering the parent node.
+             * Performs shallow copy of the node, not recommended to use with large nodes,
+             * eg. large collections.
+             * @param {boolean} [splice] Whether to splice the parent node if it's an Array.
+             * @returns {bookworm.Entity}
+             */
+            unsetKey: function (splice) {
+                var that = this,
+                    parentEntity = this.getParentEntity(),
+                    parentNodeBefore = shallowCopy(parentEntity.getNode()),
+                    entityPath = this.entityKey.getEntityPath();
+
+                bookworm.entities.unsetKey(entityPath, splice, function (parentPath, parentNodeAfter) {
+                    parentEntity.entityKey
+                        .spawnEvent(that.EVENT_ENTITY_CHANGE)
+                        .setBeforeNode(parentNodeBefore)
+                        .setAfterNode(parentNodeAfter)
+                        .triggerSync();
+                });
 
                 return this;
             }

@@ -355,4 +355,33 @@
         documentKey.unsubscribeFrom(bookworm.Entity.EVENT_ENTITY_CHANGE, onChange);
         bookworm.entities.removeMocks();
     });
+
+    test("Key removal", function () {
+        expect(2);
+
+        var document = 'foo/bar'.toDocument()
+                .setNode({
+                    hello: 'world',
+                    hi   : 'all'
+                }),
+            field = document.getField('hello');
+
+        function onChange(event) {
+            deepEqual(event.beforeNode, {
+                hello: "world",
+                hi   : "all"
+            }, "should set beforeNode on event");
+            deepEqual(event.afterNode, {
+                hi: "all"
+            }, "should set afterNode on event");
+        }
+
+        document.entityKey
+            .subscribeTo(document.EVENT_ENTITY_CHANGE, onChange);
+
+        field.unsetKey();
+
+        document.entityKey
+            .unsubscribeFrom(document.EVENT_ENTITY_CHANGE, onChange);
+    });
 }());
