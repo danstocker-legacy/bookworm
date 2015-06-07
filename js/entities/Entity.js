@@ -47,6 +47,15 @@ troop.postpone(bookworm, 'Entity', function () {
             },
 
             /**
+             * Fetches an Entity that is the current entity's parent.
+             * Returns undefined by default. Subclasses need to override.
+             * @returns {bookworm.Entity}
+             */
+            getParentEntity: function () {
+                return undefined;
+            },
+
+            /**
              * Fetches an Attribute entity for the specified attribute name.
              * @param {string} attributeName
              * @returns {bookworm.Entity}

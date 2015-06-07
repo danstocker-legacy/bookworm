@@ -52,6 +52,16 @@
         strictEqual(field.entityKey, fieldKey, "should set field key");
     });
 
+    test("Parent entity getter", function () {
+        var field = ['foo', 'bar', 'baz'].toField(),
+            parentEntity = field.getParentEntity(),
+            fieldsEntity = field.entityKey.documentKey.toDocument().getFieldsEntity();
+
+        ok(parentEntity.isA(bookworm.Entity), "should return an Entity instance");
+        ok(parentEntity.entityKey.equals(fieldsEntity.entityKey),
+            "should return corresponding fields entity");
+    });
+
     test("Value entity getter", function () {
         var field = 'foo/bar/baz'.toField();
 

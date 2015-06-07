@@ -39,6 +39,15 @@ troop.postpone(bookworm, 'Field', function () {
             },
 
             /**
+             * Fetches fields entity from the document the current field belongs to.
+             * @returns {bookworm.Entity}
+             */
+            getParentEntity: function () {
+                return this.entityKey.documentKey.toDocument()
+                    .getFieldsEntity();
+            },
+
+            /**
              * Fetches entity associated with the field's value.
              * Returns self by default.
              * @returns {bookworm.Entity}

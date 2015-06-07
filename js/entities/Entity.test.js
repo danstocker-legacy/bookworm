@@ -20,6 +20,12 @@
         strictEqual(entity.entityKey, entityKey, "should set entity key");
     });
 
+    test("Parent entity getter", function () {
+        var entity = bookworm.Entity.create(bookworm.EntityKey.create());
+
+        strictEqual(typeof entity.getParentEntity(), 'undefined', "should return undefined");
+    });
+
     test("Attribute entity getter", function () {
         var entity = 'foo/bar'.toDocument(),
             attribute = entity.getAttribute('baz');
