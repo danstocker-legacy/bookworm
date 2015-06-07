@@ -38,4 +38,15 @@
         ok(entity.isA(bookworm.Attribute), "should return Attribute instance");
         strictEqual(entity.entityKey, attributeKey, "should set attribute key");
     });
+
+    test("Parent entity getter", function () {
+        var parentKey = 'foo/bar'.toDocumentKey(),
+            attributeKey = bookworm.AttributeKey.create(parentKey, 'baz'),
+            attribute = attributeKey.toEntity(),
+            parentEntity = attribute.getParentEntity();
+
+        ok(parentEntity.isA(bookworm.Entity), "should return Entity instance");
+        ok(parentEntity.entityKey.equals(parentKey),
+            "should return corresponding parent entity");
+    });
 }());

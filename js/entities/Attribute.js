@@ -34,6 +34,14 @@ troop.postpone(bookworm, 'Attribute', function () {
                  * @name bookworm.Attribute#entityKey
                  * @type {bookworm.AttributeKey}
                  */
+            },
+
+            /**
+             * Fetches entity the current attribute belongs to.
+             * @returns {bookworm.Entity}
+             */
+            getParentEntity: function () {
+                return this.entityKey.parentKey.toEntity();
             }
         });
 });
