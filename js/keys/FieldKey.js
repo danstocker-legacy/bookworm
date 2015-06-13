@@ -97,18 +97,6 @@ troop.postpone(bookworm, 'FieldKey', function () {
             },
 
             /**
-             * Determines absolute path to the value node of the field identified by the current key.
-             * In case field value node sits on a different path relative the field node
-             * for a certain `documentType` / `fieldName` combination,
-             * subclass `FieldKey` and override `.getValuePath()` to reflect the correct path.
-             * By default, the value path is same as the entity path.
-             * @returns {sntls.Path}
-             */
-            getValuePath: function () {
-                return this.getEntityPath();
-            },
-
-            /**
              * Retrieves the field type associated with the current field from the config datastore.
              * @returns {string}
              * @see bookworm.config

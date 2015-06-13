@@ -103,22 +103,6 @@
         bookworm.DocumentKey.removeMocks();
     });
 
-    test("Value path getter", function () {
-        expect(2);
-
-        var fieldKey = 'foo/bar/baz'.toFieldKey(),
-            entityPath = {};
-
-        fieldKey.addMocks({
-            getEntityPath: function () {
-                ok(true, "should fetch entity path for current key");
-                return entityPath;
-            }
-        });
-
-        strictEqual(fieldKey.getValuePath(), entityPath, "should return entity path");
-    });
-
     test("Field type getter", function () {
         expect(2);
 

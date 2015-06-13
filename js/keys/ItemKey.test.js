@@ -100,22 +100,6 @@
         equal(fieldKey.documentKey.documentType, 'foo', "should set document type");
     });
 
-    test("Value path getter", function () {
-        expect(2);
-
-        var itemKey = 'foo/bar/baz/A'.toItemKey(),
-            entityPath = {};
-
-        itemKey.addMocks({
-            getEntityPath: function () {
-                equal(this.toString(), 'foo/bar/baz/A', "should fetch entity path for current key");
-                return entityPath;
-            }
-        });
-
-        strictEqual(itemKey.getValuePath(), entityPath, "should return entity path");
-    });
-
     test("Conversion to String", function () {
         equal(bookworm.ItemKey.create('hello', 'world', 'foo', 'bar').toString(), 'hello/world/foo/bar',
             "should return correct item path string");
