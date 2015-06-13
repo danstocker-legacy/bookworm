@@ -150,10 +150,10 @@ troop.postpone(bookworm, 'Entity', function () {
                     entityNode = this.getSilentNode(),
                     beforeNode = shallowCopy(entityNode);
 
-                bookworm.entities.appendNode(entityPath, node, function (entityPath, afterNode) {
+                bookworm.entities.appendNode(entityPath, node, function () {
                     entityKey.spawnEvent(that.EVENT_ENTITY_CHANGE)
                         .setBeforeNode(beforeNode)
-                        .setAfterNode(afterNode)
+                        .setAfterNode(that.getSilentNode())
                         .triggerSync();
                 });
 
