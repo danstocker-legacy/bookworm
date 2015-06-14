@@ -45,8 +45,8 @@
     });
 
     test("Equivalence tester", function () {
-        ok(!'foo/bar'.toDocumentKey().equals(undefined), "should fail for undefined");
         ok('foo/bar'.toDocumentKey().equals('foo/bar'.toDocumentKey()), "should pass for keys w/ same type / ID");
+        ok(!'foo/bar'.toDocumentKey().equals(undefined), "should fail for undefined");
         ok(!'foo/bar'.toDocumentKey().equals('foo/baz'.toDocumentKey()), "should fail for different IDs");
         ok(!'foo/bar'.toDocumentKey().equals('fuu/bar'.toDocumentKey()), "should fail for different types");
     });

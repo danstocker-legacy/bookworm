@@ -54,8 +54,9 @@ troop.postpone(bookworm, 'FieldKey', function () {
              * @returns {boolean}
              */
             equals: function (fieldKey) {
-                return this.documentKey.equals(fieldKey.documentKey) &&
-                       this.fieldName === fieldKey.fieldName;
+                return fieldKey &&
+                    this.documentKey.equals(fieldKey.documentKey) &&
+                    this.fieldName === fieldKey.fieldName;
             },
 
             /**
@@ -132,7 +133,7 @@ troop.postpone(bookworm, 'FieldKey', function () {
              */
             toString: function () {
                 return this.documentKey.toString() + '/' +
-                       bookworm.StringUtils.escapeChars(this.fieldName, '/');
+                    bookworm.StringUtils.escapeChars(this.fieldName, '/');
             }
         });
 });
@@ -149,13 +150,13 @@ troop.postpone(bookworm, 'FieldKey', function () {
         /** @param {bookworm.FieldKey} expr */
         isFieldKeyStrict: function (expr) {
             return bookworm.FieldKey.isBaseOf(expr) &&
-                   expr.getBase() === bookworm.FieldKey;
+                expr.getBase() === bookworm.FieldKey;
         },
 
         /** @param {bookworm.FieldKey} [expr] */
         isFieldKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
-                   bookworm.FieldKey.isBaseOf(expr);
+                bookworm.FieldKey.isBaseOf(expr);
         }
     });
 
@@ -174,8 +175,8 @@ troop.postpone(bookworm, 'FieldKey', function () {
                     fieldName = parts[2];
 
                 return typeof documentType === 'string' &&
-                       typeof documentId === 'string' &&
-                       typeof fieldName === 'string' ?
+                    typeof documentId === 'string' &&
+                    typeof fieldName === 'string' ?
                     bookworm.FieldKey.create(
                         StringUtils.unescapeChars(documentType, '/'),
                         StringUtils.unescapeChars(documentId, '/'),
@@ -200,8 +201,8 @@ troop.postpone(bookworm, 'FieldKey', function () {
                     fieldName = this[2];
 
                 return typeof documentType !== 'undefined' &&
-                       typeof documentId !== 'undefined' &&
-                       typeof fieldName !== 'undefined' ?
+                    typeof documentId !== 'undefined' &&
+                    typeof fieldName !== 'undefined' ?
                     bookworm.FieldKey.create(documentType, documentId, fieldName) :
                     undefined;
             }

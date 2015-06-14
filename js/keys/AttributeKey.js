@@ -48,8 +48,8 @@ troop.postpone(bookworm, 'AttributeKey', function () {
              */
             equals: function (attributeKey) {
                 return attributeKey &&
-                       this.parentKey.equals(attributeKey.parentKey) &&
-                       this.attributeName === attributeKey.attributeName;
+                    this.parentKey.equals(attributeKey.parentKey) &&
+                    this.attributeName === attributeKey.attributeName;
             },
 
             /**
@@ -74,7 +74,7 @@ troop.postpone(bookworm, 'AttributeKey', function () {
         /** @param {bookworm.AttributeKey} [expr] */
         isAttributeKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
-                   bookworm.AttributeKey.isBaseOf(expr);
+                bookworm.AttributeKey.isBaseOf(expr);
         }
     });
 }());

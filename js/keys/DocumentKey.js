@@ -53,8 +53,8 @@ troop.postpone(bookworm, 'DocumentKey', function () {
              */
             equals: function (documentKey) {
                 return documentKey &&
-                       this.documentType === documentKey.documentType &&
-                       this.documentId === documentKey.documentId;
+                    this.documentType === documentKey.documentType &&
+                    this.documentId === documentKey.documentId;
             },
 
             /**
@@ -97,7 +97,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
             toString: function () {
                 var StringUtils = bookworm.StringUtils;
                 return StringUtils.escapeChars(this.documentType, '/') + '/' +
-                       StringUtils.escapeChars(this.documentId, '/');
+                    StringUtils.escapeChars(this.documentId, '/');
             }
         });
 });
@@ -114,7 +114,7 @@ troop.postpone(bookworm, 'DocumentKey', function () {
         /** @param {bookworm.DocumentKey} [expr] */
         isDocumentKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
-                   bookworm.DocumentKey.isBaseOf(expr);
+                bookworm.DocumentKey.isBaseOf(expr);
         }
     });
 

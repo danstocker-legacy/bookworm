@@ -51,8 +51,9 @@ troop.postpone(bookworm, 'ItemKey', function () {
              * @returns {boolean}
              */
             equals: function (itemKey) {
-                return bookworm.FieldKey.equals.call(this, itemKey) &&
-                       this.itemId === itemKey.itemId;
+                return itemKey &&
+                    bookworm.FieldKey.equals.call(this, itemKey) &&
+                    this.itemId === itemKey.itemId;
             },
 
             /**
@@ -84,7 +85,7 @@ troop.postpone(bookworm, 'ItemKey', function () {
              */
             toString: function () {
                 return bookworm.FieldKey.toString.call(this) + '/' +
-                       bookworm.StringUtils.escapeChars(this.itemId, '/');
+                    bookworm.StringUtils.escapeChars(this.itemId, '/');
             }
         });
 });
@@ -101,7 +102,7 @@ troop.postpone(bookworm, 'ItemKey', function () {
         /** @param {bookworm.ItemKey} [expr] */
         isItemKeyOptional: function (expr) {
             return typeof expr === 'undefined' ||
-                   bookworm.ItemKey.isBaseOf(expr);
+                bookworm.ItemKey.isBaseOf(expr);
         }
     });
 
@@ -121,9 +122,9 @@ troop.postpone(bookworm, 'ItemKey', function () {
                     itemId = parts[3];
 
                 return typeof documentType === 'string' &&
-                       typeof documentId === 'string' &&
-                       typeof fieldName === 'string' &&
-                       typeof itemId === 'string' ?
+                    typeof documentId === 'string' &&
+                    typeof fieldName === 'string' &&
+                    typeof itemId === 'string' ?
                     bookworm.ItemKey.create(
                         StringUtils.unescapeChars(documentType, '/'),
                         StringUtils.unescapeChars(documentId, '/'),
@@ -149,9 +150,9 @@ troop.postpone(bookworm, 'ItemKey', function () {
                     itemId = this[3];
 
                 return typeof documentType !== 'undefined' &&
-                       typeof documentId !== 'undefined' &&
-                       typeof fieldName !== 'undefined' &&
-                       typeof itemId !== 'undefined' ?
+                    typeof documentId !== 'undefined' &&
+                    typeof fieldName !== 'undefined' &&
+                    typeof itemId !== 'undefined' ?
                     bookworm.ItemKey.create(documentType, documentId, fieldName, itemId) :
                     undefined;
             }
