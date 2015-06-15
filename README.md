@@ -1,6 +1,6 @@
 # Bookworm
 
-*Document framework*
+*Document entity framework*
 
 [Wiki](https://github.com/danstocker/bookworm/wiki)
 
@@ -23,15 +23,19 @@ The *document oriented structure* means that the model layer is organized into t
 
 Fields and collection items may have the ‘reference’ type, pointing to other entities. (Common application is the collection of references.)
 
-## Cache
+## Entity store
 
-The Bookworm cache is an in-memory datastore based on [sntls.Tree](http://danstocker.github.io/sntls/sntls.Tree.html).
+The Bookworm entity store is an in-memory datastore based on [sntls.Tree](http://danstocker.github.io/sntls/sntls.Tree.html).
 
 The cache is composed of three containers:
 
-- `bookworm.entities`: Contains *all* entities of the application. Entity classes provide access to the contents of this container.
-- `bookworm.config`: Contains configuration information, most importantly field and collection item types. Look in *js/cache/config.js* or the non-minified distribution for the structure. The contents of this container are expected to be initialized before those parts of the application that use the Bookworm API.
-- `bookworm.index`: Holds user-defined indexes for lookups, search, etc. There is no imposed structure for this container, the content is completely up to the application implementation.
+- `bookworm.entities`: Contains *all* entities within the application. Entity classes provide access to the contents of this container.
+- `bookworm.config`: Contains configuration information, most importantly field and collection item types. Look in *js/cache/config.js* or the non-minified distribution for the structure. The contents of this container is expected to be initialized before those parts of the application that use the Bookworm API.
+- `bookworm.index`: Holds user-defined indexes for lookups, search, etc. No structure is imposed on this container, content is completely up to the application implementation.
+
+## Entity keys
+
+Entity keys, such as `DocumentKey`, `FieldKey`, and `ItemKey`, are evented. You may trigger and capture events on them. The library itself triggers events on keys whenever a corresponding entity is accessed (when absent) or changed.
 
 ## Examples
 
@@ -55,3 +59,12 @@ Will not trigger access event signaling that the node is missing. Use `.getNode(
 is the same as:
 
     var nameKey = ‘user/1234/name’.toFieldKey();
+
+### Subscribing to document changes
+
+    'foo/bar'.toDocumentKey()
+        .subscribeTo(bookworm.Entity.EVENT_ENTITY_CHANGE, function (event) {
+            console.log("Entity " + event.sender + " changed.");
+            console.log("Was: " + event.beforeNode);
+            console.log("Now: " + event.afterNode);
+        });
