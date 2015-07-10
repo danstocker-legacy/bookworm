@@ -1,6 +1,6 @@
 {
     "name"           : "bookworm",
-    "version"        : "0.3.1",
+    "version"        : "0.4.0",
     "description"    : "Document entity framework",
     "keywords"       : [
         "document",
@@ -15,10 +15,10 @@
     "license"        : "MIT",
     "dependencies"   : {
         "dessert"   : "~0.3.2",
-        "evan"      : "~0.7.0",
-        "rubberband": "~0.1.5",
-        "sntls"     : "~0.20.4",
-        "troop"     : "~0.8.0"
+        "evan"      : "~0.8.0",
+        "rubberband": "~0.2.0",
+        "sntls"     : "~0.21.0",
+        "troop"     : "~0.9.0"
     },
     "repository"     : {
         "type": "git",
