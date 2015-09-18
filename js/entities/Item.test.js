@@ -65,4 +65,68 @@
         ok(parentEntity.entityKey.equals(itemsEntity.entityKey),
             "should return associated items entity");
     });
+
+    test("Node replacement", function () {
+        expect(4);
+
+        'foo/bar'.toDocument().setNode({
+            collection: {
+                baz: 'BAZ'
+            }
+        });
+
+        var item = 'foo/bar/collection/baz'.toItem();
+
+        bookworm.FieldKey.addMocks({
+            getFieldType: function () {
+                ok(this.equals('foo/bar/collection'.toFieldKey()), "should fetch parent field's type");
+                return 'collection';
+            }
+        });
+
+        bookworm.Entity.addMocks({
+            setNode: function (node) {
+                ok(this.entityKey.equals('foo/bar/collection/baz'.toItemKey()), "should replace item node");
+                equal(node, "QUX", "should pass item value to setter");
+            }
+        });
+
+        strictEqual(item.setNode("QUX"), item, "should be chainable");
+
+        bookworm.FieldKey.removeMocks();
+        bookworm.Entity.removeMocks();
+    });
+
+    test("Node addition", function () {
+        expect(4);
+
+        'foo/bar'.toDocument().setNode({
+            collection: {
+                baz: 'BAZ'
+            }
+        });
+
+        var item = 'foo/bar/collection/qux'.toItem();
+
+        bookworm.FieldKey.addMocks({
+            getFieldType: function () {
+                ok(this.equals('foo/bar/collection'.toFieldKey()), "should fetch parent field's type");
+                return 'collection';
+            }
+        });
+
+        bookworm.Entity.addMocks({
+            appendNode: function (node) {
+                ok(this.entityKey.equals('foo/bar/collection/qux'.toItemKey()), "should append collection node");
+                deepEqual(node, {
+                    qux: "QUX"
+                }, "should pass items node to setter");
+            }
+        });
+
+        strictEqual(item.setNode("QUX"), item, "should be chainable");
+
+        bookworm.FieldKey.removeMocks();
+        bookworm.Entity.removeMocks();
+    });
 }());

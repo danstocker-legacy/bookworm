@@ -59,8 +59,7 @@ troop.postpone(bookworm, 'CollectionField', function () {
 
             /**
              * Retrieves an Item instance for the item matching the specified value.
-             * Iterates ove all items. Avoid using it for large collections.
-             * TODO: Implement indexed version.
+             * Iterates over all items. Avoid using it for large collections.
              * @param {*} value
              * @returns {bookworm.Item}
              */
