@@ -81,6 +81,16 @@ troop.postpone(bookworm, 'CollectionField', function () {
                 }
 
                 return result;
+            },
+
+            /**
+             * Appends the specified item nodes to the current collection.
+             * @param {object} itemsNode
+             * @returns {bookworm.CollectionField}
+             */
+            appendItems: function (itemsNode) {
+                this.getValueEntity().appendNode(itemsNode);
+                return this;
             }
         });
 });

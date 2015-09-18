@@ -154,4 +154,27 @@
         ok(result.isA(bookworm.Item), "should return Item instance");
         equal(result.entityKey.toString(), 'foo/bar/baz/b', "should return correct entity");
     });
+
+    test("Appending items", function () {
+        'foo/bar'.toDocument().setNode({
+            collection: {
+                a: 'A',
+                b: 'B'
+            }
+        });
+
+        var collectionField = bookworm.CollectionField.create('foo/bar/collection'.toFieldKey());
+
+        strictEqual(collectionField.appendItems({
+            c: 'C',
+            d: 'D'
+        }), collectionField, "should be chainable");
+
+        deepEqual(collectionField.getNode(), {
+            a: 'A',
+            b: 'B',
+            c: 'C',
+            d: 'D'
+        });
+    });
 }());
