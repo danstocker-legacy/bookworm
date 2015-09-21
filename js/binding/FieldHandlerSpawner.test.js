@@ -6,7 +6,7 @@
     module("FieldHandlerSpawner");
 
     test("Conversion from HandlerSpawner", function () {
-        var handlerSpawner = bookworm.HandlerSpawner.create('field');
+        var handlerSpawner = bookworm.HandlerSpawner.create('delegate');
 
         ok(handlerSpawner.isA(bookworm.FieldHandlerSpawner),
             "should return FieldHandlerSpawner instance");

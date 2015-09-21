@@ -12,6 +12,7 @@ troop.postpone(bookworm, 'FieldHandlerSpawner', function () {
      */
 
     /**
+     * TODO: Rename to DelegateHandlerSpawner.
      * @class
      * @extends bookworm.HandlerSpawner
      */
@@ -20,36 +21,36 @@ troop.postpone(bookworm, 'FieldHandlerSpawner', function () {
             /**
              * @param {bookworm.EntityBound} instance
              * @param {string} methodName
-             * @param {bookworm.FieldKey} fieldKey
+             * @param {bookworm.EntityKey} entityKey
              * @returns {Function}
              */
-            spawnHandler: function (instance, methodName, fieldKey) {
+            spawnHandler: function (instance, methodName, entityKey) {
                 return function (event) {
-                    var affectedKey = event.sender,
-                        fieldPath,
+                    var entityPath = entityKey.getEntityPath(),
+                        affectedKey = event.sender,
+                        affectedPath = affectedKey.getEntityPath(),
                         beforeNode,
                         afterNode;
 
-                    if (affectedKey.equals(fieldKey)) {
-                        // field changed
+                    if (affectedKey.equals(entityKey)) {
+                        // observed entity changed
                         // same as if we were subscribing on the event itself
-                        event.setAffectedKey(fieldKey);
+                        event.setAffectedKey(entityKey);
                         instance[methodName](event);
-                    } else if (affectedKey.equals(fieldKey.documentKey)) {
-                        // document changed
+                    } else if (entityPath.isRelativeTo(affectedPath)) {
+                        // entity on the parent chain changed
 
-                        fieldPath = fieldKey.getEntityPath();
                         beforeNode = sntls.Tree.create()
-                            .setNode(affectedKey.getEntityPath(), event.beforeNode)
-                            .getNode(fieldPath);
-                        afterNode = bookworm.entities.getNode(fieldPath);
+                            .setNode(affectedPath, event.beforeNode)
+                            .getNode(entityPath);
+                        afterNode = bookworm.entities.getNode(entityPath);
 
                         if (beforeNode !== afterNode) {
-                            // field has changed
+                            // entity has changed
 
                             // creating event that carries correct information
                             event = event.clone()
-                                .setAffectedKey(fieldKey)
+                                .setAffectedKey(entityKey)
                                 .setBeforeNode(beforeNode)
                                 .setAfterNode(afterNode);
 
@@ -66,6 +67,6 @@ troop.amendPostponed(bookworm, 'HandlerSpawner', function () {
 
     bookworm.HandlerSpawner
         .addSurrogate(bookworm, 'FieldHandlerSpawner', function (bindingType) {
-            return bindingType === 'field';
+            return bindingType === 'delegate';
         });
 });

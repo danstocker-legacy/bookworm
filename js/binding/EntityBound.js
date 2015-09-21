@@ -323,7 +323,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     fieldKey.documentKey,
                     bookworm.Entity.EVENT_ENTITY_CHANGE,
                     methodName,
-                    'field');
+                    'delegate');
 
                 return this;
             },
@@ -344,7 +344,7 @@ troop.postpone(bookworm, 'EntityBound', function () {
                     fieldKey.documentKey,
                     bookworm.Entity.EVENT_ENTITY_CHANGE,
                     methodName,
-                    'field');
+                    'delegate');
 
                 return this;
             },
