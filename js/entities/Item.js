@@ -49,7 +49,7 @@ troop.postpone(bookworm, 'Item', function () {
             /**
              * Sets item in collection. When the item is already present, it just replaces the item node.
              * When it's not present yet, the item gets appended to the rest, triggering appropriate events.
-             * @param {*} node
+             * @param {*} node Item node to be set in the collection.
              * @returns {bookworm.Item}
              */
             setNode: function (node) {
