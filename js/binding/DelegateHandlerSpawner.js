@@ -1,23 +1,22 @@
 /*global dessert, troop, sntls, bookworm */
-troop.postpone(bookworm, 'FieldHandlerSpawner', function () {
+troop.postpone(bookworm, 'DelegateHandlerSpawner', function () {
     "use strict";
 
     var base = bookworm.HandlerSpawner,
         self = base.extend();
 
     /**
-     * @name bookworm.FieldHandlerSpawner.create
+     * @name bookworm.DelegateHandlerSpawner.create
      * @function
-     * @returns {bookworm.FieldHandlerSpawner}
+     * @returns {bookworm.DelegateHandlerSpawner}
      */
 
     /**
-     * TODO: Rename to DelegateHandlerSpawner.
      * @class
      * @extends bookworm.HandlerSpawner
      */
-    bookworm.FieldHandlerSpawner = self
-        .addMethods(/** @lends bookworm.FieldHandlerSpawner# */{
+    bookworm.DelegateHandlerSpawner = self
+        .addMethods(/** @lends bookworm.DelegateHandlerSpawner# */{
             /**
              * @param {bookworm.EntityBound} instance
              * @param {string} methodName
@@ -66,7 +65,7 @@ troop.amendPostponed(bookworm, 'HandlerSpawner', function () {
     "use strict";
 
     bookworm.HandlerSpawner
-        .addSurrogate(bookworm, 'FieldHandlerSpawner', function (bindingType) {
+        .addSurrogate(bookworm, 'DelegateHandlerSpawner', function (bindingType) {
             return bindingType === 'delegate';
         });
 });

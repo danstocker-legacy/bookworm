@@ -3,12 +3,12 @@
 (function () {
     "use strict";
 
-    module("FieldHandlerSpawner");
+    module("DelegateHandlerSpawner");
 
     test("Conversion from HandlerSpawner", function () {
         var handlerSpawner = bookworm.HandlerSpawner.create('delegate');
 
-        ok(handlerSpawner.isA(bookworm.FieldHandlerSpawner),
-            "should return FieldHandlerSpawner instance");
+        ok(handlerSpawner.isA(bookworm.DelegateHandlerSpawner),
+            "should return DelegateHandlerSpawner instance");
     });
 }());
