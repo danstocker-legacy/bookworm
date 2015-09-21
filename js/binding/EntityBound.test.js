@@ -376,7 +376,7 @@
             }
         });
 
-        strictEqual(entityBound.bindToFieldChange(fieldKey, 'onEntityEvent'), entityBound, "should be chainable");
+        strictEqual(entityBound.bindToDelegatedEntityChange(fieldKey, 'onEntityEvent'), entityBound, "should be chainable");
 
         // should not trigger
         fieldKey.toField()
@@ -402,7 +402,7 @@
             }
         });
 
-        entityBound.bindToFieldChange(fieldKey, 'onEntityEvent');
+        entityBound.bindToDelegatedEntityChange(fieldKey, 'onEntityEvent');
 
         // should trigger
         fieldKey.documentKey.toDocument()
@@ -429,9 +429,9 @@
             }
         });
 
-        entityBound.bindToFieldChange(fieldKey, 'onEntityEvent');
+        entityBound.bindToDelegatedEntityChange(fieldKey, 'onEntityEvent');
 
-        strictEqual(entityBound.unbindFromFieldChange(fieldKey, 'onEntityEvent'), entityBound,
+        strictEqual(entityBound.unbindFromDelegatedEntityChange(fieldKey, 'onEntityEvent'), entityBound,
             "should be chainable");
 
         deepEqual(entityBound.entityBindings.items, {},
@@ -448,7 +448,7 @@
         var entityBound = EntityBound.create()
             .bindToEntityContentChange('foo/bar'.toDocumentKey(), 'onEntityEvent')
             .bindToEntityChange('foo/bar'.toDocumentKey(), 'onEntityEvent')
-            .bindToFieldChange('foo/bar/baz'.toFieldKey(), 'onEntityEvent');
+            .bindToDelegatedEntityChange('foo/bar/baz'.toFieldKey(), 'onEntityEvent');
 
         strictEqual(entityBound.unbindAll(), entityBound, "should be chainable");
 

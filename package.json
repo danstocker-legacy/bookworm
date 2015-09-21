@@ -1,6 +1,6 @@
 {
     "name"           : "bookworm",
-    "version"        : "0.4.1",
+    "version"        : "0.4.2",
     "description"    : "Document entity framework",
     "keywords"       : [
         "document",

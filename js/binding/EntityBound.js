@@ -307,20 +307,20 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Subscribes method to be triggered when field or document changes.
+             * Subscribes method to be triggered when the specified entity or any of its parents change.
              * Adds `affectedKey` payload / property to event.
-             * @param {bookworm.FieldKey} fieldKey
+             * @param {bookworm.EntityKey} entityKey
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
              */
-            bindToFieldChange: function (fieldKey, methodName) {
+            bindToDelegatedEntityChange: function (entityKey, methodName) {
                 dessert
-                    .isFieldKeyStrict(fieldKey, "Invalid field key")
+                    .isEntityKey(entityKey, "Invalid entity key")
                     .isFunction(this[methodName], "Attempting to bind non-method");
 
                 this._bindToEntity(
-                    fieldKey,
-                    fieldKey.documentKey,
+                    entityKey,
+                    entityKey.documentKey,
                     bookworm.Entity.EVENT_ENTITY_CHANGE,
                     methodName,
                     'delegate');
@@ -329,19 +329,19 @@ troop.postpone(bookworm, 'EntityBound', function () {
             },
 
             /**
-             * Unsubscribes method from field changes.
-             * @param {bookworm.FieldKey} fieldKey
+             * Unsubscribes method from delegated changes.
+             * @param {bookworm.EntityKey} entityKey
              * @param {string} methodName
              * @returns {bookworm.EntityBound}
              */
-            unbindFromFieldChange: function (fieldKey, methodName) {
+            unbindFromDelegatedEntityChange: function (entityKey, methodName) {
                 dessert
-                    .isFieldKeyStrict(fieldKey, "Invalid field key")
+                    .isEntityKey(entityKey, "Invalid entity key")
                     .isFunction(this[methodName], "Attempting to unbind non-method");
 
                 this._unbindFromEntity(
-                    fieldKey,
-                    fieldKey.documentKey,
+                    entityKey,
+                    entityKey.documentKey,
                     bookworm.Entity.EVENT_ENTITY_CHANGE,
                     methodName,
                     'delegate');
